@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package personal_organizer;
+package com.personal_organizer;
+
+import com.personal_organizer.LoginForm;
 
 /**
  *
@@ -11,11 +13,12 @@ package personal_organizer;
  */
 public class Personal_Organizer {
 
+    public static LoginForm loginForm;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        LoginForm loginForm = new LoginForm();
+        loginForm = new LoginForm();
         loginForm.setVisible(true);
                 
     }

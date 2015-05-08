@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package personal_organizer;
+package com.personal_organizer;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -59,11 +59,13 @@ public class LoginForm extends JFrame {
 
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         pnlButtons.add(btnLogin = new JButton("Login"), gbc);
-        //btnGo.addActionListener(new LoginListener());
-        pnlButtons.add(btnCancel = new JButton("Cancel"), gbc);
+        btnLogin.addActionListener(new LoginListener());
+        btnLogin.addMouseListener(new LoginListener());
+        //pnlButtons.add(btnCancel = new JButton("Cancel"), gbc);
         //btnCancel.addActionListener(new CanceListener());
         pnlButtons.add(btnSignUp = new JButton("Sign Up"), gbc);
-        //btnCancel.addActionListener(new CanceListener());
+        btnSignUp.addActionListener(new LoginListener());
+        btnSignUp.addMouseListener(new LoginListener());
  
         this.add(pnlLogin, BorderLayout.CENTER);
         this.add(pnlButtons, BorderLayout.SOUTH);
@@ -75,8 +77,16 @@ public class LoginForm extends JFrame {
     
     class LoginListener implements MouseListener, ActionListener {
 
+        public void listener(Object o){
+            if(o == btnSignUp) {
+                Personal_Organizer.loginForm.setVisible(false);
+                new SignUpForm();
+            }
+        }
+        
         @Override
         public void mouseClicked(MouseEvent e) {
+            listener(e.getSource());
         }
 
         @Override
