@@ -66,6 +66,7 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLoginName = new JTextField("", 10), gbc);
+
                 
                 gbc.gridy = 1;
                 pnlPersonalInformation.add(txtPassword = new JPasswordField("", 10), gbc);
