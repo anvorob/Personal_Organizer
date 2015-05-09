@@ -19,6 +19,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -31,7 +32,8 @@ import javax.swing.border.TitledBorder;
 public class SignUpForm extends JFrame {
 
     JTextField txtFirstName, txtLastName;
-    JTextField txtPhone, txtEmail;
+    JTextField txtPhone, txtEmail, txtLoginName;
+    JPasswordField txtPassword, txtPassword1;
 
     JComboBox birthDayYear, birthDayMonth, birthDayDay;
 
@@ -40,19 +42,19 @@ public class SignUpForm extends JFrame {
     JButton btnCancel, btnSave;
     
     public SignUpForm() {
-        this.setTitle("Cornell Application Form");
+        this.setTitle("Personal Organizer - Sign Up");
         GridBagConstraints gbc = new GridBagConstraints();
-        TitledBorder title = BorderFactory.createTitledBorder("STUDENT DETAILS");
+        TitledBorder title = BorderFactory.createTitledBorder("Personal Information");
 
         JPanel pnlFields = new JPanel();
         {
             pnlFields.setLayout(new GridBagLayout());
 
-            JPanel pnlStudentDetails = new JPanel();
+            JPanel pnlPersonalInformation = new JPanel();
             {
-                pnlStudentDetails.setLayout(new GridBagLayout());
+                pnlPersonalInformation.setLayout(new GridBagLayout());
 
-                pnlStudentDetails.setBorder(title);
+                pnlPersonalInformation.setBorder(title);
 
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 gbc.insets = new Insets(5, 10, 5, 10);
@@ -60,22 +62,48 @@ public class SignUpForm extends JFrame {
                 gbc.gridwidth = 1;
                 gbc.gridx = 0;
                 gbc.gridy = 0;
-                pnlStudentDetails.add(new JLabel("First Name: "), gbc);
+                pnlPersonalInformation.add(new JLabel("Login Name: *"), gbc);
 
                 gbc.gridx = 1;
-                pnlStudentDetails.add(txtFirstName = new JTextField("", 10), gbc);
-                //txtFirstName.setInputVerifier(new InputVerifier);
-                gbc.gridx = 2;
-                pnlStudentDetails.add(new JLabel("Last Name: "), gbc);
+                pnlPersonalInformation.add(txtLoginName = new JTextField("", 10), gbc);
+                
+                gbc.gridy = 1;
+                pnlPersonalInformation.add(txtPassword = new JPasswordField("", 10), gbc);
 
-                gbc.gridx = 3;
-                pnlStudentDetails.add(txtLastName = new JTextField("", 10), gbc);
+                gbc.gridx = 0;
+                pnlPersonalInformation.add(new JLabel("Password: *"), gbc);
+
+                gbc.gridy = 2;
+                pnlPersonalInformation.add(new JLabel("Repeat Password: *"), gbc);
+
+                gbc.gridx = 1;
+                pnlPersonalInformation.add(txtPassword1 = new JPasswordField("", 10), gbc);
 
                 gbc.gridy = 3;
+                pnlPersonalInformation.add(txtFirstName = new JTextField("", 10), gbc);
 
-                gbc.gridx = 2;
+                gbc.gridx = 0;
+                pnlPersonalInformation.add(new JLabel("First Name: "), gbc);
 
-                //pnlBankCard.add(bankCardExpiryDateMonth = new JComboBox(months));
+                gbc.gridy = 4;
+                pnlPersonalInformation.add(new JLabel("Last Name: "), gbc);
+
+                gbc.gridx = 1;
+                pnlPersonalInformation.add(txtLastName = new JTextField("", 10), gbc);
+
+                gbc.gridy = 5;
+                pnlPersonalInformation.add(txtPhone = new JTextField("", 10), gbc);
+                
+                gbc.gridx = 0;
+                pnlPersonalInformation.add(new JLabel("Phone No.: "), gbc);
+                
+                gbc.gridy = 6;
+                pnlPersonalInformation.add(new JLabel("E-mail: *"), gbc);
+                
+                gbc.gridx = 1;
+                pnlPersonalInformation.add(txtEmail = new JTextField("", 10), gbc);
+
+                gbc.gridy = 7;
                 JPanel pnlBirthDay = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 5));
                 String[] days = {"", " 01", " 02", " 03", " 04", " 05", " 06",
                     " 07", " 08", " 09", " 10", " 11", " 12", " 13", " 14", " 15", " 16",
@@ -89,49 +117,26 @@ public class SignUpForm extends JFrame {
                 pnlBirthDay.add(birthDayDay = new JComboBox(days));
                 pnlBirthDay.add(birthDayMonth = new JComboBox(months));
                 pnlBirthDay.add(birthDayYear = new JComboBox(years1));
-
-                gbc.gridx = 1;
-                pnlStudentDetails.add(pnlBirthDay, gbc);
+                pnlPersonalInformation.add(pnlBirthDay, gbc);
 
                 gbc.gridx = 0;
-                pnlStudentDetails.add(new JLabel("Date of Birth: "), gbc);
+                pnlPersonalInformation.add(new JLabel("Date of Birth: "), gbc);
 
-
-                gbc.gridy = 4;
-                gbc.gridwidth = 4;
-
-
-                gbc.gridy = 5;
-
-                gbc.gridy = 6;
-
-                gbc.gridy = 7;
-                gbc.gridwidth = 3;
-                pnlStudentDetails.add(new JLabel("If you are registered with NZQA and have an"
-                        + " NSN please write it here: "), gbc);
-                gbc.gridx = 3;
-                gbc.gridwidth = 1;
-
-                gbc.gridwidth = 4;
-                gbc.gridx = 0;
                 gbc.gridy = 0;
-                pnlFields.add(pnlStudentDetails, gbc);
+                pnlFields.add(pnlPersonalInformation, gbc);
             }
         }
         
-        
-        
-        
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        gbc.gridy = 2;
+        //gbc.gridy = 2;
         //pnlButtons.add(btnUpdate = new JButton("Update"));
         //btnUpdate.addActionListener(new UpdateListener());
 
-        gbc.gridx = 1;
+        //gbc.gridx = 1;
         pnlButtons.add(btnCancel = new JButton("Cancel"));
         //btnCancel.addActionListener(new CanceListener());
 
-        gbc.gridx = 2;
+        //gbc.gridx = 2;
         pnlButtons.add(btnSave = new JButton("Save"));
         //btnSave.addActionListener(new SaveListener());
 
@@ -139,7 +144,8 @@ public class SignUpForm extends JFrame {
         //scrollPane.setBounds(0, 0, 500, 700);
         this.add(pnlButtons, BorderLayout.SOUTH);
 
-        this.setSize(650, 300);
+        //this.setSize(550, 180);
+        this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         
