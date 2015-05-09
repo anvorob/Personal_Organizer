@@ -14,17 +14,18 @@ import com.personal_organizer.LoginForm;
 public class Personal_Organizer {
 
     public static LoginForm loginForm;
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {  
-          WelcomeForm welcomeform=new WelcomeForm();
-          welcomeform.setVisible(true);
-          Thread t=new Thread(welcomeform);
-          t.start();
-          System.out.print(""+welcomeform.isRunning());
-          loginForm = new LoginForm();
-          loginForm.setVisible(true);
+    public static void main(String[] args) {
+        WelcomeForm welcomeform = new WelcomeForm();
+        welcomeform.setVisible(true);
+        Thread t = new Thread(welcomeform);
+        t.start();
+        System.out.print("" + welcomeform.isRunning());
+        loginForm = new LoginForm();
+        loginForm.setVisible(true);
     }
-    
+
 }
