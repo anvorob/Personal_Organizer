@@ -17,10 +17,14 @@ public class Personal_Organizer {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        loginForm = new LoginForm();
-        loginForm.setVisible(true);
-                
+    public static void main(String[] args) {  
+          WelcomeForm welcomeform=new WelcomeForm();
+          welcomeform.setVisible(true);
+          Thread t=new Thread(welcomeform);
+          t.start();
+          System.out.print(""+welcomeform.isRunning());
+          loginForm = new LoginForm();
+          loginForm.setVisible(true);
     }
     
 }

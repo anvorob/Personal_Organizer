@@ -6,6 +6,7 @@
 package com.personal_organizer;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -59,6 +61,11 @@ public class LoginForm extends JFrame {
 
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         pnlButtons.add(btnLogin = new JButton("Login"), gbc);
+//        btnLogin.setOpaque(false);
+//        btnLogin.setFocusPainted(false);
+//        //btnLogin.setBorderPainted(false);
+//        btnLogin.setContentAreaFilled(false);
+//        btnLogin.setBorder(BorderFactory.); 
         btnLogin.addActionListener(new LoginListener());
         btnLogin.addMouseListener(new LoginListener());
         //pnlButtons.add(btnCancel = new JButton("Cancel"), gbc);
