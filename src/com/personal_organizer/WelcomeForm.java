@@ -18,11 +18,11 @@ import javax.swing.*;
 public class WelcomeForm extends OFrame implements Runnable{
     
     JProgressBar progressbar;
-    
     public WelcomeForm(){
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        //this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         BorderLayout border=new BorderLayout(0, 30);
         this.setLayout(border);
+        //this.setDefaultCloseOperation(OFrame.DISPOSE_ON_CLOSE);
         progressbar=new JProgressBar(0, 100);
         //progressbar.setValue(30);
         //progressbar.setSize(10, 20);
@@ -39,11 +39,12 @@ public class WelcomeForm extends OFrame implements Runnable{
         for(int i=0;i<=100;i++){
             progressbar.setValue(i);
             try{Thread.sleep(i);}catch(Exception e){}
+            isRunning();
         }
         
     }
     protected boolean isRunning(){
         int i=progressbar.getValue();
-        return i == 100;
+        return i != 100;
     }
 }

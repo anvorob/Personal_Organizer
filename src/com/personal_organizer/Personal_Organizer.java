@@ -19,11 +19,17 @@ public class Personal_Organizer {
      */
     public static void main(String[] args) {  
           WelcomeForm welcomeform=new WelcomeForm();
+          loginForm = new LoginForm();
           welcomeform.setVisible(true);
           Thread t=new Thread(welcomeform);
           t.start();
-          System.out.print(""+welcomeform.isRunning());
-          loginForm = new LoginForm();
+          while(welcomeform.isRunning()){
+              System.out.println(""+welcomeform.isRunning());
+          }
+          if(welcomeform.isRunning()==false){
+              welcomeform.setVisible(false);
+          }
+          
           loginForm.setVisible(true);
     }
     
