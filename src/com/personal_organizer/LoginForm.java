@@ -5,6 +5,7 @@
  */
 package com.personal_organizer;
 
+import com.personal_organizer.view.OButton;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;

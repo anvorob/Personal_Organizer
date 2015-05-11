@@ -16,7 +16,6 @@ import javax.swing.*;
 public class OFrame extends JFrame{
     
     public OFrame(){
-        this.setTitle("Welcome to Personal Organizer");
         this.setSize(200,400); 
         
         try {
@@ -37,4 +36,10 @@ public class OFrame extends JFrame{
         this.setResizable(false);
         this.setLocationRelativeTo(null);
     }
+    
+//    public OFrame(String title){
+//        this.setTitle(title);
+//        this();
+//        
+//    }
 }

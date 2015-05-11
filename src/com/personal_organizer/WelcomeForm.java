@@ -20,16 +20,17 @@ public class WelcomeForm extends OFrame implements Runnable{
     JProgressBar progressbar;
     public WelcomeForm(){
         //this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        BorderLayout border=new BorderLayout(0, 30);
-        this.setLayout(border);
+        BorderLayout border=new BorderLayout(0, 200);
+        this.setLayout(null);
         //this.setDefaultCloseOperation(OFrame.DISPOSE_ON_CLOSE);
         progressbar=new JProgressBar(0, 100);
+        progressbar.setBounds (0, 350, 200, 20);
         //progressbar.setValue(30);
         //progressbar.setSize(10, 20);
 //      progressbar.setString("Almost");
         progressbar.setStringPainted(true);
         //flow.addLayoutComponent("Text", progressbar);
-        this.add(progressbar, BorderLayout.SOUTH);
+        this.add(progressbar, BorderLayout.CENTER);
         this.setUndecorated(true);
     }
     
