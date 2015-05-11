@@ -14,6 +14,7 @@ import com.personal_organizer.LoginForm;
 public class Personal_Organizer {
 
     public static LoginForm loginForm;
+    public static MainForm mainform;
     /**
      * @param args the command line arguments
      */
@@ -31,6 +32,8 @@ public class Personal_Organizer {
           }
           
           loginForm.setVisible(true);
+          mainform=new MainForm();
+          mainform.setVisible(true);
     }
     
 }
