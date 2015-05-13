@@ -16,6 +16,11 @@ import javax.swing.*;
 public class OFrame extends JFrame{
     
     public OFrame(){
+        this("Welcome to Caldnedar");
+    }
+    
+    public OFrame(String title){
+        this.setTitle(title);
         this.setSize(200,400); 
         
         try {
@@ -25,7 +30,7 @@ public class OFrame extends JFrame{
                 URL url = bgimage.toURI().toURL();
                 bg.setContentType("text/html");
                 bg.setText("<html><body style='color: #ffffff; background-image: url(" + url.toString() + ");'></body></html>");
-                this.setContentPane(bg);
+                //this.setContentPane(bg);
             } catch (MalformedURLException ex) {
                 ex.printStackTrace();
                 System.out.println("Background image failed to load");
@@ -33,13 +38,8 @@ public class OFrame extends JFrame{
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(new Color(51,51,51));
-        this.setResizable(false);
+        //this.setResizable(false);
         this.setLocationRelativeTo(null);
+        
     }
-    
-//    public OFrame(String title){
-//        this.setTitle(title);
-//        this();
-//        
-//    }
 }

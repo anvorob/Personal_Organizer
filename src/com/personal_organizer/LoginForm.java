@@ -6,6 +6,7 @@
 package com.personal_organizer;
 
 import com.personal_organizer.view.OButton;
+import com.personal_organizer.view.OFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -28,7 +29,7 @@ import javax.swing.JTextField;
  *
  * @author Vorobiov Anatolii & Mikhail Novizhilov
  */
-public class LoginForm extends JFrame {
+public class LoginForm extends OFrame {
     
     JTextField txtUserId;
     JPasswordField txtPassword;
