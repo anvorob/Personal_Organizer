@@ -3,15 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Tolik/Documents/NetBeansProjects/Personal_Organizer/src/com/personal_organizer/view/OFrame.java</file>
-            <file>file:/C:/Users/Tolik/Documents/NetBeansProjects/Personal_Organizer/src/com/personal_organizer/SignUpForm.java</file>
-            <file>file:/C:/Users/Tolik/Documents/NetBeansProjects/Personal_Organizer/src/com/personal_organizer/view/OButton.java</file>
-            <file>file:/C:/Users/Tolik/Documents/NetBeansProjects/Personal_Organizer/src/com/personal_organizer/LoginForm.java</file>
-            <file>file:/C:/Users/Tolik/Documents/NetBeansProjects/Personal_Organizer/src/com/personal_organizer/MemoForm.java</file>
-            <file>file:/C:/Users/Tolik/Documents/NetBeansProjects/Personal_Organizer/src/com/personal_organizer/WelcomeForm.java</file>
-            <file>file:/C:/Users/Tolik/Documents/NetBeansProjects/Personal_Organizer/src/com/personal_organizer/MainForm.java</file>
-            <file>file:/C:/Users/Tolik/Documents/NetBeansProjects/Personal_Organizer/src/com/personal_organizer/view/RoundedBorder.java</file>
-            <file>file:/C:/Users/Tolik/Documents/NetBeansProjects/Personal_Organizer/src/com/personal_organizer/Personal_Organizer.java</file>
+            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/db/DBFunctions.java</file>
+            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/MainForm.java</file>
+            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/Personal_Organizer.java</file>
+            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/dao/DAO.java</file>
         </group>
     </open-files>
 </project-private>
