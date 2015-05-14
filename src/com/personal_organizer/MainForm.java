@@ -160,6 +160,7 @@ public class MainForm extends JFrame implements ActionListener{
             
             this.pack();
             this.setLocationRelativeTo(null);
+            this.setResizable(false);
         }
 
     @Override

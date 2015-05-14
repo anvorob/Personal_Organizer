@@ -21,7 +21,7 @@ public class Personal_Organizer {
      */
     public static void main(String[] args) {  
 //          WelcomeForm welcomeform=new WelcomeForm();
-//          loginForm = new LoginForm();
+          loginForm = new LoginForm();
 //          welcomeform.setVisible(true);
 //          Thread t=new Thread(welcomeform);
 //          t.start();
@@ -32,9 +32,9 @@ public class Personal_Organizer {
 //              welcomeform.setVisible(false);
 //          }
 //          
-//          loginForm.setVisible(true);
-          mainform=new MainForm();
-          mainform.setVisible(true);
+          loginForm.setVisible(true);
+          //mainform=new MainForm();
+          //mainform.setVisible(true);
     }
     
 }

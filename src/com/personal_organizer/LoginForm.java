@@ -5,6 +5,7 @@
  */
 package com.personal_organizer;
 
+import com.personal_organizer.dao.DAO;
 import com.personal_organizer.view.OButton;
 import com.personal_organizer.view.OFrame;
 import java.awt.BorderLayout;
@@ -17,6 +18,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,11 +34,15 @@ import javax.swing.JTextField;
  * @author Vorobiov Anatolii & Mikhail Novizhilov
  */
 public class LoginForm extends OFrame {
-    
-    JTextField txtUserId;
-    JPasswordField txtPassword;
-    JButton btnCancel, btnLogin, btnSignUp;
-    
+
+    protected MainForm mainform;
+    protected JTextField txtUserId;
+    protected JPasswordField txtPassword;
+    protected JButton btnCancel, btnLogin, btnSignUp;
+    protected static final String DB_SERVER_NAME = "localhost";
+    protected static final String DB_USERID = "sa";
+    protected static final String DB_PASSWORD = "NA@!ru30";
+
     public LoginForm() {
 
         this.setTitle("Personal Organizer - Login");
@@ -54,9 +62,11 @@ public class LoginForm extends OFrame {
 
         gbc.gridx = 1;
         pnlLogin.add(txtUserId = new JTextField(10), gbc);
+        txtUserId.setText("mic");
 
         gbc.gridy = 1;
         pnlLogin.add(txtPassword = new JPasswordField(10), gbc);
+        txtPassword.setText("123");
 
         gbc.gridx = 0;
         pnlLogin.add(new JLabel("Password"), gbc);
@@ -75,7 +85,7 @@ public class LoginForm extends OFrame {
         pnlButtons.add(btnSignUp = new JButton("Sign Up"), gbc);
         btnSignUp.addActionListener(new LoginListener());
         btnSignUp.addMouseListener(new LoginListener());
- 
+
         this.add(pnlLogin, BorderLayout.CENTER);
         this.add(pnlButtons, BorderLayout.SOUTH);
 
@@ -83,16 +93,78 @@ public class LoginForm extends OFrame {
         this.setLocationRelativeTo(null);
 
     }
-    
+
+    protected boolean checkUserPassword() {
+        boolean unswer = false;
+        String userName = txtUserId.getText();
+        System.out.println("User ID: '" + userName + "'\n(userName == \"\") = " + (userName.equals("")));
+
+        if (userName.equals("")) {
+            System.out.println("User ID can't be empty.");
+        } else {
+            String userPassword = txtPassword.getText();
+            System.out.println("Password: '" + userPassword + "'\n(userPassword == \"\") = " + (userPassword.equals("")));
+            if (userPassword.equals("")) {
+                System.out.println("Password can't be empty.");
+            } else {
+                userPassword = md5Custom(userPassword);
+                System.out.println(userPassword);
+                DAO dao = new DAO(DB_SERVER_NAME, DB_USERID, DB_PASSWORD);
+                unswer = dao.checkUserPassword(userName, userPassword);
+                if (!unswer) {
+                    System.out.println("The combination of user and password"
+                            + " was not found.\nTry agaim.");
+                } else {
+                    System.out.println("Wellcome " + userName + "!");
+                    mainform = new MainForm();
+                    this.setVisible(false);
+                    mainform.setVisible(true);
+                }
+            }
+
+        }
+
+        return unswer;
+    }
+
+    public static String md5Custom(String st) {
+        MessageDigest messageDigest = null;
+        byte[] digest = new byte[0];
+
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.reset();
+            messageDigest.update(st.getBytes());
+            digest = messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            // тут можно обработать ошибку
+            // возникает она если в передаваемый алгоритм в getInstance(,,,) не существует
+            e.printStackTrace();
+        }
+
+        BigInteger bigInt = new BigInteger(1, digest);
+        String md5Hex = bigInt.toString(16);
+
+        while (md5Hex.length() < 32) {
+            md5Hex = "0" + md5Hex;
+        }
+
+        return md5Hex;
+    }
+
     class LoginListener implements MouseListener, ActionListener {
 
-        public void listener(Object o){
-            if(o == btnSignUp) {
+        public void listener(Object o) {
+            if (o == btnSignUp) {
                 Personal_Organizer.loginForm.setVisible(false);
                 new SignUpForm();
+            } else if (o == btnLogin) {
+                if (checkUserPassword()) {
+
+                }
             }
         }
-        
+
         @Override
         public void mouseClicked(MouseEvent e) {
             listener(e.getSource());
@@ -117,7 +189,7 @@ public class LoginForm extends OFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
         }
-        
+
     }
-    
+
 }
