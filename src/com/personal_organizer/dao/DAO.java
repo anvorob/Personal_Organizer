@@ -5,6 +5,8 @@
  */
 package com.personal_organizer.dao;
 
+import com.personal_organizer.Personal_Organizer;
+import com.personal_organizer.UserProfile;
 import com.personal_organizer.db.DBFunctions;
 
 /**
@@ -13,16 +15,23 @@ import com.personal_organizer.db.DBFunctions;
  */
 public class DAO {
     
-    DBFunctions db;
     
     public DAO (String db_server_name, String db_userid, String db_password){
         
-        db = new DBFunctions(db_server_name, db_userid, db_password);
+        Personal_Organizer.db = new DBFunctions(db_server_name, db_userid, db_password);
 
     }
 
-    public boolean checkUserPassword(String userName, String password){
+    public boolean checkUserPassword(UserProfile userProfile){
         
-        return db.checkUserPassword(userName, password);
+        return Personal_Organizer.db.checkUserPassword(userProfile);
+    }
+    
+    public boolean isTheLoginNameNotUsed(){
+        return Personal_Organizer.db.isTheLoginNameNotUsed();
+    }
+    
+    public void saveUpdateUserPassword(String command){
+        Personal_Organizer.db.saveUpdateUserPassword(command);
     }
 }

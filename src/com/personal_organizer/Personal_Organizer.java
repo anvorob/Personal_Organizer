@@ -6,6 +6,8 @@
 package com.personal_organizer;
 
 import com.personal_organizer.LoginForm;
+import com.personal_organizer.dao.DAO;
+import com.personal_organizer.db.DBFunctions;
 
 /**
  *
@@ -15,6 +17,14 @@ public class Personal_Organizer {
 
     public static LoginForm loginForm;
     public static MainForm mainform;
+    public static UserProfile userProfile;
+    public static SignUpForm signUpForm;
+    public static DBFunctions db;
+    public static DAO dao;
+    public static final String DB_SERVER_NAME = "localhost";
+    public static final String DB_USERID = "sa";
+    public static final String DB_PASSWORD = "NA@!ro20";
+    
     
     /**
      * @param args the command line arguments
@@ -37,4 +47,8 @@ public class Personal_Organizer {
           //mainform.setVisible(true);
     }
     
+    public static void connectDB(){
+        dao = new DAO(DB_SERVER_NAME, DB_USERID, DB_PASSWORD);
+
+    }
 }

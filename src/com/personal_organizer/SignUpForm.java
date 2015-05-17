@@ -5,22 +5,21 @@
  */
 package com.personal_organizer;
 
+import com.personal_organizer.dao.DAO;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
@@ -40,7 +39,7 @@ public class SignUpForm extends JFrame {
     JScrollPane scrollPane;
 
     JButton btnCancel, btnSave;
-    
+
     public SignUpForm() {
         this.setTitle("Personal Organizer - Sign Up");
         GridBagConstraints gbc = new GridBagConstraints();
@@ -66,10 +65,11 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLoginName = new JTextField("", 10), gbc);
+                txtLoginName.setText("mic");
 
-                
                 gbc.gridy = 1;
                 pnlPersonalInformation.add(txtPassword = new JPasswordField("", 10), gbc);
+                txtPassword.setText("micmic");
 
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("Password: *"), gbc);
@@ -79,6 +79,7 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtPassword1 = new JPasswordField("", 10), gbc);
+                txtPassword1.setText("micmic");
 
                 gbc.gridy = 3;
                 pnlPersonalInformation.add(txtFirstName = new JTextField("", 10), gbc);
@@ -94,15 +95,16 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridy = 5;
                 pnlPersonalInformation.add(txtPhone = new JTextField("", 10), gbc);
-                
+
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("Phone No.: "), gbc);
-                
+
                 gbc.gridy = 6;
                 pnlPersonalInformation.add(new JLabel("E-mail: *"), gbc);
-                
+
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtEmail = new JTextField("", 10), gbc);
+                txtEmail.setText("mixnov@bk.ru");
 
                 gbc.gridy = 7;
                 JPanel pnlBirthDay = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 5));
@@ -127,7 +129,7 @@ public class SignUpForm extends JFrame {
                 pnlFields.add(pnlPersonalInformation, gbc);
             }
         }
-        
+
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         //gbc.gridy = 2;
         //pnlButtons.add(btnUpdate = new JButton("Update"));
@@ -135,11 +137,11 @@ public class SignUpForm extends JFrame {
 
         //gbc.gridx = 1;
         pnlButtons.add(btnCancel = new JButton("Cancel"));
-        //btnCancel.addActionListener(new CanceListener());
+        btnCancel.addActionListener(new SignUpListener());
 
         //gbc.gridx = 2;
         pnlButtons.add(btnSave = new JButton("Save"));
-        //btnSave.addActionListener(new SaveListener());
+        btnSave.addActionListener(new SignUpListener());
 
         this.add(scrollPane = new JScrollPane(pnlFields), BorderLayout.CENTER);
         //scrollPane.setBounds(0, 0, 500, 700);
@@ -148,8 +150,59 @@ public class SignUpForm extends JFrame {
         //this.setSize(550, 180);
         this.pack();
         this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        
+        //this.setVisible(true);
+
+    }
+
+    class SignUpListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == btnCancel) {
+                setVisible(false);
+                Personal_Organizer.loginForm.setVisible(true);
+            } else {
+                if (e.getSource() == btnSave) {
+                    System.out.println("btnSave");
+                    if (txtLoginName.getText().equals("")) {
+                        System.out.println("The field 'Login Name' can not be empty!");
+                    } else {
+                        System.out.println("-----------The field 'Login Name' can not be empty!");
+                        if (txtEmail.getText().equals("")) {
+                            System.out.println("The field 'E-Mail' can not be empty!");
+                        } else {
+                            System.out.println("------------The field 'E-Mail' can not be empty!");
+                            if (!txtPassword.getText().equals(txtPassword1.getText())) {
+                                System.out.println("Password are not the same!");
+                            } else {
+                                System.out.println("-----------------Password are not the same!");
+                                if (txtPassword.getText().length() < 5) {
+                                    System.out.println("The minimal Password's length is 5 characters!");
+                                } else {
+                                    System.out.println("----------------The minimal Password's length is 5 characters!");
+                                    setUserProfile();
+                                    Personal_Organizer.connectDB();
+                                    if (!Personal_Organizer.dao.isTheLoginNameNotUsed()) {
+                                        System.out.println("The Login name '" + Personal_Organizer.userProfile.getUserName() + "' is already used.");
+                                    } else {
+                                        Personal_Organizer.dao.saveUpdateUserPassword("save");
+                                    };
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void setUserProfile() {
+        System.out.println("setUserProfile");
+
+        Personal_Organizer.userProfile = new UserProfile(txtLoginName.getText(),
+                txtPassword.getText(), txtEmail.getText());
+
     }
 
 }

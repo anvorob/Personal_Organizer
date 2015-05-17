@@ -6,10 +6,8 @@
 package com.personal_organizer;
 
 import com.personal_organizer.dao.DAO;
-import com.personal_organizer.view.OButton;
 import com.personal_organizer.view.OFrame;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,12 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -35,13 +28,11 @@ import javax.swing.JTextField;
  */
 public class LoginForm extends OFrame {
 
-    protected MainForm mainform;
-    protected JTextField txtUserId;
-    protected JPasswordField txtPassword;
-    protected JButton btnCancel, btnLogin, btnSignUp;
-    protected static final String DB_SERVER_NAME = "localhost";
-    protected static final String DB_USERID = "sa";
-    protected static final String DB_PASSWORD = "NA@!ru30";
+    private boolean showCommentForDebuging = false;
+    private MainForm mainform;
+    private JTextField txtUserId;
+    private JPasswordField txtPassword;
+    private JButton btnCancel, btnLogin, btnSignUp;
 
     public LoginForm() {
 
@@ -91,26 +82,24 @@ public class LoginForm extends OFrame {
 
         this.pack();
         this.setLocationRelativeTo(null);
-
     }
 
-    protected boolean checkUserPassword() {
+    private boolean checkUserPassword() {
         boolean unswer = false;
         String userName = txtUserId.getText();
-        System.out.println("User ID: '" + userName + "'\n(userName == \"\") = " + (userName.equals("")));
+        print("User ID: '" + userName + "'\n(userName == \"\") = " + (userName.equals("")));
 
         if (userName.equals("")) {
-            System.out.println("User ID can't be empty.");
+            print("User ID can't be empty.");
         } else {
             String userPassword = txtPassword.getText();
-            System.out.println("Password: '" + userPassword + "'\n(userPassword == \"\") = " + (userPassword.equals("")));
+            print("Password: '" + userPassword + "'\n(userPassword == \"\") = " + (userPassword.equals("")));
             if (userPassword.equals("")) {
-                System.out.println("Password can't be empty.");
+                print("Password can't be empty.");
             } else {
-                userPassword = md5Custom(userPassword);
-                System.out.println(userPassword);
-                DAO dao = new DAO(DB_SERVER_NAME, DB_USERID, DB_PASSWORD);
-                unswer = dao.checkUserPassword(userName, userPassword);
+                Personal_Organizer.userProfile = new UserProfile(userName, userPassword);
+                Personal_Organizer.connectDB();
+                unswer = Personal_Organizer.dao.checkUserPassword(Personal_Organizer.userProfile);
                 if (!unswer) {
                     System.out.println("The combination of user and password"
                             + " was not found.\nTry agaim.");
@@ -121,35 +110,8 @@ public class LoginForm extends OFrame {
                     mainform.setVisible(true);
                 }
             }
-
         }
-
         return unswer;
-    }
-
-    public static String md5Custom(String st) {
-        MessageDigest messageDigest = null;
-        byte[] digest = new byte[0];
-
-        try {
-            messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.reset();
-            messageDigest.update(st.getBytes());
-            digest = messageDigest.digest();
-        } catch (NoSuchAlgorithmException e) {
-            // тут можно обработать ошибку
-            // возникает она если в передаваемый алгоритм в getInstance(,,,) не существует
-            e.printStackTrace();
-        }
-
-        BigInteger bigInt = new BigInteger(1, digest);
-        String md5Hex = bigInt.toString(16);
-
-        while (md5Hex.length() < 32) {
-            md5Hex = "0" + md5Hex;
-        }
-
-        return md5Hex;
     }
 
     class LoginListener implements MouseListener, ActionListener {
@@ -157,7 +119,10 @@ public class LoginForm extends OFrame {
         public void listener(Object o) {
             if (o == btnSignUp) {
                 Personal_Organizer.loginForm.setVisible(false);
-                new SignUpForm();
+                if (Personal_Organizer.signUpForm == null) {
+                    Personal_Organizer.signUpForm = new SignUpForm();
+                }
+                Personal_Organizer.signUpForm.setVisible(true);
             } else if (o == btnLogin) {
                 if (checkUserPassword()) {
 
@@ -190,6 +155,12 @@ public class LoginForm extends OFrame {
         public void actionPerformed(ActionEvent e) {
         }
 
+    }
+
+    private void print(String str) {
+        if (showCommentForDebuging) {
+            System.out.println(str);
+        }
     }
 
 }
