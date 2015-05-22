@@ -11,6 +11,7 @@ package com.personal_organizer;
  */
 import com.personal_organizer.calendar.DateListener;
 import com.personal_organizer.calendar.JCalendar;
+import com.personal_organizer.modules.Tools;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,18 +20,19 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-public class MainForm extends JFrame implements ActionListener{
-    
+
+public class MainForm extends JFrame implements ActionListener {
+
     JMenuBar topmenu;
     JMenu memo;
     JMenu calendar;
     JMenu contacts;
     JMenu messenger;
     JMenu info;
-    
+
     JMenuItem showmessenger;
     JMenuItem messengercontact;
-    
+
     JMenuItem infoabout;
     JMenuItem infohelp;
 
@@ -40,89 +42,86 @@ public class MainForm extends JFrame implements ActionListener{
     JPanel pnleventstable;
     JPanel pnleventbtns;
     JPanel pnlstatusbar;
-    
+
     JTable tblevents;
-    
+
     JLabel statustitle;
     JLabel statusdescript;
     JLabel eventtitle;
-    
+
     JButton btneventnext;
     JButton btneventprev;
     JButton btnaddevent;
     JButton btndeleteevent;
     JButton btnviewevent;
-    
-    MemoForm memoform;
-        public MainForm(){
-            
-            this.setTitle("MainForm");
-            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            topmenu = new JMenuBar();
-            memo=new JMenu("Memo");
-            calendar=new JMenu("Calendar");
-            contacts=new JMenu("Contacts");
-            messenger=new JMenu("Messenger");
-            info=new JMenu("Info");
-            
-            messenger.add(showmessenger=new JMenuItem("Show Messenger"));
-            messenger.add(messengercontact=new JMenuItem("Contact List"));
-            
-            info.add(infoabout=new JMenuItem("About"));
-            info.add(infohelp=new JMenuItem("Help"));
-            
-            memo.addMenuListener(new MListeners());
-            
-            
-            this.setLayout(new BorderLayout());
-            topmenu.add(memo);
-            topmenu.add(calendar);
-            topmenu.add(contacts);
-            topmenu.add(messenger);
-            topmenu.add(info);
-            
-            this.setJMenuBar(topmenu);
-            eventtitle=new JLabel("", SwingConstants.CENTER);
-            pnlcalendar=new JPanel();
-            
-            JCalendar cal = new JCalendar();
-	    cal.addDateListener(new DateListener(){
 
-	      @Override
-	      public void dateChanged(Calendar new_c) {
-		int day = new_c.get(Calendar.DAY_OF_MONTH);
-		int month = new_c.get(Calendar.MONTH) + 1;
-		int year = new_c.get(Calendar.YEAR);
-		System.out.println("Selected: " + day + "/" +
-		            month + "/" + year + " (DD/MM/YYYY)");
-                eventtitle.setText(""+day+"/"+month+"/"+year);
-	      }
-	      
-	    });
-	    this.getContentPane().add(cal, BorderLayout.NORTH);
-            
-            
-            pnlevents=new JPanel(new BorderLayout());
-            pnleventscontrol = new JPanel(new BorderLayout());
-            btneventnext=new JButton("Next");
-            btneventprev=new JButton("Prev");
-            //eventtitle=new JLabel("Title");
-            pnleventscontrol.add(btneventprev, BorderLayout.EAST);
-            pnleventscontrol.add(eventtitle, BorderLayout.CENTER);
-            pnleventscontrol.add(btneventnext, BorderLayout.WEST);
-            
-            pnleventstable = new JPanel();
-            String columns[]={"Title","Description","Time From","Time Till","Type","Contacts"};
-            Object[][] data={{"Business meeting","140 Hobson","9:00","10:00","Meeting","Tom"},
-            {"","","","","",""},
-            {"","","","","",""},
-            {"","","","","",""},
-            {"","","","","",""},
-            {"","","","","",""}};
-            tblevents=new JTable(data,columns);
-            tblevents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-            System.out.println(""+tblevents.getModel().getValueAt(0, 2));
-            
+    MemoForm memoform;
+
+    public MainForm() {
+
+        this.setTitle(Tools.caption());
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        topmenu = new JMenuBar();
+        memo = new JMenu("Memo");
+        calendar = new JMenu("Calendar");
+        contacts = new JMenu("Contacts");
+        messenger = new JMenu("Messenger");
+        info = new JMenu("Info");
+
+        messenger.add(showmessenger = new JMenuItem("Show Messenger"));
+        messenger.add(messengercontact = new JMenuItem("Contact List"));
+
+        info.add(infoabout = new JMenuItem("About"));
+        info.add(infohelp = new JMenuItem("Help"));
+
+        memo.addMenuListener(new MListeners());
+
+        this.setLayout(new BorderLayout());
+        topmenu.add(memo);
+        topmenu.add(calendar);
+        topmenu.add(contacts);
+        topmenu.add(messenger);
+        topmenu.add(info);
+
+        this.setJMenuBar(topmenu);
+        eventtitle = new JLabel("", SwingConstants.CENTER);
+        pnlcalendar = new JPanel();
+
+        JCalendar cal = new JCalendar();
+        cal.addDateListener(new DateListener() {
+
+            @Override
+            public void dateChanged(Calendar new_c) {
+                int day = new_c.get(Calendar.DAY_OF_MONTH);
+                int month = new_c.get(Calendar.MONTH) + 1;
+                int year = new_c.get(Calendar.YEAR);
+                System.out.println("Selected: " + day + "/"
+                        + month + "/" + year + " (DD/MM/YYYY)");
+                eventtitle.setText("" + day + "/" + month + "/" + year);
+            }
+
+        });
+        this.getContentPane().add(cal, BorderLayout.NORTH);
+
+        pnlevents = new JPanel(new BorderLayout());
+        pnleventscontrol = new JPanel(new BorderLayout());
+        //eventtitle=new JLabel("Title");
+        pnleventscontrol.add(btneventprev = new JButton("Prev"), BorderLayout.WEST);
+        pnleventscontrol.add(eventtitle, BorderLayout.CENTER);
+        pnleventscontrol.add(btneventnext = new JButton("Next"), BorderLayout.EAST);
+
+        pnleventstable = new JPanel();
+        String columns[] = {"Title", "Description", "Time From", "Time Till", "Type", "Contacts"};
+        Object[][] data = {{"Business meeting", "140 Hobson", "9:00", "10:00", "Meeting", "Tom"},
+        {"", "", "", "", "", ""},
+        {"", "", "", "", "", ""},
+        {"", "", "", "", "", ""},
+        {"", "", "", "", "", ""},
+        {"", "", "", "", "", ""}};
+        tblevents = new JTable(data, columns);
+        tblevents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        System.out.println("" + tblevents.getModel().getValueAt(0, 2));
+
 //            tblevents.getColumnModel().getColumn(0).setPreferredWidth(27);
 //            tblevents.getColumnModel().getColumn(1).setPreferredWidth(120);
 //            tblevents.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -133,46 +132,46 @@ public class MainForm extends JFrame implements ActionListener{
 //            tblevents.getColumnModel().getColumn(8).setPreferredWidth(95);
 //            tblevents.getColumnModel().getColumn(9).setPreferredWidth(40);
 //            tblevents.getColumnModel().getColumn(10).setPreferredWidth(400);
-            
-            JScrollPane scroll=new JScrollPane(tblevents);
-            pnleventstable.add(scroll);
-            
-            pnleventbtns= new JPanel(new FlowLayout((int) CENTER_ALIGNMENT, 10,5));
-            pnleventbtns.add(btnaddevent=new JButton("Add Event"));
-            pnleventbtns.add(btndeleteevent=new JButton("Delete Event"));
-            pnleventbtns.add(btnviewevent=new JButton("View Event"));
-            
-            pnlevents.add(pnleventscontrol, BorderLayout.NORTH);
-            pnlevents.add(pnleventstable, BorderLayout.CENTER);
-            pnlevents.add(pnleventbtns, BorderLayout.SOUTH);
-            this.add(pnlevents, BorderLayout.CENTER);
-            
-            pnlstatusbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            pnlstatusbar.setBorder(new BevelBorder(BevelBorder.LOWERED));
-            pnlstatusbar.setBackground(Color.GRAY);
-            
-            pnlstatusbar.add(statustitle= new JLabel("Title", SwingConstants.RIGHT));
-            pnlstatusbar.add(statusdescript=new JLabel("Description"));
-                    
-            statustitle.setText(""+tblevents.getModel().getValueAt(0, 0));
-            statusdescript.setText(": "+tblevents.getModel().getValueAt(0, 1));
-            this.add(pnlstatusbar, BorderLayout.SOUTH);
-            
-            this.pack();
-            this.setLocationRelativeTo(null);
-            this.setResizable(false);
-        }
+        JScrollPane scroll = new JScrollPane(tblevents);
+        pnleventstable.add(scroll);
+
+        pnleventbtns = new JPanel(new FlowLayout((int) CENTER_ALIGNMENT, 10, 5));
+        pnleventbtns.add(btnaddevent = new JButton("Add Event"));
+        pnleventbtns.add(btndeleteevent = new JButton("Delete Event"));
+        pnleventbtns.add(btnviewevent = new JButton("View Event"));
+
+        pnlevents.add(pnleventscontrol, BorderLayout.NORTH);
+        pnlevents.add(pnleventstable, BorderLayout.CENTER);
+        pnlevents.add(pnleventbtns, BorderLayout.SOUTH);
+        this.add(pnlevents, BorderLayout.CENTER);
+
+        pnlstatusbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pnlstatusbar.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        pnlstatusbar.setBackground(Color.GRAY);
+
+        pnlstatusbar.add(statustitle = new JLabel("Title", SwingConstants.RIGHT));
+        pnlstatusbar.add(statusdescript = new JLabel("Description"));
+
+        statustitle.setText("" + tblevents.getModel().getValueAt(0, 0));
+        statusdescript.setText(": " + tblevents.getModel().getValueAt(0, 1));
+        this.add(pnlstatusbar, BorderLayout.SOUTH);
+
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-        class MListeners  implements MenuListener{
+
+    class MListeners implements MenuListener {
 
         @Override
         public void menuSelected(MenuEvent e) {
-            if(e.getSource()==memo){
-                memoform=new MemoForm();
+            if (e.getSource() == memo) {
+                memoform = new MemoForm();
                 memoform.setVisible(true);
             }
         }
@@ -186,8 +185,6 @@ public class MainForm extends JFrame implements ActionListener{
         public void menuCanceled(MenuEvent e) {
             System.out.println("Menu cenceled");
         }
-    
-}
-}
 
-
+    }
+}

@@ -6,6 +6,7 @@
 package com.personal_organizer;
 
 import com.personal_organizer.dao.DAO;
+import com.personal_organizer.db.DBFunctions;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -181,11 +182,11 @@ public class SignUpForm extends JFrame {
                                 } else {
                                     System.out.println("----------------The minimal Password's length is 5 characters!");
                                     setUserProfile();
-                                    Personal_Organizer.connectDB();
-                                    if (!Personal_Organizer.dao.isTheLoginNameNotUsed()) {
+                                    DBFunctions db = new DBFunctions();
+                                    if (!db.isTheLoginNameNotUsed()) {
                                         System.out.println("The Login name '" + Personal_Organizer.userProfile.getUserName() + "' is already used.");
                                     } else {
-                                        Personal_Organizer.dao.saveUpdateUserPassword("save");
+                                        db.saveUpdateUserPassword("save");
                                     };
 
                                 }
