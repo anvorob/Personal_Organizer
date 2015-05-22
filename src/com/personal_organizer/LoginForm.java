@@ -82,12 +82,10 @@ public class LoginForm extends OFrame {
 //        btnLogin.setContentAreaFilled(false);
 //        btnLogin.setBorder(BorderFactory.); 
         btnLogin.addActionListener(new LoginListener());
-        btnLogin.addMouseListener(new LoginListener());
         //pnlButtons.add(btnCancel = new JButton("Cancel"), gbc);
         //btnCancel.addActionListener(new CanceListener());
         pnlButtons.add(btnSignUp = new JButton("Sign Up"), gbc);
         btnSignUp.addActionListener(new LoginListener());
-        btnSignUp.addMouseListener(new LoginListener());
 
         this.add(pnlLogin, BorderLayout.CENTER);
         this.add(pnlButtons, BorderLayout.SOUTH);
@@ -133,7 +131,7 @@ public class LoginForm extends OFrame {
         }
     }
 
-    class LoginListener implements MouseListener, ActionListener {
+    class LoginListener implements ActionListener {
 
         public void listener(Object o) {
             Tools.time = System.currentTimeMillis();
@@ -146,27 +144,6 @@ public class LoginForm extends OFrame {
             } else if (o == btnLogin) {
                 checkUserPassword();
             }
-        }
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            //listener(e.getSource());
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
         }
 
         @Override
