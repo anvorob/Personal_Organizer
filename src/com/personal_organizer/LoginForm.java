@@ -12,43 +12,54 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 /**
  *
  * @author Vorobiov Anatolii & Mikhail Novizhilov
  */
 public class LoginForm extends OFrame {
-
-    private boolean showCommentForDebuging = false;
+    
     private MainForm mainform;
-    private JTextField txtUserId;
+    private JTextField txtUserName;
     private JPasswordField txtPassword;
+    private JTextField txtServerAddress;
+    private JTextField txtServerUserName;
+    private JPasswordField txtServerPassword;
     private JButton btnCancel, btnLogin, btnSignUp;
     private JCheckBox chbxRememberLogin;
-
+    private JCheckBox chbxRememberSQLSettings;
+    
     public LoginForm() {
-
+        
         this.setTitle("Personal Organizer - Login");
         //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        this.addWindowListener(new CloseListener());
+        JPanel pnlMain = new JPanel();
+        pnlMain.setLayout(new GridLayout(0, 1));
+        
         JPanel pnlLogin = new JPanel();
         pnlLogin.setLayout(new GridBagLayout());
+        TitledBorder title = BorderFactory.createTitledBorder("Login");
+        pnlLogin.setBorder(title);
         GridBagConstraints gbc = new GridBagConstraints();
-
+        
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 10, 5, 10);
         gbc.gridheight = 1;
@@ -56,23 +67,62 @@ public class LoginForm extends OFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         pnlLogin.add(new JLabel("User ID"), gbc);
-
+        
         gbc.gridx = 1;
-        pnlLogin.add(txtUserId = new JTextField(10), gbc);
-        txtUserId.setText("mic");
-
+        pnlLogin.add(txtUserName = new JTextField(10), gbc);
+        txtUserName.setText("mic");
+        
         gbc.gridy = 1;
         pnlLogin.add(txtPassword = new JPasswordField(10), gbc);
         txtPassword.setText("123");
-
+        
         gbc.gridx = 0;
         pnlLogin.add(new JLabel("Password"), gbc);
+        
+        JPanel pnlSQLSettings = new JPanel(new GridBagLayout());
+        title = BorderFactory.createTitledBorder("SQL server settings");
+        pnlSQLSettings.setBorder(title);
+        
+        gbc.gridy = 0;
+        
+        pnlSQLSettings.add(new JLabel("Address:"), gbc);
+        
+        gbc.gridx = 1;
+        pnlSQLSettings.add(txtServerAddress = new JTextField(10), gbc);
+        //txtServerAddress.setText("");
 
+        gbc.gridy = 1;
+        pnlSQLSettings.add(txtServerUserName = new JTextField(10), gbc);
+        //txtServerUserName.setText("sa");
+
+        gbc.gridx = 0;
+        pnlSQLSettings.add(new JLabel("User ID"), gbc);
+        
         gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        //gbc.fill = GridBagLayout.;
-        pnlLogin.add(chbxRememberLogin = new JCheckBox("Remenber Login and Password"), gbc);
+        pnlSQLSettings.add(new JLabel("Password:"), gbc);
+        
+        gbc.gridx = 1;
+        pnlSQLSettings.add(txtServerPassword = new JPasswordField(10), gbc);
+        //txtServerPassword.setText("");
 
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        JPanel pnlRememberSQLSettings = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        pnlRememberSQLSettings.add(chbxRememberSQLSettings = new JCheckBox("Remenber SQL Settings"));
+        pnlSQLSettings.add(pnlRememberSQLSettings, gbc);
+
+        //gbc.gridy = 3;
+        //pnlLogin.add(pnlSQLSettings, gbc);
+        gbc.gridy = 2;
+        JPanel pnlRememberLogin = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        
+        pnlRememberLogin.add(chbxRememberLogin = new JCheckBox("Remenber Login and Password"));
+        pnlLogin.add(pnlRememberLogin, gbc);
+        
+        pnlMain.add(pnlLogin);
+        pnlMain.add(pnlSQLSettings);
+        
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         pnlButtons.add(btnLogin = new JButton("Login"));
 
@@ -86,102 +136,201 @@ public class LoginForm extends OFrame {
         //btnCancel.addActionListener(new CanceListener());
         pnlButtons.add(btnSignUp = new JButton("Sign Up"), gbc);
         btnSignUp.addActionListener(new LoginListener());
-
-        this.add(pnlLogin, BorderLayout.CENTER);
+        
+        readSettings();
+        
+        this.add(pnlMain, BorderLayout.CENTER);
         this.add(pnlButtons, BorderLayout.SOUTH);
-
+        
         this.pack();
         this.setLocationRelativeTo(null);
     }
-
+    
     private void checkUserPassword() {
         boolean unswer = false;
-        String userName = txtUserId.getText();
-        print("User ID: '" + userName + "'\n(userName == \"\") = " + (userName.equals("")));
-        Tools.diff("String userName = txtUserId.getText();", System.currentTimeMillis());
-        if (userName.equals("")) {
-            print("User ID can't be empty.");
+//        String userName = txtUserName.getText();
+//        Tools.print("User ID: '" + userName + "'\n(userName == \"\") = " + (userName.equals("")));
+//        //Tools.diff("String userName = txtUserName.getText();", System.currentTimeMillis());
+//        if (userName.equals("")) {
+//            Tools.print("User ID can't be empty.");
+//        } else {
+//            String userPassword = txtPassword.getText();
+//            Tools.print("Password: '" + userPassword + "'\n(userPassword == \"\") = " + (userPassword.equals("")));
+//            //Tools.diff("String userPassword = txtPassword.getText();", System.currentTimeMillis());
+//            if (userPassword.equals("")) {
+//                Tools.print("Password can't be empty.");
+//            } else {
+//                DBFunctions db = new DBFunctions();
+//                //Tools.diff("DBFunctions db = new DBFunctions();", System.currentTimeMillis());
+//                Personal_Organizer.userProfile = new UserProfile(userName, userPassword);
+//                //Tools.diff("Personal_Organizer.userProfile = new UserProfile(userName, userPassword);", System.currentTimeMillis());
+//                unswer = db.checkUserPassword(Personal_Organizer.userProfile);
+//                //Tools.diff("unswer = db.checkUserPassword(Personal_Organizer.userProfile);", System.currentTimeMillis());
+//                if (!unswer) {
+//                    System.out.println("The combination of user and password"
+//                            + " was not found.\nTry agaim.");
+//                } else {
+//                    System.out.println("Wellcome " + userName + "!");
+//                    //Tools.diff("System.out.println(\"Wellcome \" + userName + \"!\");", System.currentTimeMillis());
+//                    mainform = new MainForm();
+//                    //Tools.diff("mainform = new MainForm();", System.currentTimeMillis());
+//                    this.setVisible(false);
+//                    //Tools.diff("this.setVisible(false);", System.currentTimeMillis());
+//                    mainform.setVisible(true);
+//                    //Tools.diff("mainform.setVisible(true);", System.currentTimeMillis());
+//                }
+//            }
+//        }
+        unswer = DBFunctions.checkUserPassword(this);
+        
+        if (!unswer) {
+            System.out.println("The combination of user and password"
+                    + " was not found.\nTry agaim.");
         } else {
-            String userPassword = txtPassword.getText();
-            print("Password: '" + userPassword + "'\n(userPassword == \"\") = " + (userPassword.equals("")));
-            Tools.diff("String userPassword = txtPassword.getText();", System.currentTimeMillis());
-            if (userPassword.equals("")) {
-                print("Password can't be empty.");
-            } else {
-                DBFunctions db = new DBFunctions();
-                Tools.diff("DBFunctions db = new DBFunctions();", System.currentTimeMillis());
-                Personal_Organizer.userProfile = new UserProfile(userName, userPassword);
-                Tools.diff("Personal_Organizer.userProfile = new UserProfile(userName, userPassword);", System.currentTimeMillis());
-                unswer = db.checkUserPassword(Personal_Organizer.userProfile);
-                Tools.diff("unswer = db.checkUserPassword(Personal_Organizer.userProfile);", System.currentTimeMillis());
-                if (!unswer) {
-                    System.out.println("The combination of user and password"
-                            + " was not found.\nTry agaim.");
-                } else {
-                    System.out.println("Wellcome " + userName + "!");
-                    Tools.diff("System.out.println(\"Wellcome \" + userName + \"!\");", System.currentTimeMillis());
-                    mainform = new MainForm();
-                    Tools.diff("mainform = new MainForm();", System.currentTimeMillis());
-                    this.setVisible(false);
-                    Tools.diff("this.setVisible(false);", System.currentTimeMillis());
-                    mainform.setVisible(true);
-                    Tools.diff("mainform.setVisible(true);", System.currentTimeMillis());
-                }
-            }
+            System.out.println("Wellcome " + getUserName() + "!");
+            //Tools.diff("System.out.println(\"Wellcome \" + userName + \"!\");", System.currentTimeMillis());
+            mainform = new MainForm();
+            //Tools.diff("mainform = new MainForm();", System.currentTimeMillis());
+            this.setVisible(false);
+            //Tools.diff("this.setVisible(false);", System.currentTimeMillis());
+            mainform.setVisible(true);
+            //Tools.diff("mainform.setVisible(true);", System.currentTimeMillis());
         }
     }
-
+    
+    public String getUserName() {
+        return this.txtUserName.getText();
+    }
+    
+    public void setUserName(String userName) {
+        this.txtUserName.setText(userName);
+    }
+    
+    public String getPassword() {
+        return this.txtPassword.getText();
+    }
+    
+    public void setPassword(String password) {
+        this.txtPassword.setText(password);
+    }
+    
+    public boolean getRememberLogin() {
+        return this.chbxRememberLogin.isSelected();
+    }
+    
+    public void setRememberLogin(boolean rememberLogin) {
+        this.chbxRememberLogin.setSelected(rememberLogin);
+    }
+    
+    public String getServerAddress() {
+        return this.txtServerAddress.getText();
+    }
+    
+    public void setServerAddress(String serverAddress) {
+        this.txtServerAddress.setText(serverAddress);
+    }
+    
+    public String getServerUserName() {
+        return this.txtServerUserName.getText();
+    }
+    
+    public void setServerUserName(String serverUserName) {
+        this.txtServerUserName.setText(serverUserName);
+    }
+    
+    public String getServerPassword() {
+        return this.txtServerPassword.getText();
+    }
+    
+    public void setServerPassword(String serverPassword) {
+        this.txtServerPassword.setText(serverPassword);
+    }
+    
+    public boolean getRememberSQLSettings() {
+        return this.chbxRememberSQLSettings.isSelected();
+    }
+    
+    public void setRememberSQLSettings(boolean rememberSQLSettings) {
+        this.chbxRememberSQLSettings.setSelected(rememberSQLSettings);
+    }
+    
+    private void readSettings() {
+        Tools.readSettings(this);
+    }
+    
+    private void writeSettings() {
+        Tools.writeSettings(this);
+    }
+    
     class LoginListener implements ActionListener {
 
-        public void listener(Object o) {
+//        public void listener(Object o) {
+//            Tools.time = System.currentTimeMillis();
+//            if (o == btnSignUp) {
+//                Personal_Organizer.loginForm.setVisible(false);
+//                if (Personal_Organizer.signUpForm == null) {
+//                    Personal_Organizer.signUpForm = new SignUpForm();
+//                }
+//                Personal_Organizer.signUpForm.setVisible(true);
+//            } else if (o == btnLogin) {
+//                checkUserPassword();
+//            }
+//        }
+//
+        @Override
+        public void actionPerformed(ActionEvent e) {
+//            listener(e.getSource());
             Tools.time = System.currentTimeMillis();
-            if (o == btnSignUp) {
+            if (e.getSource() == btnSignUp) {
                 Personal_Organizer.loginForm.setVisible(false);
                 if (Personal_Organizer.signUpForm == null) {
                     Personal_Organizer.signUpForm = new SignUpForm();
                 }
                 Personal_Organizer.signUpForm.setVisible(true);
-            } else if (o == btnLogin) {
+            } else if (e.getSource() == btnLogin) {
+                writeSettings();
                 checkUserPassword();
             }
         }
-
+        
+    }
+    
+    class CloseListener implements WindowListener {
+        
         @Override
-        public void actionPerformed(ActionEvent e) {
-            listener(e.getSource());
+        public void windowOpened(WindowEvent e) {
+            
         }
-
-    }
-
-    private void print(String str) {
-        if (showCommentForDebuging) {
-            System.out.println(str);
+        
+        @Override
+        public void windowClosing(WindowEvent e) {
+            writeSettings();
         }
-    }
-
-    public static void write(String fileName, String text) {
-        //Определяем файл
-        File file = new File(fileName);
-
-        try {
-            //проверяем, что если файл не существует то создаем его
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            //PrintWriter обеспечит возможности записи в файл
-            PrintWriter out = new PrintWriter(file.getAbsoluteFile());
-
-            try {
-                //Записываем текст у файл
-                out.print(text);
-            } finally {
-                //После чего мы должны закрыть файл
-                //Иначе файл не запишется
-                out.close();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        
+        @Override
+        public void windowClosed(WindowEvent e) {
+            
         }
+        
+        @Override
+        public void windowIconified(WindowEvent e) {
+            
+        }
+        
+        @Override
+        public void windowDeiconified(WindowEvent e) {
+            
+        }
+        
+        @Override
+        public void windowActivated(WindowEvent e) {
+            
+        }
+        
+        @Override
+        public void windowDeactivated(WindowEvent e) {
+            
+        }
+        
     }
 }

@@ -7,6 +7,8 @@ package com.personal_organizer;
 
 import com.personal_organizer.dao.DAO;
 import com.personal_organizer.db.DBFunctions;
+import com.personal_organizer.modules.Tools;
+import java.util.Date;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -155,6 +157,9 @@ public class SignUpForm extends JFrame {
 
     }
 
+    private void saveUpdateUserProfile(){
+        Tools.saveUpdateUserProfile(this);
+    }
     class SignUpListener implements ActionListener {
 
         @Override
@@ -164,46 +169,127 @@ public class SignUpForm extends JFrame {
                 Personal_Organizer.loginForm.setVisible(true);
             } else {
                 if (e.getSource() == btnSave) {
-                    System.out.println("btnSave");
-                    if (txtLoginName.getText().equals("")) {
-                        System.out.println("The field 'Login Name' can not be empty!");
-                    } else {
-                        System.out.println("-----------The field 'Login Name' can not be empty!");
-                        if (txtEmail.getText().equals("")) {
-                            System.out.println("The field 'E-Mail' can not be empty!");
-                        } else {
-                            System.out.println("------------The field 'E-Mail' can not be empty!");
-                            if (!txtPassword.getText().equals(txtPassword1.getText())) {
-                                System.out.println("Password are not the same!");
-                            } else {
-                                System.out.println("-----------------Password are not the same!");
-                                if (txtPassword.getText().length() < 5) {
-                                    System.out.println("The minimal Password's length is 5 characters!");
-                                } else {
-                                    System.out.println("----------------The minimal Password's length is 5 characters!");
-                                    setUserProfile();
-                                    DBFunctions db = new DBFunctions();
-                                    if (!db.isTheLoginNameNotUsed()) {
-                                        System.out.println("The Login name '" + Personal_Organizer.userProfile.getUserName() + "' is already used.");
-                                    } else {
-                                        db.saveUpdateUserPassword("save");
-                                    };
-
-                                }
-                            }
-                        }
-                    }
+//                    System.out.println("btnSave");
+//                    if (txtLoginName.getText().equals("")) {
+//                        System.out.println("The field 'Login Name' can not be empty!");
+//                    } else {
+//                        System.out.println("-----------The field 'Login Name' can not be empty!");
+//                        if (txtEmail.getText().equals("")) {
+//                            System.out.println("The field 'E-Mail' can not be empty!");
+//                        } else {
+//                            System.out.println("------------The field 'E-Mail' can not be empty!");
+//                            if (!txtPassword.getText().equals(txtPassword1.getText())) {
+//                                System.out.println("Password are not the same!");
+//                            } else {
+//                                System.out.println("-----------------Password are not the same!");
+//                                if (txtPassword.getText().length() < 5) {
+//                                    System.out.println("The minimal Password's length is 5 characters!");
+//                                } else {
+//                                    System.out.println("----------------The minimal Password's length is 5 characters!");
+//                                    setUserProfile();
+//                                    DBFunctions db = new DBFunctions();
+//                                    if (!db.isTheLoginNameNotUsed()) {
+//                                        System.out.println("The Login name '" + Personal_Organizer.userProfile.getUserName() + "' is already used.");
+//                                    } else {
+//                                        db.saveUpdateUserPassword("save");
+//                                    };
+//
+//                                }
+//                            }
+//                        }
+//                    }
+                    saveUpdateUserProfile();
                 }
             }
         }
     }
 
-    private void setUserProfile() {
-        System.out.println("setUserProfile");
+    public String getFirstName() {
+        return this.txtFirstName.getText();
+    }
 
-        Personal_Organizer.userProfile = new UserProfile(txtLoginName.getText(),
-                txtPassword.getText(), txtEmail.getText());
+    public void setFirstName(String FirstName) {
+        this.txtFirstName.setText(FirstName);
+    }
 
+    public String getLastName() {
+        return this.txtLastName.getText();
+    }
+
+    public void setLastName(String LastName) {
+
+    }
+
+    public String getPhone() {
+        return this.txtPhone.getText();
+    }
+
+    public void setPhone(String Phone) {
+        this.txtPhone.setText(Phone);
+    }
+
+    public String getEmail() {
+        return this.txtEmail.getText();
+    }
+
+    public void setEmail(String Email) {
+        this.txtEmail.setText(Email);
+    }
+
+    public String getLoginName() {
+        return this.txtLoginName.getText();
+    }
+
+    public void setLoginName(String LoginName) {
+        this.txtLoginName.setText(LoginName);
+    }
+
+    public String getPassword() {
+        return this.txtPassword.getText();
+    }
+
+    public void setPassword(String Password) {
+        this.txtPassword.setText(Password);
+    }
+
+    public String getPassword1() {
+        return this.txtPassword1.getText();
+    }
+
+    public void setPassword1(String Password1) {
+        this.txtPassword1.setText(Password1);
+    }
+
+    public String getBirthDayYear() {
+        return this.birthDayYear.getItemAt(this.birthDayYear.getSelectedIndex()).toString();
+    }
+
+    public void setBirthDayYear(String birthDayYear) {
+        this.birthDayYear.setSelectedIndex(Integer.parseInt(birthDayYear));
+    }
+
+    public String getBirthDayMonth() {
+        return this.birthDayMonth.getItemAt(this.birthDayMonth.getSelectedIndex()).toString();
+    }
+
+    public void setBirthDayMonth(String birthDayMonth) {
+        this.birthDayMonth.setSelectedIndex(Integer.parseInt(birthDayMonth));
+    }
+
+    public String getBirthDayDay() {
+        return this.birthDayDay.getItemAt(this.birthDayDay.getSelectedIndex()).toString();
+    }
+
+    public void setBirthDayDay(String birthDayDay) {
+        this.birthDayDay.setSelectedIndex(Integer.parseInt(birthDayDay));
+    }
+
+    public String getBirthDay() {
+        return this.birthDayYear.getName();
+    }
+
+    public void setBirthDay(String birthDayYear) {
+        this.birthDayYear.setSelectedIndex(Integer.parseInt(birthDayYear));
     }
 
 }

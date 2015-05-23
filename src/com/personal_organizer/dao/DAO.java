@@ -22,18 +22,17 @@ import java.util.logging.Logger;
  * @author Mikhail
  */
 public class DAO {
-    
-    
-    public static String dbServerName = "localhost";
-    public static String dbUserID = "sa";
-    public static String dbPassword = "NA@!ro20";
 
-    private boolean showCommentForDebuging = false;
-    private ResultSet rs;
-    private Connection conn;
-    private Statement statement;
+    public static String dbServerAddress;
+    public static String dbServerUserName;
+    public static String dbServerPassword;
+
+    private static boolean showCommentForDebuging = false;
+    private static ResultSet rs;
+    private static Connection conn;
+    private static Statement statement;
     //private String db_connect_string, db_userid, db_password;
-    private String dbPath;
+    private static String dbPath;
     private static final String DB_NAME = "OrganizerDB";
     private static final String TBL_USERS = "tblUsers";
     private static final String TBL_CONTACT_BOOK = "tblContactBook";
@@ -92,41 +91,37 @@ public class DAO {
 //    public static final String CREATE_TABLE2 = "CREATE TABLE " + TABLE2_NAME + " ( "
 //            + T2COLUMN_ID + " int, " + T2COLUMN_CATEGORY + " int, " + T2COLUMN_NUMBER + " INT, "
 //            + T2COLUMN_WORD + " TEXT, " + T2COLUMN_WORDR + " TEXT)";
-    
 //  public DAO (String db_server_name, String db_userid, String db_password){
+//    public DAO() {
+//        dbConnect();
+//        Tools.diff("dbConnect();", System.currentTimeMillis());
+//    }
 
-    public DAO() {
-        dbConnect(dbServerName, dbUserID, dbPassword);
-        Tools.diff("dbConnect(dbServerName, dbUserID, dbPassword);", System.currentTimeMillis());
-    }
-
-    private void createDataBase(){
+    private void createDataBase() {
         // create database if not exist
         executeQuery(CREATE_DATABASE);
     }
-    
-    private void createTables(){
+
+    private void createTables() {
         // create table users
         executeQuery(CREATE_TABLE_USERS);
     }
 
-    private void dbConnect(String db_server_name,
-            String db_userid,
-            String db_password) {
+    private static void dbConnect() {
         try {
             // get the Class object
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        Tools.diff("Class.forName(", System.currentTimeMillis());
-            String db_connect_string = "jdbc:sqlserver://" + db_server_name + ";databaseName=" + DB_NAME;
-        Tools.diff("String db_connect_string = ", System.currentTimeMillis());
+            Tools.diff("Class.forName(", System.currentTimeMillis());
+            String db_connect_string = "jdbc:sqlserver://" + dbServerAddress + ";databaseName=" + DB_NAME;
+            Tools.diff("String db_connect_string = ", System.currentTimeMillis());
             // establish a connection with the database
-            this.conn = DriverManager.getConnection(db_connect_string,
-                    db_userid, db_password);
-        Tools.diff("this.conn = DriverManager.getConnection(db_connect_string,", System.currentTimeMillis());
+            conn = DriverManager.getConnection(db_connect_string,
+                    dbServerUserName, dbServerPassword);
+            Tools.diff("this.conn = DriverManager.getConnection(db_connect_string,", System.currentTimeMillis());
             //print("connected");
             // create a Statement object
-            this.statement = conn.createStatement();
-        Tools.diff("this.statement = conn.createStatement();", System.currentTimeMillis());
+            statement = conn.createStatement();
+            Tools.diff("this.statement = conn.createStatement();", System.currentTimeMillis());
             // create query
 //            String queryString = "select * from sysobjects where type='u'";
 //            // execute query and get a result
@@ -140,35 +135,38 @@ public class DAO {
         }
     }
 
-    private void executeQuery(String queryString) {
+    private static void executeQuery(String queryString) {
         try {
-            print("================ NEW QUERY ====================");
-            print(queryString);
-            if (this.statement.execute (queryString)) {
-                this.rs = this.statement.getResultSet();
-                print("1");
+            Tools.print("================ NEW QUERY ====================");
+            Tools.print(queryString);
+            if (statement.execute(queryString)) {
+                rs = statement.getResultSet();
+                Tools.print("1");
             }
-            print("2");
+            Tools.print("2");
         } catch (SQLException ex) {
-            print("3");
+            Tools.print("3");
             Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public boolean checkUserPassword(UserProfile userProfile) {
-
+    public static boolean checkUserPassword(UserProfile userProfile) {
+        dbConnect();
         boolean unswer = false;
         String userName = userProfile.getUserName();
         String password = userProfile.getPassword();
+
         String query = "select " + T1COLUMN_ID + " from " + TBL_USERS + " where "
                 + T1COLUMN_USER_NAME + " = '" + userName + "' and " + T1COLUMN_PASSWORD
                 + " = '" + password + "'";
         executeQuery(query);
         try {
-            if(rs.next()) unswer = true;
-            if (unswer)  {
-                while (this.rs.next()) {
-                    print(this.rs.getString(1));
+            if (rs.next()) {
+                unswer = true;
+            }
+            if (unswer) {
+                while (rs.next()) {
+                    Tools.print(rs.getString(1));
                 }
             }
         } catch (SQLException ex) {
@@ -178,7 +176,7 @@ public class DAO {
         return unswer;
     }
 
-    public void saveUpdateUserPassword(String command) {
+    public static void saveUpdateUserPassword(String command) {
 
         String query;
         String userName = Personal_Organizer.userProfile.getUserName();
@@ -186,36 +184,34 @@ public class DAO {
         String userEmail = Personal_Organizer.userProfile.getUserEmail();
         String phone = Personal_Organizer.userProfile.getPhone();
         String userID = Personal_Organizer.userProfile.getUserID();
-        if(command.equals("save")) {
-            query = "insert into " + TBL_USERS + " values ('" + userID + "', '" 
-                + userName + "', '" + userEmail + "', '" + password + "', '" + 
-                phone + "')";
+        if (command.equals("save")) {
+            query = "insert into " + TBL_USERS + " values ('" + userID + "', '"
+                    + userName + "', '" + userEmail + "', '" + password + "', '"
+                    + phone + "')";
         } else {
-            query = "update " + TBL_USERS + " set " + T1COLUMN_USER_NAME + 
-                " = '" + userName + "', " + T1COLUMN_USER_EMAIL + " = '" + 
-                userEmail + "', " + T1COLUMN_PASSWORD + " = '" + password + 
-                "', " + T1COLUMN_PHONE + " = '" +phone + "' where "  + 
-                T1COLUMN_ID + " = '" + userID + "'";
+            query = "update " + TBL_USERS + " set " + T1COLUMN_USER_NAME
+                    + " = '" + userName + "', " + T1COLUMN_USER_EMAIL + " = '"
+                    + userEmail + "', " + T1COLUMN_PASSWORD + " = '" + password
+                    + "', " + T1COLUMN_PHONE + " = '" + phone + "' where "
+                    + T1COLUMN_ID + " = '" + userID + "'";
         }
         executeQuery(query);
     }
 
-    private void print(String str){
-        if(showCommentForDebuging) System.out.println(str);
-    }
-
-    public boolean isTheLoginNameNotUsed(){
+    public static boolean isTheLoginNameNotUsed() {
         boolean unswer = false;
-        
+
         String userName = Personal_Organizer.userProfile.getUserName();
         String query = "select " + T1COLUMN_ID + " from " + TBL_USERS + " where "
                 + T1COLUMN_USER_NAME + " = '" + userName + "'";
         executeQuery(query);
         try {
-            if(!rs.next()) unswer = true;
-            if (!unswer)  {
-                while (this.rs.next()) {
-                    print(this.rs.getString(1));
+            if (!rs.next()) {
+                unswer = true;
+            }
+            if (!unswer) {
+                while (rs.next()) {
+                    Tools.print(rs.getString(1));
                 }
             }
         } catch (SQLException ex) {
