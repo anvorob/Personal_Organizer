@@ -41,8 +41,8 @@ public class DAO {
 
     private static final String T1COLUMN_ID = "_user_id";
     private static final String T1COLUMN_ID_TYPE = " char(10) NOT NULL PRIMARY KEY, ";
-    private static final String T1COLUMN_USER_NAME = "_user_name";
-    private static final String T1COLUMN_USER_NAME_TYPE = " char(10) NOT NULL, ";
+    private static final String T1COLUMN_LOGIN_NAME = "_login_name";
+    private static final String T1COLUMN_LOGIN_NAME_TYPE = " char(10) NOT NULL, ";
     private static final String T1COLUMN_USER_EMAIL = "_user_email";
     private static final String T1COLUMN_USER_EMAIL_TYPE = " char(30) NOT NULL, ";
     private static final String T1COLUMN_PASSWORD = "_password";
@@ -66,7 +66,7 @@ public class DAO {
     private static final String CREATE_TABLE_USERS = "IF not EXISTS (SELECT 1 FROM "
             + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" + TBL_USERS + "')"
             + "CREATE TABLE " + TBL_USERS + " (" + T1COLUMN_ID + T1COLUMN_ID_TYPE
-            + T1COLUMN_USER_NAME + T1COLUMN_USER_NAME_TYPE + T1COLUMN_USER_EMAIL
+            + T1COLUMN_LOGIN_NAME + T1COLUMN_LOGIN_NAME_TYPE + T1COLUMN_USER_EMAIL
             + T1COLUMN_USER_EMAIL_TYPE + T1COLUMN_PASSWORD + T1COLUMN_PASSWORD_TYPE
             + T1COLUMN_PHONE + T1COLUMN_PHONE_TYPE;
 //    private static final String CREATE_TABLE_USERS = "IF not EXISTS (SELECT 1 FROM "
@@ -153,11 +153,11 @@ public class DAO {
     public static boolean checkUserPassword(UserProfile userProfile) {
         dbConnect();
         boolean unswer = false;
-        String userName = userProfile.getUserName();
+        String loginName = userProfile.getLoginName();
         String password = userProfile.getPassword();
 
         String query = "select " + T1COLUMN_ID + " from " + TBL_USERS + " where "
-                + T1COLUMN_USER_NAME + " = '" + userName + "' and " + T1COLUMN_PASSWORD
+                + T1COLUMN_LOGIN_NAME + " = '" + loginName + "' and " + T1COLUMN_PASSWORD
                 + " = '" + password + "'";
         executeQuery(query);
         try {
@@ -179,7 +179,7 @@ public class DAO {
     public static void saveUpdateUserPassword(String command) {
 
         String query;
-        String userName = Personal_Organizer.userProfile.getUserName();
+        String userName = Personal_Organizer.userProfile.getLoginName();
         String password = Personal_Organizer.userProfile.getPassword();
         String userEmail = Personal_Organizer.userProfile.getUserEmail();
         String phone = Personal_Organizer.userProfile.getPhone();
@@ -189,7 +189,7 @@ public class DAO {
                     + userName + "', '" + userEmail + "', '" + password + "', '"
                     + phone + "')";
         } else {
-            query = "update " + TBL_USERS + " set " + T1COLUMN_USER_NAME
+            query = "update " + TBL_USERS + " set " + T1COLUMN_LOGIN_NAME
                     + " = '" + userName + "', " + T1COLUMN_USER_EMAIL + " = '"
                     + userEmail + "', " + T1COLUMN_PASSWORD + " = '" + password
                     + "', " + T1COLUMN_PHONE + " = '" + phone + "' where "
@@ -201,9 +201,9 @@ public class DAO {
     public static boolean isTheLoginNameNotUsed() {
         boolean unswer = false;
 
-        String userName = Personal_Organizer.userProfile.getUserName();
+        String userName = Personal_Organizer.userProfile.getLoginName();
         String query = "select " + T1COLUMN_ID + " from " + TBL_USERS + " where "
-                + T1COLUMN_USER_NAME + " = '" + userName + "'";
+                + T1COLUMN_LOGIN_NAME + " = '" + userName + "'";
         executeQuery(query);
         try {
             if (!rs.next()) {
