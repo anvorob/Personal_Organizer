@@ -8,7 +8,8 @@ package com.personal_organizer;
 import com.personal_organizer.dao.DAO;
 import com.personal_organizer.db.DBFunctions;
 import com.personal_organizer.modules.Tools;
-import java.util.Date;
+import java.sql.Date;
+//import java.util.Date;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -21,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
@@ -124,7 +126,9 @@ public class SignUpForm extends JFrame {
                 pnlBirthDay.add(birthDayMonth = new JComboBox(months));
                 pnlBirthDay.add(birthDayYear = new JComboBox(years1));
                 pnlPersonalInformation.add(pnlBirthDay, gbc);
-
+                birthDayDay.setSelectedIndex(24);
+                birthDayMonth.setSelectedIndex(4);
+                birthDayYear.setSelectedIndex(1976 - 1975);
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("Date of Birth: "), gbc);
 
@@ -157,9 +161,19 @@ public class SignUpForm extends JFrame {
 
     }
 
-    private void saveUpdateUserProfile(){
-        Tools.saveUpdateUserProfile(this);
+    private void saveUpdateUserProfile(String command) {
+        int rows = Tools.saveUpdateUserProfile(this, command);
+        if (rows > 0) {
+            JOptionPane.showMessageDialog(Personal_Organizer.signUpForm,
+                    "Login Name saved. Now you can Login.");
+            this.setVisible(false);
+            Personal_Organizer.loginForm.setLoginName(txtLoginName.getText());
+            Personal_Organizer.loginForm.setPassword(txtPassword.getText());
+            //Personal_Organizer.loginForm.setRememberLogin(false);
+            Personal_Organizer.loginForm.setVisible(true);
+        }
     }
+
     class SignUpListener implements ActionListener {
 
         @Override
@@ -169,36 +183,7 @@ public class SignUpForm extends JFrame {
                 Personal_Organizer.loginForm.setVisible(true);
             } else {
                 if (e.getSource() == btnSave) {
-//                    System.out.println("btnSave");
-//                    if (txtLoginName.getText().equals("")) {
-//                        System.out.println("The field 'Login Name' can not be empty!");
-//                    } else {
-//                        System.out.println("-----------The field 'Login Name' can not be empty!");
-//                        if (txtEmail.getText().equals("")) {
-//                            System.out.println("The field 'E-Mail' can not be empty!");
-//                        } else {
-//                            System.out.println("------------The field 'E-Mail' can not be empty!");
-//                            if (!txtPassword.getText().equals(txtPassword1.getText())) {
-//                                System.out.println("Password are not the same!");
-//                            } else {
-//                                System.out.println("-----------------Password are not the same!");
-//                                if (txtPassword.getText().length() < 5) {
-//                                    System.out.println("The minimal Password's length is 5 characters!");
-//                                } else {
-//                                    System.out.println("----------------The minimal Password's length is 5 characters!");
-//                                    setUserProfile();
-//                                    DBFunctions db = new DBFunctions();
-//                                    if (!db.isTheLoginNameNotUsed()) {
-//                                        System.out.println("The Login name '" + Personal_Organizer.userProfile.getUserName() + "' is already used.");
-//                                    } else {
-//                                        db.saveUpdateUserPassword("save");
-//                                    };
-//
-//                                }
-//                            }
-//                        }
-//                    }
-                    saveUpdateUserProfile();
+                    saveUpdateUserProfile(e.getActionCommand().toLowerCase());
                 }
             }
         }
@@ -260,36 +245,37 @@ public class SignUpForm extends JFrame {
         this.txtPassword1.setText(Password1);
     }
 
-    public String getBirthDayYear() {
-        return this.birthDayYear.getItemAt(this.birthDayYear.getSelectedIndex()).toString();
+    public int getBirthDayYear() {
+        return this.birthDayYear.getSelectedIndex() + 1975;
     }
 
-    public void setBirthDayYear(String birthDayYear) {
-        this.birthDayYear.setSelectedIndex(Integer.parseInt(birthDayYear));
+    public void setBirthDayYear(int birthDayYear) {
+        this.birthDayYear.setSelectedIndex(birthDayYear - 1975);
     }
 
-    public String getBirthDayMonth() {
-        return this.birthDayMonth.getItemAt(this.birthDayMonth.getSelectedIndex()).toString();
+    public int getBirthDayMonth() {
+        return this.birthDayMonth.getSelectedIndex();
     }
 
-    public void setBirthDayMonth(String birthDayMonth) {
-        this.birthDayMonth.setSelectedIndex(Integer.parseInt(birthDayMonth));
+    public void setBirthDayMonth(int birthDayMonth) {
+        this.birthDayMonth.setSelectedIndex(birthDayMonth);
     }
 
-    public String getBirthDayDay() {
-        return this.birthDayDay.getItemAt(this.birthDayDay.getSelectedIndex()).toString();
+    public int getBirthDayDay() {
+        return this.birthDayDay.getSelectedIndex();
     }
 
-    public void setBirthDayDay(String birthDayDay) {
-        this.birthDayDay.setSelectedIndex(Integer.parseInt(birthDayDay));
+    public void setBirthDayDay(int birthDayDay) {
+        this.birthDayDay.setSelectedIndex(birthDayDay);
     }
 
-    public String getBirthDay() {
-        return this.birthDayYear.getName();
+    public Date getBirthDay() {
+        return new Date(getBirthDayYear(), getBirthDayMonth(), getBirthDayDay());
     }
 
-    public void setBirthDay(String birthDayYear) {
-        this.birthDayYear.setSelectedIndex(Integer.parseInt(birthDayYear));
+    public void setBirthDay(Date birthDayYear) {
+        this.birthDayYear.setSelectedIndex(birthDayYear.getYear() - 1975);
+        this.birthDayMonth.setSelectedIndex(birthDayYear.getMonth());
+        this.birthDayDay.setSelectedIndex(birthDayYear.getDate());
     }
-
 }

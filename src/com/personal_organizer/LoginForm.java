@@ -18,9 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -35,9 +32,9 @@ import javax.swing.border.TitledBorder;
  * @author Vorobiov Anatolii & Mikhail Novizhilov
  */
 public class LoginForm extends OFrame {
-    
+
     private MainForm mainform;
-    private JTextField txtUserName;
+    private JTextField txtLoginName;
     private JPasswordField txtPassword;
     private JTextField txtServerAddress;
     private JTextField txtServerUserName;
@@ -45,21 +42,21 @@ public class LoginForm extends OFrame {
     private JButton btnCancel, btnLogin, btnSignUp;
     private JCheckBox chbxRememberLogin;
     private JCheckBox chbxRememberSQLSettings;
-    
+
     public LoginForm() {
-        
+
         this.setTitle("Personal Organizer - Login");
         //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.addWindowListener(new CloseListener());
         JPanel pnlMain = new JPanel();
         pnlMain.setLayout(new GridLayout(0, 1));
-        
+
         JPanel pnlLogin = new JPanel();
         pnlLogin.setLayout(new GridBagLayout());
         TitledBorder title = BorderFactory.createTitledBorder("Login");
         pnlLogin.setBorder(title);
         GridBagConstraints gbc = new GridBagConstraints();
-        
+
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 10, 5, 10);
         gbc.gridheight = 1;
@@ -67,26 +64,26 @@ public class LoginForm extends OFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         pnlLogin.add(new JLabel("User ID"), gbc);
-        
+
         gbc.gridx = 1;
-        pnlLogin.add(txtUserName = new JTextField(10), gbc);
-        txtUserName.setText("mic");
-        
+        pnlLogin.add(txtLoginName = new JTextField(10), gbc);
+        //txtLoginName.setText("mic");
+
         gbc.gridy = 1;
         pnlLogin.add(txtPassword = new JPasswordField(10), gbc);
-        txtPassword.setText("123");
-        
+        //txtPassword.setText("123");
+
         gbc.gridx = 0;
         pnlLogin.add(new JLabel("Password"), gbc);
-        
+
         JPanel pnlSQLSettings = new JPanel(new GridBagLayout());
         title = BorderFactory.createTitledBorder("SQL server settings");
         pnlSQLSettings.setBorder(title);
-        
+
         gbc.gridy = 0;
-        
+
         pnlSQLSettings.add(new JLabel("Address:"), gbc);
-        
+
         gbc.gridx = 1;
         pnlSQLSettings.add(txtServerAddress = new JTextField(10), gbc);
         //txtServerAddress.setText("");
@@ -97,10 +94,10 @@ public class LoginForm extends OFrame {
 
         gbc.gridx = 0;
         pnlSQLSettings.add(new JLabel("User ID"), gbc);
-        
+
         gbc.gridy = 2;
         pnlSQLSettings.add(new JLabel("Password:"), gbc);
-        
+
         gbc.gridx = 1;
         pnlSQLSettings.add(txtServerPassword = new JPasswordField(10), gbc);
         //txtServerPassword.setText("");
@@ -116,13 +113,13 @@ public class LoginForm extends OFrame {
         //pnlLogin.add(pnlSQLSettings, gbc);
         gbc.gridy = 2;
         JPanel pnlRememberLogin = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        
+
         pnlRememberLogin.add(chbxRememberLogin = new JCheckBox("Remenber Login and Password"));
         pnlLogin.add(pnlRememberLogin, gbc);
-        
+
         pnlMain.add(pnlLogin);
         pnlMain.add(pnlSQLSettings);
-        
+
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         pnlButtons.add(btnLogin = new JButton("Login"));
 
@@ -136,147 +133,101 @@ public class LoginForm extends OFrame {
         //btnCancel.addActionListener(new CanceListener());
         pnlButtons.add(btnSignUp = new JButton("Sign Up"), gbc);
         btnSignUp.addActionListener(new LoginListener());
-        
+
         readSettings();
-        
+
         this.add(pnlMain, BorderLayout.CENTER);
         this.add(pnlButtons, BorderLayout.SOUTH);
-        
+
         this.pack();
         this.setLocationRelativeTo(null);
     }
-    
+
     private void checkUserPassword() {
         boolean unswer = false;
-//        String userName = txtUserName.getText();
-//        Tools.print("User ID: '" + userName + "'\n(userName == \"\") = " + (userName.equals("")));
-//        //Tools.diff("String userName = txtUserName.getText();", System.currentTimeMillis());
-//        if (userName.equals("")) {
-//            Tools.print("User ID can't be empty.");
-//        } else {
-//            String userPassword = txtPassword.getText();
-//            Tools.print("Password: '" + userPassword + "'\n(userPassword == \"\") = " + (userPassword.equals("")));
-//            //Tools.diff("String userPassword = txtPassword.getText();", System.currentTimeMillis());
-//            if (userPassword.equals("")) {
-//                Tools.print("Password can't be empty.");
-//            } else {
-//                DBFunctions db = new DBFunctions();
-//                //Tools.diff("DBFunctions db = new DBFunctions();", System.currentTimeMillis());
-//                Personal_Organizer.userProfile = new UserProfile(userName, userPassword);
-//                //Tools.diff("Personal_Organizer.userProfile = new UserProfile(userName, userPassword);", System.currentTimeMillis());
-//                unswer = db.checkUserPassword(Personal_Organizer.userProfile);
-//                //Tools.diff("unswer = db.checkUserPassword(Personal_Organizer.userProfile);", System.currentTimeMillis());
-//                if (!unswer) {
-//                    System.out.println("The combination of user and password"
-//                            + " was not found.\nTry agaim.");
-//                } else {
-//                    System.out.println("Wellcome " + userName + "!");
-//                    //Tools.diff("System.out.println(\"Wellcome \" + userName + \"!\");", System.currentTimeMillis());
-//                    mainform = new MainForm();
-//                    //Tools.diff("mainform = new MainForm();", System.currentTimeMillis());
-//                    this.setVisible(false);
-//                    //Tools.diff("this.setVisible(false);", System.currentTimeMillis());
-//                    mainform.setVisible(true);
-//                    //Tools.diff("mainform.setVisible(true);", System.currentTimeMillis());
-//                }
-//            }
-//        }
         unswer = DBFunctions.checkUserPassword(this);
-        
+
         if (!unswer) {
             System.out.println("The combination of user and password"
                     + " was not found.\nTry agaim.");
         } else {
-            System.out.println("Wellcome " + getUserName() + "!");
+            System.out.println("Wellcome " + getLoginName() + "!");
             //Tools.diff("System.out.println(\"Wellcome \" + userName + \"!\");", System.currentTimeMillis());
-            mainform = new MainForm();
+            Personal_Organizer.mainform = new MainForm();
             //Tools.diff("mainform = new MainForm();", System.currentTimeMillis());
             this.setVisible(false);
             //Tools.diff("this.setVisible(false);", System.currentTimeMillis());
-            mainform.setVisible(true);
+            Personal_Organizer.mainform.setVisible(true);
             //Tools.diff("mainform.setVisible(true);", System.currentTimeMillis());
         }
     }
-    
-    public String getUserName() {
-        return this.txtUserName.getText();
+
+    public String getLoginName() {
+        return this.txtLoginName.getText();
     }
-    
-    public void setUserName(String userName) {
-        this.txtUserName.setText(userName);
+
+    public void setLoginName(String loginName) {
+        this.txtLoginName.setText(loginName);
     }
-    
+
     public String getPassword() {
         return this.txtPassword.getText();
     }
-    
+
     public void setPassword(String password) {
         this.txtPassword.setText(password);
     }
-    
+
     public boolean getRememberLogin() {
         return this.chbxRememberLogin.isSelected();
     }
-    
+
     public void setRememberLogin(boolean rememberLogin) {
         this.chbxRememberLogin.setSelected(rememberLogin);
     }
-    
+
     public String getServerAddress() {
         return this.txtServerAddress.getText();
     }
-    
+
     public void setServerAddress(String serverAddress) {
         this.txtServerAddress.setText(serverAddress);
     }
-    
+
     public String getServerUserName() {
         return this.txtServerUserName.getText();
     }
-    
+
     public void setServerUserName(String serverUserName) {
         this.txtServerUserName.setText(serverUserName);
     }
-    
+
     public String getServerPassword() {
         return this.txtServerPassword.getText();
     }
-    
+
     public void setServerPassword(String serverPassword) {
         this.txtServerPassword.setText(serverPassword);
     }
-    
+
     public boolean getRememberSQLSettings() {
         return this.chbxRememberSQLSettings.isSelected();
     }
-    
+
     public void setRememberSQLSettings(boolean rememberSQLSettings) {
         this.chbxRememberSQLSettings.setSelected(rememberSQLSettings);
     }
-    
+
     private void readSettings() {
         Tools.readSettings(this);
     }
-    
+
     private void writeSettings() {
         Tools.writeSettings(this);
     }
-    
+
     class LoginListener implements ActionListener {
 
-//        public void listener(Object o) {
-//            Tools.time = System.currentTimeMillis();
-//            if (o == btnSignUp) {
-//                Personal_Organizer.loginForm.setVisible(false);
-//                if (Personal_Organizer.signUpForm == null) {
-//                    Personal_Organizer.signUpForm = new SignUpForm();
-//                }
-//                Personal_Organizer.signUpForm.setVisible(true);
-//            } else if (o == btnLogin) {
-//                checkUserPassword();
-//            }
-//        }
-//
         @Override
         public void actionPerformed(ActionEvent e) {
 //            listener(e.getSource());
@@ -292,45 +243,45 @@ public class LoginForm extends OFrame {
                 checkUserPassword();
             }
         }
-        
+
     }
-    
+
     class CloseListener implements WindowListener {
-        
+
         @Override
         public void windowOpened(WindowEvent e) {
-            
+
         }
-        
+
         @Override
         public void windowClosing(WindowEvent e) {
             writeSettings();
         }
-        
+
         @Override
         public void windowClosed(WindowEvent e) {
-            
+
         }
-        
+
         @Override
         public void windowIconified(WindowEvent e) {
-            
+
         }
-        
+
         @Override
         public void windowDeiconified(WindowEvent e) {
-            
+
         }
-        
+
         @Override
         public void windowActivated(WindowEvent e) {
-            
+
         }
-        
+
         @Override
         public void windowDeactivated(WindowEvent e) {
-            
+
         }
-        
+
     }
 }
