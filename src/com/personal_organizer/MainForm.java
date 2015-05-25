@@ -23,69 +23,69 @@ import javax.swing.event.MenuListener;
 
 public class MainForm extends JFrame implements ActionListener {
 
-    JMenuBar topmenu;
+    JMenuBar topMenu;
     JMenu memo;
     JMenu calendar;
     JMenu contacts;
     JMenu messenger;
     JMenu info;
 
-    JMenuItem showmessenger;
-    JMenuItem messengercontact;
+    JMenuItem showMessenger;
+    JMenuItem messengerContact;
 
-    JMenuItem infoabout;
-    JMenuItem infohelp;
+    JMenuItem infoAbout;
+    JMenuItem infoHelp;
 
-    JPanel pnlcalendar;
-    JPanel pnlevents;
-    JPanel pnleventscontrol;
-    JPanel pnleventstable;
-    JPanel pnleventbtns;
-    JPanel pnlstatusbar;
+    JPanel pnlCalendar;
+    JPanel pnlEvents;
+    JPanel pnlEventscontrol;
+    JPanel pnlEventsTable;
+    JPanel pnlEventBtns;
+    JPanel pnlStatusBar;
 
-    JTable tblevents;
+    JTable tblEvents;
 
-    JLabel statustitle;
-    JLabel statusdescript;
-    JLabel eventtitle;
+    JLabel statusTitle;
+    JLabel statusDescript;
+    JLabel eventTitle;
 
-    JButton btneventnext;
-    JButton btneventprev;
-    JButton btnaddevent;
-    JButton btndeleteevent;
-    JButton btnviewevent;
+    JButton btnEventNext;
+    JButton btnEventPrev;
+    JButton btnAddEvent;
+    JButton btnDeleteEvent;
+    JButton btnViewEvent;
 
-    MemoForm memoform;
+    MemoForm memoForm;
 
     public MainForm() {
 
         this.setTitle(Tools.caption());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        topmenu = new JMenuBar();
+        topMenu = new JMenuBar();
         memo = new JMenu("Memo");
         calendar = new JMenu("Calendar");
         contacts = new JMenu("Contacts");
         messenger = new JMenu("Messenger");
         info = new JMenu("Info");
 
-        messenger.add(showmessenger = new JMenuItem("Show Messenger"));
-        messenger.add(messengercontact = new JMenuItem("Contact List"));
+        messenger.add(showMessenger = new JMenuItem("Show Messenger"));
+        messenger.add(messengerContact = new JMenuItem("Contact List"));
 
-        info.add(infoabout = new JMenuItem("About"));
-        info.add(infohelp = new JMenuItem("Help"));
+        info.add(infoAbout = new JMenuItem("About"));
+        info.add(infoHelp = new JMenuItem("Help"));
 
         memo.addMenuListener(new MListeners());
 
         this.setLayout(new BorderLayout());
-        topmenu.add(memo);
-        topmenu.add(calendar);
-        topmenu.add(contacts);
-        topmenu.add(messenger);
-        topmenu.add(info);
+        topMenu.add(memo);
+        topMenu.add(calendar);
+        topMenu.add(contacts);
+        topMenu.add(messenger);
+        topMenu.add(info);
 
-        this.setJMenuBar(topmenu);
-        eventtitle = new JLabel("", SwingConstants.CENTER);
-        pnlcalendar = new JPanel();
+        this.setJMenuBar(topMenu);
+        eventTitle = new JLabel("", SwingConstants.CENTER);
+        pnlCalendar = new JPanel();
 
         JCalendar cal = new JCalendar();
         cal.addDateListener(new DateListener() {
@@ -97,20 +97,20 @@ public class MainForm extends JFrame implements ActionListener {
                 int year = new_c.get(Calendar.YEAR);
                 System.out.println("Selected: " + day + "/"
                         + month + "/" + year + " (DD/MM/YYYY)");
-                eventtitle.setText("" + day + "/" + month + "/" + year);
+                eventTitle.setText("" + day + "/" + month + "/" + year);
             }
 
         });
         this.getContentPane().add(cal, BorderLayout.NORTH);
 
-        pnlevents = new JPanel(new BorderLayout());
-        pnleventscontrol = new JPanel(new BorderLayout());
+        pnlEvents = new JPanel(new BorderLayout());
+        pnlEventscontrol = new JPanel(new BorderLayout());
         //eventtitle=new JLabel("Title");
-        pnleventscontrol.add(btneventprev = new JButton("Prev"), BorderLayout.WEST);
-        pnleventscontrol.add(eventtitle, BorderLayout.CENTER);
-        pnleventscontrol.add(btneventnext = new JButton("Next"), BorderLayout.EAST);
+        pnlEventscontrol.add(btnEventPrev = new JButton("Prev"), BorderLayout.WEST);
+        pnlEventscontrol.add(eventTitle, BorderLayout.CENTER);
+        pnlEventscontrol.add(btnEventNext = new JButton("Next"), BorderLayout.EAST);
 
-        pnleventstable = new JPanel();
+        pnlEventsTable = new JPanel();
         String columns[] = {"Title", "Description", "Time From", "Time Till", "Type", "Contacts"};
         Object[][] data = {{"Business meeting", "140 Hobson", "9:00", "10:00", "Meeting", "Tom"},
         {"", "", "", "", "", ""},
@@ -118,43 +118,43 @@ public class MainForm extends JFrame implements ActionListener {
         {"", "", "", "", "", ""},
         {"", "", "", "", "", ""},
         {"", "", "", "", "", ""}};
-        tblevents = new JTable(data, columns);
-        tblevents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        System.out.println("" + tblevents.getModel().getValueAt(0, 2));
+        tblEvents = new JTable(data, columns);
+        tblEvents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        System.out.println("" + tblEvents.getModel().getValueAt(0, 2));
 
-//            tblevents.getColumnModel().getColumn(0).setPreferredWidth(27);
-//            tblevents.getColumnModel().getColumn(1).setPreferredWidth(120);
-//            tblevents.getColumnModel().getColumn(2).setPreferredWidth(100);
-//            tblevents.getColumnModel().getColumn(3).setPreferredWidth(90);
-//            tblevents.getColumnModel().getColumn(4).setPreferredWidth(90);
-//            tblevents.getColumnModel().getColumn(6).setPreferredWidth(120);
-//            tblevents.getColumnModel().getColumn(7).setPreferredWidth(100);
-//            tblevents.getColumnModel().getColumn(8).setPreferredWidth(95);
-//            tblevents.getColumnModel().getColumn(9).setPreferredWidth(40);
-//            tblevents.getColumnModel().getColumn(10).setPreferredWidth(400);
-        JScrollPane scroll = new JScrollPane(tblevents);
-        pnleventstable.add(scroll);
+//            tblEvents.getColumnModel().getColumn(0).setPreferredWidth(27);
+//            tblEvents.getColumnModel().getColumn(1).setPreferredWidth(120);
+//            tblEvents.getColumnModel().getColumn(2).setPreferredWidth(100);
+//            tblEvents.getColumnModel().getColumn(3).setPreferredWidth(90);
+//            tblEvents.getColumnModel().getColumn(4).setPreferredWidth(90);
+//            tblEvents.getColumnModel().getColumn(6).setPreferredWidth(120);
+//            tblEvents.getColumnModel().getColumn(7).setPreferredWidth(100);
+//            tblEvents.getColumnModel().getColumn(8).setPreferredWidth(95);
+//            tblEvents.getColumnModel().getColumn(9).setPreferredWidth(40);
+//            tblEvents.getColumnModel().getColumn(10).setPreferredWidth(400);
+        JScrollPane scroll = new JScrollPane(tblEvents);
+        pnlEventsTable.add(scroll);
 
-        pnleventbtns = new JPanel(new FlowLayout((int) CENTER_ALIGNMENT, 10, 5));
-        pnleventbtns.add(btnaddevent = new JButton("Add Event"));
-        pnleventbtns.add(btndeleteevent = new JButton("Delete Event"));
-        pnleventbtns.add(btnviewevent = new JButton("View Event"));
+        pnlEventBtns = new JPanel(new FlowLayout((int) CENTER_ALIGNMENT, 10, 5));
+        pnlEventBtns.add(btnAddEvent = new JButton("Add Event"));
+        pnlEventBtns.add(btnDeleteEvent = new JButton("Delete Event"));
+        pnlEventBtns.add(btnViewEvent = new JButton("View Event"));
 
-        pnlevents.add(pnleventscontrol, BorderLayout.NORTH);
-        pnlevents.add(pnleventstable, BorderLayout.CENTER);
-        pnlevents.add(pnleventbtns, BorderLayout.SOUTH);
-        this.add(pnlevents, BorderLayout.CENTER);
+        pnlEvents.add(pnlEventscontrol, BorderLayout.NORTH);
+        pnlEvents.add(pnlEventsTable, BorderLayout.CENTER);
+        pnlEvents.add(pnlEventBtns, BorderLayout.SOUTH);
+        this.add(pnlEvents, BorderLayout.CENTER);
 
-        pnlstatusbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pnlstatusbar.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        pnlstatusbar.setBackground(Color.GRAY);
+        pnlStatusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pnlStatusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        pnlStatusBar.setBackground(Color.GRAY);
 
-        pnlstatusbar.add(statustitle = new JLabel("Title", SwingConstants.RIGHT));
-        pnlstatusbar.add(statusdescript = new JLabel("Description"));
+        pnlStatusBar.add(statusTitle = new JLabel("Title", SwingConstants.RIGHT));
+        pnlStatusBar.add(statusDescript = new JLabel("Description"));
 
-        statustitle.setText("" + tblevents.getModel().getValueAt(0, 0));
-        statusdescript.setText(": " + tblevents.getModel().getValueAt(0, 1));
-        this.add(pnlstatusbar, BorderLayout.SOUTH);
+        statusTitle.setText("" + tblEvents.getModel().getValueAt(0, 0));
+        statusDescript.setText(": " + tblEvents.getModel().getValueAt(0, 1));
+        this.add(pnlStatusBar, BorderLayout.SOUTH);
 
         this.pack();
         this.setLocationRelativeTo(null);
@@ -171,8 +171,8 @@ public class MainForm extends JFrame implements ActionListener {
         @Override
         public void menuSelected(MenuEvent e) {
             if (e.getSource() == memo) {
-                memoform = new MemoForm();
-                memoform.setVisible(true);
+                memoForm = new MemoForm();
+                memoForm.setVisible(true);
             }
         }
 

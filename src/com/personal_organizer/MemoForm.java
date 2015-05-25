@@ -35,29 +35,30 @@ import javax.swing.JTextArea;
  *
  * @author Tolik
  */
-public class MemoForm extends JFrame implements ActionListener{
-    
-    JPanel pnltop;
-    JPanel pnlmemo;
+public class MemoForm extends JFrame implements ActionListener {
+
+    JPanel pnlTop;
+    JPanel pnlMemo;
 
     JButton close;
     JButton add;
-    
-    JTextArea txtmemo;
-    public MemoForm(){
+
+    JTextArea txtMemo;
+
+    public MemoForm() {
         //this.setTitle("Memos");
-        Point p=new Point(930,20);
+        Point p = new Point(930, 20);
         this.setLocation(p);
         //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(200, 200));
-        pnltop = new JPanel();
-        BoxLayout toplayout= new BoxLayout(pnltop,BoxLayout.X_AXIS);
-        
-        pnltop.setLayout(toplayout);
+        pnlTop = new JPanel();
+        BoxLayout toplayout = new BoxLayout(pnlTop, BoxLayout.X_AXIS);
+
+        pnlTop.setLayout(toplayout);
         Icon imgclose = new ImageIcon(getClass().getResource("/resources/close_16.png"));
-        Icon imgadd =new ImageIcon(getClass().getResource("/resources/add_16.png"));
+        Icon imgadd = new ImageIcon(getClass().getResource("/resources/add_16.png"));
         close = new JButton(imgclose);
-        add=new JButton(imgadd);
+        add = new JButton(imgadd);
         close.setOpaque(false);
         close.setContentAreaFilled(false);
         close.setBorderPainted(false);
@@ -65,36 +66,36 @@ public class MemoForm extends JFrame implements ActionListener{
         add.setOpaque(false);
         add.setContentAreaFilled(false);
         add.setBorderPainted(false);
-        pnltop.add(add);
-        pnltop.add(Box.createHorizontalGlue());
-        pnltop.add(close);
-        //pnltop.setMinimumSize(new Dimension(20, 20));
-        this.add(pnltop, BorderLayout.NORTH);
-        JPanel pnlmemo=new JPanel(new GridLayout(1, 1));
-        txtmemo=new JTextArea(5, 5);
-        txtmemo.setLineWrap(true);
-        txtmemo.setWrapStyleWord(true);
-        txtmemo.addKeyListener(new java.awt.event.KeyAdapter() {
-        @Override
+        pnlTop.add(add);
+        pnlTop.add(Box.createHorizontalGlue());
+        pnlTop.add(close);
+        //pnlTop.setMinimumSize(new Dimension(20, 20));
+        this.add(pnlTop, BorderLayout.NORTH);
+        JPanel pnlMemo = new JPanel(new GridLayout(1, 1));
+        txtMemo = new JTextArea(5, 5);
+        txtMemo.setLineWrap(true);
+        txtMemo.setWrapStyleWord(true);
+        txtMemo.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyPressed(java.awt.event.KeyEvent evt) {
-            System.out.println(""+txtmemo.getSize().height+" : "+txtmemo.getSize().width);
-            changesize(txtmemo.getSize().height, txtmemo.getSize().width);
-        }
-    });
-        txtmemo.setBackground(Color.LIGHT_GRAY);
-        pnlmemo.add(txtmemo);
-        System.out.println(""+pnlmemo.getSize().width+" : "+pnlmemo.getSize().height);
-        this.add(pnlmemo, BorderLayout.CENTER);
+                System.out.println("" + txtMemo.getSize().height + " : " + txtMemo.getSize().width);
+                changesize(txtMemo.getSize().height, txtMemo.getSize().width);
+            }
+        });
+        txtMemo.setBackground(Color.LIGHT_GRAY);
+        pnlMemo.add(txtMemo);
+        System.out.println("" + pnlMemo.getSize().width + " : " + pnlMemo.getSize().height);
+        this.add(pnlMemo, BorderLayout.CENTER);
         this.setUndecorated(true);
     }
 
-    public void changesize(int h, int w){
+    public void changesize(int h, int w) {
         this.setSize(w, h);
     }
-    
+
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==close){
+        if (e.getSource() == close) {
             System.exit(0);
         }
-} 
+    }
 }
