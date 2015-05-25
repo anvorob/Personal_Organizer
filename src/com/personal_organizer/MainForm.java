@@ -53,6 +53,8 @@ public class MainForm extends JFrame implements ActionListener{
     JButton btndeleteevent;
     JButton btnviewevent;
     
+    static public int fw,fx,fy;
+    
     MemoForm memoform;
         public MainForm(){
             
@@ -142,6 +144,11 @@ public class MainForm extends JFrame implements ActionListener{
             pnleventbtns.add(btndeleteevent=new JButton("Delete Event"));
             pnleventbtns.add(btnviewevent=new JButton("View Event"));
             
+            btnaddevent.addActionListener(this);
+            btndeleteevent.addActionListener(this);
+            btnviewevent.addActionListener(this);
+            
+            
             pnlevents.add(pnleventscontrol, BorderLayout.NORTH);
             pnlevents.add(pnleventstable, BorderLayout.CENTER);
             pnlevents.add(pnleventbtns, BorderLayout.SOUTH);
@@ -161,17 +168,39 @@ public class MainForm extends JFrame implements ActionListener{
             this.pack();
             this.setLocationRelativeTo(null);
         }
-
+    public void frameSize(){
+        fw=this.getWidth();
+        Point p=this.getLocationOnScreen();
+        this.setExtendedState(JFrame.NORMAL);
+        Rectangle r=this.getBounds();
+        fx=(int)r.getX();
+        fy=(int)r.getY();
+//        fx=this.getLocation().x;
+//        fy=this.getLocation().y;
+//            fx=p.x;
+//            fy=p.y;
+        System.out.println("width: "+fw+" x: "+fx+" y: "+fy);
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       if(e.getSource()==btnaddevent){
+            EventForm event=new EventForm();
+            event.setVisible(true);
+       } 
+       if(e.getSource()==btndeleteevent){
+           System.out.println("Delete");
+       }
+       if(e.getSource()==btnviewevent){
+           EventForm event=new EventForm();
+            event.setVisible(true);
+       }
     }
         class MListeners  implements MenuListener{
 
         @Override
         public void menuSelected(MenuEvent e) {
             if(e.getSource()==memo){
-                memoform=new MemoForm();
+                memoform=new MemoForm(fw,fx,fy);
                 memoform.setVisible(true);
             }
         }

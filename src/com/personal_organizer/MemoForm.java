@@ -43,10 +43,11 @@ public class MemoForm extends JFrame implements ActionListener{
     JButton close;
     JButton add;
     
-    JTextArea txtmemo;
-    public MemoForm(){
+    JTextArea txtmemo;  
+    public MemoForm(int w, int x, int y){
         //this.setTitle("Memos");
-        Point p=new Point(930,20);
+        System.out.println("width: "+w+" x: "+x+" y: "+y);
+        Point p=new Point(w+x,y);
         this.setLocation(p);
         //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(200, 200));

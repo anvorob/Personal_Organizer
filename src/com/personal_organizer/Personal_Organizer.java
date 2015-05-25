@@ -6,6 +6,11 @@
 package com.personal_organizer;
 
 import com.personal_organizer.LoginForm;
+import com.personal_organizer.messenger.Gui;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,8 +24,8 @@ public class Personal_Organizer {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {  
-//          WelcomeForm welcomeform=new WelcomeForm();
+    public static void main(String[] args) {        
+            //          WelcomeForm welcomeform=new WelcomeForm();
 //          loginForm = new LoginForm();
 //          welcomeform.setVisible(true);
 //          Thread t=new Thread(welcomeform);
@@ -33,8 +38,15 @@ public class Personal_Organizer {
 //          }
 //          
 //          loginForm.setVisible(true);
-          mainform=new MainForm();
-          mainform.setVisible(true);
+//          mainform=new MainForm();
+//          mainform.setVisible(true);
+//          mainform.frameSize();
+//        try {
+//            System.out.println(InetAddress.getLocalHost().getHostAddress());
+//        } catch (UnknownHostException ex) {
+//            Logger.getLogger(Personal_Organizer.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        
     }
     
 }
