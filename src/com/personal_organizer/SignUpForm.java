@@ -5,22 +5,26 @@
  */
 package com.personal_organizer;
 
+import com.personal_organizer.dao.DAO;
+import com.personal_organizer.db.DBFunctions;
+import com.personal_organizer.modules.Tools;
+import java.sql.Date;
+//import java.util.Date;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
@@ -40,7 +44,7 @@ public class SignUpForm extends JFrame {
     JScrollPane scrollPane;
 
     JButton btnCancel, btnSave;
-    
+
     public SignUpForm() {
         this.setTitle("Personal Organizer - Sign Up");
         GridBagConstraints gbc = new GridBagConstraints();
@@ -66,10 +70,11 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLoginName = new JTextField("", 10), gbc);
+                txtLoginName.setText("mic");
 
-                
                 gbc.gridy = 1;
                 pnlPersonalInformation.add(txtPassword = new JPasswordField("", 10), gbc);
+                txtPassword.setText("micmic");
 
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("Password: *"), gbc);
@@ -79,6 +84,7 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtPassword1 = new JPasswordField("", 10), gbc);
+                txtPassword1.setText("micmic");
 
                 gbc.gridy = 3;
                 pnlPersonalInformation.add(txtFirstName = new JTextField("", 10), gbc);
@@ -94,15 +100,16 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridy = 5;
                 pnlPersonalInformation.add(txtPhone = new JTextField("", 10), gbc);
-                
+
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("Phone No.: "), gbc);
-                
+
                 gbc.gridy = 6;
                 pnlPersonalInformation.add(new JLabel("E-mail: *"), gbc);
-                
+
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtEmail = new JTextField("", 10), gbc);
+                txtEmail.setText("mixnov@bk.ru");
 
                 gbc.gridy = 7;
                 JPanel pnlBirthDay = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 5));
@@ -119,7 +126,9 @@ public class SignUpForm extends JFrame {
                 pnlBirthDay.add(birthDayMonth = new JComboBox(months));
                 pnlBirthDay.add(birthDayYear = new JComboBox(years1));
                 pnlPersonalInformation.add(pnlBirthDay, gbc);
-
+                birthDayDay.setSelectedIndex(24);
+                birthDayMonth.setSelectedIndex(4);
+                birthDayYear.setSelectedIndex(1976 - 1975);
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("Date of Birth: "), gbc);
 
@@ -127,7 +136,7 @@ public class SignUpForm extends JFrame {
                 pnlFields.add(pnlPersonalInformation, gbc);
             }
         }
-        
+
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         //gbc.gridy = 2;
         //pnlButtons.add(btnUpdate = new JButton("Update"));
@@ -135,11 +144,11 @@ public class SignUpForm extends JFrame {
 
         //gbc.gridx = 1;
         pnlButtons.add(btnCancel = new JButton("Cancel"));
-        //btnCancel.addActionListener(new CanceListener());
+        btnCancel.addActionListener(new SignUpListener());
 
         //gbc.gridx = 2;
         pnlButtons.add(btnSave = new JButton("Save"));
-        //btnSave.addActionListener(new SaveListener());
+        btnSave.addActionListener(new SignUpListener());
 
         this.add(scrollPane = new JScrollPane(pnlFields), BorderLayout.CENTER);
         //scrollPane.setBounds(0, 0, 500, 700);
@@ -148,8 +157,125 @@ public class SignUpForm extends JFrame {
         //this.setSize(550, 180);
         this.pack();
         this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        
+        //this.setVisible(true);
+
     }
 
+    private void saveUpdateUserProfile(String command) {
+        int rows = Tools.saveUpdateUserProfile(this, command);
+        if (rows > 0) {
+            JOptionPane.showMessageDialog(Personal_Organizer.signUpForm,
+                    "Login Name saved. Now you can Login.");
+            this.setVisible(false);
+            Personal_Organizer.loginForm.setLoginName(txtLoginName.getText());
+            Personal_Organizer.loginForm.setPassword(txtPassword.getText());
+            //Personal_Organizer.loginForm.setRememberLogin(false);
+            Personal_Organizer.loginForm.setVisible(true);
+        }
+    }
+
+    class SignUpListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == btnCancel) {
+                setVisible(false);
+                Personal_Organizer.loginForm.setVisible(true);
+            } else {
+                if (e.getSource() == btnSave) {
+                    saveUpdateUserProfile(e.getActionCommand().toLowerCase());
+                }
+            }
+        }
+    }
+
+    public String getFirstName() {
+        return this.txtFirstName.getText();
+    }
+
+    public void setFirstName(String FirstName) {
+        this.txtFirstName.setText(FirstName);
+    }
+
+    public String getLastName() {
+        return this.txtLastName.getText();
+    }
+
+    public void setLastName(String LastName) {
+
+    }
+
+    public String getPhone() {
+        return this.txtPhone.getText();
+    }
+
+    public void setPhone(String Phone) {
+        this.txtPhone.setText(Phone);
+    }
+
+    public String getEmail() {
+        return this.txtEmail.getText();
+    }
+
+    public void setEmail(String Email) {
+        this.txtEmail.setText(Email);
+    }
+
+    public String getLoginName() {
+        return this.txtLoginName.getText();
+    }
+
+    public void setLoginName(String LoginName) {
+        this.txtLoginName.setText(LoginName);
+    }
+
+    public String getPassword() {
+        return this.txtPassword.getText();
+    }
+
+    public void setPassword(String Password) {
+        this.txtPassword.setText(Password);
+    }
+
+    public String getPassword1() {
+        return this.txtPassword1.getText();
+    }
+
+    public void setPassword1(String Password1) {
+        this.txtPassword1.setText(Password1);
+    }
+
+    public int getBirthDayYear() {
+        return this.birthDayYear.getSelectedIndex() + 1975;
+    }
+
+    public void setBirthDayYear(int birthDayYear) {
+        this.birthDayYear.setSelectedIndex(birthDayYear - 1975);
+    }
+
+    public int getBirthDayMonth() {
+        return this.birthDayMonth.getSelectedIndex();
+    }
+
+    public void setBirthDayMonth(int birthDayMonth) {
+        this.birthDayMonth.setSelectedIndex(birthDayMonth);
+    }
+
+    public int getBirthDayDay() {
+        return this.birthDayDay.getSelectedIndex();
+    }
+
+    public void setBirthDayDay(int birthDayDay) {
+        this.birthDayDay.setSelectedIndex(birthDayDay);
+    }
+
+    public Date getBirthDay() {
+        return new Date(getBirthDayYear(), getBirthDayMonth(), getBirthDayDay());
+    }
+
+    public void setBirthDay(Date birthDayYear) {
+        this.birthDayYear.setSelectedIndex(birthDayYear.getYear() - 1975);
+        this.birthDayMonth.setSelectedIndex(birthDayYear.getMonth());
+        this.birthDayDay.setSelectedIndex(birthDayYear.getDate());
+    }
 }
