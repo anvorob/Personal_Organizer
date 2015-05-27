@@ -17,7 +17,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -35,15 +38,18 @@ import javax.swing.border.TitledBorder;
  */
 public class SignUpForm extends JFrame {
 
-    JTextField txtFirstName, txtLastName;
-    JTextField txtPhone, txtEmail, txtLoginName;
-    JPasswordField txtPassword, txtPassword1;
+    private JTextField txtFirstName, txtLastName;
+    private JTextField txtPhone, txtEmail, txtLoginName;
+    private JPasswordField txtPassword, txtPasswordRepeat;
 
-    JComboBox birthDayYear, birthDayMonth, birthDayDay;
+    private JComboBox birthDayYear, birthDayMonth, birthDayDay;
 
-    JScrollPane scrollPane;
+    private JScrollPane scrollPane;
 
-    JButton btnCancel, btnSave;
+    private JButton btnCancel, btnSave;
+
+    private ImageIcon iconLogin, iconPassword, iconPasswordRepeat, iconEmail;
+    private static String[] imageList = {"yes.png", "yes.png"};
 
     public SignUpForm() {
         this.setTitle("Personal Organizer - Sign Up");
@@ -72,7 +78,13 @@ public class SignUpForm extends JFrame {
                 pnlPersonalInformation.add(txtLoginName = new JTextField("", 10), gbc);
                 txtLoginName.setText("mic");
 
+                gbc.gridx = 2;
+                pnlPersonalInformation.add(new JLabel(iconLogin = new ImageIcon(imageList[0])), gbc);
+
                 gbc.gridy = 1;
+                pnlPersonalInformation.add(new JLabel(iconPassword = new ImageIcon(imageList[0])), gbc);
+
+                gbc.gridx = 1;
                 pnlPersonalInformation.add(txtPassword = new JPasswordField("", 10), gbc);
                 txtPassword.setText("micmic");
 
@@ -83,10 +95,14 @@ public class SignUpForm extends JFrame {
                 pnlPersonalInformation.add(new JLabel("Repeat Password: *"), gbc);
 
                 gbc.gridx = 1;
-                pnlPersonalInformation.add(txtPassword1 = new JPasswordField("", 10), gbc);
-                txtPassword1.setText("micmic");
+                pnlPersonalInformation.add(txtPasswordRepeat = new JPasswordField("", 10), gbc);
+                txtPasswordRepeat.setText("micmic");
+
+                gbc.gridx = 2;
+                pnlPersonalInformation.add(new JLabel(iconPasswordRepeat = new ImageIcon(imageList[0])), gbc);
 
                 gbc.gridy = 3;
+                gbc.gridx = 1;
                 pnlPersonalInformation.add(txtFirstName = new JTextField("", 10), gbc);
 
                 gbc.gridx = 0;
@@ -111,7 +127,11 @@ public class SignUpForm extends JFrame {
                 pnlPersonalInformation.add(txtEmail = new JTextField("", 10), gbc);
                 txtEmail.setText("mixnov@bk.ru");
 
+                gbc.gridx = 2;
+                pnlPersonalInformation.add(new JLabel(iconEmail = new ImageIcon(imageList[0])), gbc);
+
                 gbc.gridy = 7;
+                gbc.gridx = 1;
                 JPanel pnlBirthDay = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 5));
                 String[] days = {"", " 01", " 02", " 03", " 04", " 05", " 06",
                     " 07", " 08", " 09", " 10", " 11", " 12", " 13", " 14", " 15", " 16",
@@ -155,6 +175,7 @@ public class SignUpForm extends JFrame {
         this.add(pnlButtons, BorderLayout.SOUTH);
 
         //this.setSize(550, 180);
+        this.addWindowListener(new closingListener());
         this.pack();
         this.setLocationRelativeTo(null);
         //this.setVisible(true);
@@ -237,12 +258,12 @@ public class SignUpForm extends JFrame {
         this.txtPassword.setText(Password);
     }
 
-    public String getPassword1() {
-        return this.txtPassword1.getText();
+    public String getPasswordRepeat() {
+        return this.txtPasswordRepeat.getText();
     }
 
-    public void setPassword1(String Password1) {
-        this.txtPassword1.setText(Password1);
+    public void setPasswordRepeat(String PasswordRepeat) {
+        this.txtPasswordRepeat.setText(PasswordRepeat);
     }
 
     public int getBirthDayYear() {
@@ -277,5 +298,45 @@ public class SignUpForm extends JFrame {
         this.birthDayYear.setSelectedIndex(birthDayYear.getYear() - 1975);
         this.birthDayMonth.setSelectedIndex(birthDayYear.getMonth());
         this.birthDayDay.setSelectedIndex(birthDayYear.getDate());
+    }
+
+    class closingListener implements WindowListener {
+
+        @Override
+        public void windowOpened(WindowEvent e) {
+
+        }
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            setVisible(false);
+            Personal_Organizer.loginForm.setVisible(true);
+        }
+
+        @Override
+        public void windowClosed(WindowEvent e) {
+
+        }
+
+        @Override
+        public void windowIconified(WindowEvent e) {
+
+        }
+
+        @Override
+        public void windowDeiconified(WindowEvent e) {
+
+        }
+
+        @Override
+        public void windowActivated(WindowEvent e) {
+
+        }
+
+        @Override
+        public void windowDeactivated(WindowEvent e) {
+
+        }
+
     }
 }
