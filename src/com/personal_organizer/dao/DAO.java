@@ -56,7 +56,7 @@ public class DAO {
     private static final String T1COLUMN_BIRTH_DAY = "_user_birth_day";
     private static final String T1COLUMN_BIRTH_DAY_TYPE = " date, ";
     private static final String T1COLUMN_PHONE = "_phone";
-    private static final String T1COLUMN_PHONE_TYPE = " varchar(10));";
+    private static final String T1COLUMN_PHONE_TYPE = " varchar(10)";
 
 //    public static final String T2COLUMN_ID = "_id2";
 //    public static final String T2COLUMN_CATEGORY = "_category2";
@@ -67,6 +67,8 @@ public class DAO {
             = "use master\nIF DB_ID (N'" + DB_NAME + "') IS NULL\n"
             + "CREATE DATABASE OrganizerDB\nCOLLATE  Latin1_General_BIN\nWITH "
             + "TRUSTWORTHY ON, DB_CHAINING ON";
+    private static final String USE_DATABASE
+            = "use OrganizerDB";
 //    private static final String CREATE_DATABASE
 //            = "USE master;\nGO\nIF DB_ID (N'" + DB_NAME + "') IS NOT NULL\n"
 //            + "DROP DATABASE OrganizerDB;\nGO\nCREATE DATABASE OrganizerDB\n"
@@ -106,14 +108,16 @@ public class DAO {
 //        dbConnect();
 //        Tools.diff("dbConnect();", System.currentTimeMillis());
 //    }
-    private void createDataBase() {
+    private static void createDataBase() {
         // create database if not exist
-        executeQuery(CREATE_DATABASE);
+        executeUpdate(CREATE_DATABASE);
+        executeUpdate(USE_DATABASE);
+        createTables();
     }
 
-    private void createTables() {
+    private static void createTables() {
         // create table users
-        executeQuery(CREATE_TABLE_USERS);
+        executeUpdate(CREATE_TABLE_USERS);
     }
 
     private static void dbConnect() {
@@ -121,7 +125,8 @@ public class DAO {
             // get the Class object
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             Tools.diff("Class.forName(", System.currentTimeMillis());
-            String db_connect_string = "jdbc:sqlserver://" + dbServerAddress + ";databaseName=" + DB_NAME;
+            //String db_connect_string = "jdbc:sqlserver://" + dbServerAddress + ";databaseName=" + DB_NAME;
+            String db_connect_string = "jdbc:sqlserver://" + dbServerAddress;
             Tools.diff("String db_connect_string = ", System.currentTimeMillis());
             // establish a connection with the database
             conn = DriverManager.getConnection(db_connect_string,
@@ -130,6 +135,7 @@ public class DAO {
             //print("connected");
             // create a Statement object
             statement = conn.createStatement();
+            createDataBase();
             Tools.diff("this.statement = conn.createStatement();", System.currentTimeMillis());
             // create query
 //            String queryString = "select * from sysobjects where type='u'";
@@ -175,6 +181,7 @@ public class DAO {
 //            Tools.print("3");
 //            Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println(queryString + " ==> " + rows);
         return rows;
     }
 

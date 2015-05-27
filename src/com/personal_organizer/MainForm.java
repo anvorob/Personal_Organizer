@@ -95,9 +95,11 @@ public class MainForm extends JFrame implements ActionListener{
 		int day = new_c.get(Calendar.DAY_OF_MONTH);
 		int month = new_c.get(Calendar.MONTH) + 1;
 		int year = new_c.get(Calendar.YEAR);
-		System.out.println("Selected: " + day + "/" +
-		            month + "/" + year + " (DD/MM/YYYY)");
-                eventtitle.setText(""+day+"/"+month+"/"+year);
+                String date = (((""+day).length()==1) ? "0" : "") + day + "/"
+                        + (((""+month).length()==1) ? "0" : "") + month + "/"
+                        + year;
+		System.out.println("Selected: " + date + " (DD/MM/YYYY)");
+                eventtitle.setText(date);
 	      }
 	      
 	    });
