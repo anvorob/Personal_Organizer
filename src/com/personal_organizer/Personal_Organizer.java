@@ -20,13 +20,15 @@ public class Personal_Organizer {
 
     public static LoginForm loginForm;
     public static MainForm mainform;
+    public static SignUpForm signUpForm;
+    public static UserProfile userProfile;
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {        
             //          WelcomeForm welcomeform=new WelcomeForm();
-//          loginForm = new LoginForm();
+          loginForm = new LoginForm();
 //          welcomeform.setVisible(true);
 //          Thread t=new Thread(welcomeform);
 //          t.start();
@@ -37,10 +39,10 @@ public class Personal_Organizer {
 //              welcomeform.setVisible(false);
 //          }
 //          
-//          loginForm.setVisible(true);
-//          mainform=new MainForm();
-//          mainform.setVisible(true);
-//          mainform.frameSize();
+          loginForm.setVisible(true);
+          mainform=new MainForm();
+          mainform.setVisible(true);
+          mainform.frameSize();
 //        try {
 //            System.out.println(InetAddress.getLocalHost().getHostAddress());
 //        } catch (UnknownHostException ex) {

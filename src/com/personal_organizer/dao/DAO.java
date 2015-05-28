@@ -57,6 +57,7 @@ public class DAO {
     private static final String T1COLUMN_BIRTH_DAY_TYPE = " date, ";
     private static final String T1COLUMN_PHONE = "_phone";
     private static final String T1COLUMN_PHONE_TYPE = " varchar(10));";
+    private static final String T1COLUMN_EVENT_ID="_event_id";
 
 //    public static final String T2COLUMN_ID = "_id2";
 //    public static final String T2COLUMN_CATEGORY = "_category2";
@@ -264,5 +265,20 @@ public class DAO {
 
         dbClose();
         return unswer;
+    }
+    
+    public static void fetchEvents(){
+        String query="select" + T1COLUMN_EVENT_ID + " from " + TBL_EVENTS + " where "
+                + T1COLUMN_EVENT_ID +"='22'";
+        dbConnect();
+//        executeQuery(query);
+//        try{
+//            while (rs.next()) {
+//                    Tools.print(rs.getString(1));
+//                }
+//        }catch(SQLException e){
+//            System.out.println(e.toString());
+//        }
+        dbClose();
     }
 }
