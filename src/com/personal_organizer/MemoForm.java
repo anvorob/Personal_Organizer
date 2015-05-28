@@ -95,7 +95,8 @@ public class MemoForm extends JFrame implements ActionListener{
     
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==close){
-            System.exit(0);
+            //System.exit(0);
+            this.setVisible(false);
         }
 } 
 }

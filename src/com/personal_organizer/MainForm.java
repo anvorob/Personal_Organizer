@@ -11,15 +11,18 @@ package com.personal_organizer;
  */
 import com.personal_organizer.calendar.DateListener;
 import com.personal_organizer.calendar.JCalendar;
+import com.personal_organizer.modules.EventProfile;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-public class MainForm extends JFrame implements ActionListener{
+public class MainForm extends JFrame implements ActionListener,ListSelectionListener{
     
     JMenuBar topmenu;
     JMenu memo;
@@ -53,6 +56,7 @@ public class MainForm extends JFrame implements ActionListener{
     JButton btndeleteevent;
     JButton btnviewevent;
     
+    static public Object[] rowData;
     static public int fw,fx,fy;
     
     MemoForm memoform;
@@ -101,19 +105,29 @@ public class MainForm extends JFrame implements ActionListener{
 		System.out.println("Selected: " + date + " (DD/MM/YYYY)");
                 eventtitle.setText(date);
 	      }
-	      
+  
 	    });
 	    this.getContentPane().add(cal, BorderLayout.NORTH);
             
             
             pnlevents=new JPanel(new BorderLayout());
             pnleventscontrol = new JPanel(new BorderLayout());
-            btneventnext=new JButton("Next");
-            btneventprev=new JButton("Prev");
+            Icon backward = new ImageIcon(getClass().getResource("/resources/backward_32.png"));
+            Icon forward =new ImageIcon(getClass().getResource("/resources/forward_32.png"));
+            btneventnext=new JButton(forward);
+            btneventprev=new JButton(backward);
+            btneventnext.setOpaque(false);
+            btneventnext.setContentAreaFilled(false);
+            btneventnext.setBorderPainted(false);
+            btneventnext.addActionListener(this);
+            btneventprev.setOpaque(false);
+            btneventprev.setContentAreaFilled(false);
+            btneventprev.setBorderPainted(false);
+            btneventprev.addActionListener(this);
             //eventtitle=new JLabel("Title");
-            pnleventscontrol.add(btneventprev, BorderLayout.EAST);
+            pnleventscontrol.add(btneventprev, BorderLayout.WEST);
             pnleventscontrol.add(eventtitle, BorderLayout.CENTER);
-            pnleventscontrol.add(btneventnext, BorderLayout.WEST);
+            pnleventscontrol.add(btneventnext, BorderLayout.EAST);
             
             pnleventstable = new JPanel();
             String columns[]={"Title","Description","Time From","Time Till","Type","Contacts"};
@@ -124,6 +138,8 @@ public class MainForm extends JFrame implements ActionListener{
             {"","","","","",""},
             {"","","","","",""}};
             tblevents=new JTable(data,columns);
+            rowData = new Object[tblevents.getColumnCount()];
+            tblevents.getSelectionModel().addListSelectionListener(this);
             tblevents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             System.out.println(""+tblevents.getModel().getValueAt(0, 2));
             
@@ -150,6 +166,8 @@ public class MainForm extends JFrame implements ActionListener{
             btndeleteevent.addActionListener(this);
             btnviewevent.addActionListener(this);
             
+            btndeleteevent.setEnabled(false);
+            btnviewevent.setEnabled(false);
             
             pnlevents.add(pnleventscontrol, BorderLayout.NORTH);
             pnlevents.add(pnleventstable, BorderLayout.CENTER);
@@ -188,6 +206,8 @@ public class MainForm extends JFrame implements ActionListener{
        if(e.getSource()==btnaddevent){
             EventForm event=new EventForm();
             event.setVisible(true);
+            new EventProfile();
+            
        } 
        if(e.getSource()==btndeleteevent){
            System.out.println("Delete");
@@ -196,6 +216,32 @@ public class MainForm extends JFrame implements ActionListener{
            EventForm event=new EventForm();
             event.setVisible(true);
        }
+       if(e.getSource()==btneventprev){
+//           Icon backward = new ImageIcon(getClass().getResource("/resources/backward_32_pressed.png"));
+//           btneventprev=new JButton(backward);
+           System.out.println("Pressed prev");
+       }
+       if(e.getSource()==btneventnext){
+//            Icon forward =new ImageIcon(getClass().getResource("/resources/forward_32_pressed.png"));
+//            btneventnext=new JButton(forward);
+            System.out.println("Pressed next");
+       }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        //System.out.println("This is: "++" : "+tblevents.getSelectedColumn());
+        int row = tblevents.getSelectedRow();
+        //String selectedObject = (String) tblevents.getModel().getValueAt(tblevents.getSelectedRow(), tblevents.getSelectedColumn());
+        Object[] rowData = new Object[tblevents.getColumnCount()];
+        String selectedObj = "This is: ";
+        btnviewevent.setEnabled(true);
+        btndeleteevent.setEnabled(true);
+        for (int i = 0; i < tblevents.getColumnCount(); i++) {
+            rowData[i] = tblevents.getValueAt(row, i);
+            selectedObj += tblevents.getValueAt(row, i);
+        }
+        System.out.println(selectedObj);
     }
         class MListeners  implements MenuListener{
 
@@ -219,5 +265,3 @@ public class MainForm extends JFrame implements ActionListener{
     
 }
 }
-
-

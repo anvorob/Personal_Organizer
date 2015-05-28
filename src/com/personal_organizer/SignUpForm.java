@@ -60,6 +60,15 @@ public class SignUpForm extends JFrame {
 
     private static String[] imageList = {"no.png", "yes.png"};
 
+    boolean isLoginNameOk, isPasswordOk, isPasswordRepeatOk, isEmailOk;
+    
+    {
+        isLoginNameOk = false;
+        isPasswordOk = false;
+        isPasswordRepeatOk = false;
+        isEmailOk = false;
+
+    }
     public SignUpForm() {
         this.setTitle("Personal Organizer - Sign Up");
         GridBagConstraints gbc = new GridBagConstraints();
