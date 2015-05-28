@@ -40,9 +40,9 @@ public class Personal_Organizer {
 //          }
 //          
           loginForm.setVisible(true);
-          mainform=new MainForm();
-          mainform.setVisible(true);
-          mainform.frameSize();
+//          mainform=new MainForm();
+//          mainform.setVisible(true);
+//          mainform.frameSize();
 //        try {
 //            System.out.println(InetAddress.getLocalHost().getHostAddress());
 //        } catch (UnknownHostException ex) {
