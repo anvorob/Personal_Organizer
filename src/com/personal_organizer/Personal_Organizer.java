@@ -5,6 +5,7 @@
  */
 package com.personal_organizer;
 
+import com.personal_organizer.modules.UserProfile;
 import com.personal_organizer.LoginForm;
 import com.personal_organizer.messenger.Gui;
 import java.net.InetAddress;

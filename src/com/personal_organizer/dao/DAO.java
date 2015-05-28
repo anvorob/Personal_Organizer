@@ -6,7 +6,7 @@
 package com.personal_organizer.dao;
 
 import com.personal_organizer.Personal_Organizer;
-import com.personal_organizer.UserProfile;
+import com.personal_organizer.modules.UserProfile;
 import com.personal_organizer.db.DBFunctions;
 import com.personal_organizer.modules.Tools;
 import java.sql.Connection;
@@ -254,6 +254,7 @@ public class DAO {
         String userName = Personal_Organizer.userProfile.getLoginName();
         String query = "select " + T1COLUMN_ID + " from " + TBL_USERS + " where "
                 + T1COLUMN_LOGIN_NAME + " = '" + userName + "'";
+        System.out.println(query);
         dbConnect();
         executeQuery(query);
         try {
