@@ -460,9 +460,8 @@ public class SignUpForm extends JFrame {
 
         @Override
         public void focusLost(FocusEvent e) {
+            setUserProfile();
             if (e.getSource() == txtLoginName) {
-                setUserProfile();
-
                 String logon = txtLoginName.getText();
                 if (logon.length() < 3) {
                     setImageNo(cardLayout, pnlIconLogin);
@@ -478,8 +477,6 @@ public class SignUpForm extends JFrame {
                     System.out.println("The user name is already used.");
                 }
             } else if (e.getSource() == txtPassword) {
-                setUserProfile();
-
                 String password = txtPassword.getText();
                 if (password.length() < 6) {
                     setImageNo(cardLayout, pnlIconPassword);
@@ -542,7 +539,7 @@ public class SignUpForm extends JFrame {
 
     }
 
-    private void setUserProfile() {
+    void setUserProfile() {
         Tools.setUserProfile(this);
     }
 }
