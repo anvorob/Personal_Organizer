@@ -14,6 +14,7 @@ import java.sql.Date;
 //import java.util.Date;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,6 +23,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -58,17 +61,21 @@ public class SignUpForm extends JFrame {
     private JPanel pnlIconLogin, pnlIconPassword, pnlIconPasswordRepeat, pnlIconEmail;
     private CardLayout cardLayout;
 
+    JLabel lbl1, lbl2, lbl3, lbl4, lbl5, lbl6;
     private static String[] imageList = {"no.png", "yes.png"};
-
+    private int r, g, b;
     boolean isLoginNameOk, isPasswordOk, isPasswordRepeatOk, isEmailOk;
-    
+
     {
         isLoginNameOk = false;
         isPasswordOk = false;
         isPasswordRepeatOk = false;
         isEmailOk = false;
-
+        r = 239;
+        g = 239;
+        b = 239;
     }
+
     public SignUpForm() {
         this.setTitle("Personal Organizer - Sign Up");
         GridBagConstraints gbc = new GridBagConstraints();
@@ -90,7 +97,8 @@ public class SignUpForm extends JFrame {
                 gbc.gridwidth = 1;
                 gbc.gridx = 0;
                 gbc.gridy = 0;
-                pnlPersonalInformation.add(new JLabel("Login Name: *"), gbc);
+                pnlPersonalInformation.add(lbl1 = new JLabel("Login Name: *"), gbc);
+                lbl1.addMouseListener(new mouseListener());
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLoginName = new JTextField("", 10), gbc);
@@ -110,7 +118,7 @@ public class SignUpForm extends JFrame {
                 gbc.gridwidth = 3;
                 pnlPersonalInformation.add(errLogin = new OLabel(), gbc);
                 gbc.gridwidth = 1;
-                
+
                 gbc.gridx = 2;
                 gbc.gridy = 2;
                 pnlIconPassword = new JPanel();
@@ -127,7 +135,8 @@ public class SignUpForm extends JFrame {
                 System.out.println("txtPassword.getPassword() = " + txtPassword.getPassword());
 
                 gbc.gridx = 0;
-                pnlPersonalInformation.add(new JLabel("Password: *"), gbc);
+                pnlPersonalInformation.add(lbl2 = new JLabel("Password: *"), gbc);
+                lbl2.addMouseListener(new mouseListener());
 
                 gbc.gridy = 3;
                 gbc.gridx = 0;
@@ -137,12 +146,13 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 0;
                 gbc.gridy = 4;
-                pnlPersonalInformation.add(new JLabel("Repeat Password: *"), gbc);
+                pnlPersonalInformation.add(lbl3 = new JLabel("Repeat Password: *"), gbc);
+                lbl3.addMouseListener(new mouseListener());
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtPasswordRepeat = new JPasswordField("", 10), gbc);
                 txtPasswordRepeat.addFocusListener(new focusListener());
-                txtPasswordRepeat.setText("micmic");
+                txtPasswordRepeat.setText("123");
 
                 gbc.gridx = 2;
                 pnlIconPasswordRepeat = new JPanel();
@@ -163,7 +173,8 @@ public class SignUpForm extends JFrame {
                 pnlPersonalInformation.add(txtFirstName = new JTextField("", 10), gbc);
 
                 gbc.gridx = 0;
-                pnlPersonalInformation.add(new JLabel("First Name: "), gbc);
+                pnlPersonalInformation.add(lbl4 = new JLabel("First Name: "), gbc);
+                lbl4.addMouseListener(new mouseListener());
 
                 gbc.gridy = 7;
                 gbc.gridx = 0;
@@ -173,7 +184,8 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 0;
                 gbc.gridy = 8;
-                pnlPersonalInformation.add(new JLabel("Last Name: "), gbc);
+                pnlPersonalInformation.add(lbl5 = new JLabel("Last Name: "), gbc);
+                lbl5.addMouseListener(new mouseListener());
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLastName = new JTextField("", 10), gbc);
@@ -189,7 +201,8 @@ public class SignUpForm extends JFrame {
                 pnlPersonalInformation.add(txtPhone = new JTextField("", 10), gbc);
 
                 gbc.gridx = 0;
-                pnlPersonalInformation.add(new JLabel("Phone No.: "), gbc);
+                pnlPersonalInformation.add(lbl6 = new JLabel("Phone No.: "), gbc);
+                lbl6.addMouseListener(new mouseListener());
 
                 gbc.gridy = 11;
                 gbc.gridx = 0;
@@ -203,6 +216,7 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtEmail = new JTextField("", 10), gbc);
+                txtEmail.addFocusListener(new focusListener());
                 txtEmail.setText("mixnov@bk.ru");
 
                 gbc.gridx = 2;
@@ -388,21 +402,21 @@ public class SignUpForm extends JFrame {
             if (e.getSource() == btnCancel) {
 //                setVisible(false);
 //                Personal_Organizer.loginForm.setVisible(true);
-                setImageNo(cardLayout, pnlIconLogin);
-                setImageYes(cardLayout, pnlIconPassword);
-                setImageNo(cardLayout, pnlIconPasswordRepeat);
-                setImageYes(cardLayout, pnlIconEmail);
+//                setImageNo(cardLayout, pnlIconLogin);
+//                setImageYes(cardLayout, pnlIconPassword);
+//                setImageNo(cardLayout, pnlIconPasswordRepeat);
+//                setImageYes(cardLayout, pnlIconEmail);
             } else {
                 if (e.getSource() == btnSave) {
-//                    String command = e.getActionCommand().toLowerCase();
-//                    saveUpdateUserProfile(command);
-                    setImageYes(cardLayout, pnlIconLogin);
+                    String command = e.getActionCommand().toLowerCase();
+                    saveUpdateUserProfile(command);
+//                    setImageYes(cardLayout, pnlIconLogin);
                     //cardLayout.last(pnlIconLogin);
-                    setImageNo(cardLayout, pnlIconPassword);
+//                    setImageNo(cardLayout, pnlIconPassword);
                     //cardLayout.first(pnlIconPassword);
-                    setImageYes(cardLayout, pnlIconPasswordRepeat);
+//                    setImageYes(cardLayout, pnlIconPasswordRepeat);
                     //cardLayout.last(pnlIconPasswordRepeat);
-                    setImageNo(cardLayout, pnlIconEmail);
+//                    setImageNo(cardLayout, pnlIconEmail);
                     //cardLayout.first(pnlIconEmail);
 
                 }
@@ -505,19 +519,21 @@ public class SignUpForm extends JFrame {
                     }
                     String warning = "";
                     if (!hasNumber) {
-                        warning = warning + "The password has ro contain numbers.\n";
+                        warning = warning + " numbers,";
                     }
                     if (!hasCapital) {
-                        warning = warning + "The password has ro contain Upper case letters.\n";
+                        warning = warning + " Upper case letters,";
                     }
                     if (!hasSmall) {
-                        warning = warning + "The password has ro contain Lower case letters.\n";
+                        warning = warning + " Lower case letters.";
                     }
                     if (warning.equals("")) {
                         setImageYes(cardLayout, pnlIconPassword);
                         errPassword.setText("");
                         System.out.println("Password - Ok");
                     } else {
+                        warning = "The password has ro contain" + warning;
+                        warning = warning.substring(0, warning.length() - 1) + ".";
                         setImageNo(cardLayout, pnlIconPassword);
                         errPassword.setText(warning);
                         System.out.println(warning);
@@ -527,11 +543,47 @@ public class SignUpForm extends JFrame {
                 if (!txtPassword.getText().equals(txtPasswordRepeat.getText())) {
                     setImageNo(cardLayout, pnlIconPasswordRepeat);
                     errPasswordRepeat.setText("The password and repeat password are not match.");
-                    System.out.println("The password and repeat password are not match. "+txtPassword.getText()+" != "+txtPasswordRepeat.getText());
+                    System.out.println("The password and repeat password are not match. " + txtPassword.getText() + " != " + txtPasswordRepeat.getText());
                 } else {
                     setImageYes(cardLayout, pnlIconPasswordRepeat);
                     errPasswordRepeat.setText("");
                     System.out.println("Password Repeat - Ok.");
+                }
+            } else if (e.getSource() == txtEmail) {
+                int at = 0;
+                String eMail = txtEmail.getText();
+                String warning = "";
+                if (eMail.equals("")) {
+                    setImageNo(cardLayout, pnlIconEmail);
+                    errEmail.setToolTipText("You have to enter E-Mail address.");
+                    warning = "You have to enter E-Mail address.";
+                    System.out.println("You have to enter E-Mail address.");
+                } else if (eMail.indexOf('.') == -1) {
+                    warning = "The '.' sibbol is missing!";
+                    System.out.println("The '.' sibbol is missing!");
+                } else if ((eMail.indexOf(',') >= 0) || (eMail.indexOf(';') >= 0) || (eMail.indexOf(' ') >= 0)) {
+                    warning = "E-mail address is incorrect!";
+                    System.out.println("E-mail address is incorrect!");
+                } else {
+                    at = eMail.indexOf('@');
+                    if (at == -1) {
+                        warning = "The '@' simbol is missing!";
+                        System.out.println("The '@' simbol is missing!");
+                    } else if ((at < 1) || (at > eMail.length() - 5)) {
+                        warning = "E-mail address is incorrect!";
+                        System.out.println("E-mail address is incorrect!");
+                    } else if ((eMail.charAt(at - 1) == '.') || (eMail.charAt(at + 1) == '.')) {
+                        warning = "E-mail address is incorrect!";
+                        System.out.println("E-mail address is incorrect!");
+                    }
+
+                }
+                if(warning.equals("")){
+                    errEmail.setText("");
+                    cardLayout.last(pnlIconEmail);
+                } else {
+                    errEmail.setText(warning);
+                    cardLayout.first(pnlIconEmail);
                 }
             }
 
@@ -541,5 +593,60 @@ public class SignUpForm extends JFrame {
 
     void setUserProfile() {
         Tools.setUserProfile(this);
+    }
+
+    class mouseListener implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+//            Object ee = e.getSource();
+//            if(ee == lbl1){
+//                r++;
+//                if(r == 256) r = 255;
+//                lbl1.setText(""+r);
+//            } else if(ee == lbl2){
+//                g++;
+//                if(g == 256) g = 255;
+//                lbl2.setText(""+g);
+//            } else if(ee == lbl3){
+//                b++;
+//                if(b == 256) b = 255;
+//                lbl3.setText(""+b);
+//            } else if(ee == lbl4){
+//                r--;
+//                if(r == -1) r = 0;
+//                lbl4.setText(""+r);
+//            } else if(ee == lbl5){
+//                g--;
+//                if(g == -1) g = 0;
+//                lbl5.setText(""+g);
+//            } else if(ee == lbl6){
+//                b--;
+//                if(b == -1) b = 0;
+//                lbl6.setText(""+b);
+//            }
+//            errLogin.setForeground(new Color(r, g, b));
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+
     }
 }

@@ -34,7 +34,7 @@ public class EventProfile {
         description=descript;
         type=t;
         contacts=cont;
-        DAO.fetchEvents();
+        //DAO.fetchEvents();
     }
     
 }

@@ -145,7 +145,7 @@ public class Tools {
     public static String encryptionA(String password) {
         StringBuilder tmpPassword = new StringBuilder("");
 
-        System.out.println(password);
+        System.out.println("0 - " + password);
         StringBuilder newPassword = new StringBuilder("");
         for (int i = 0; i < password.length(); i++) {
             int k = i + 1;
@@ -154,7 +154,7 @@ public class Tools {
             tmpPassword.append(l);
             tmpPassword.append(j);
         }
-        System.out.println(tmpPassword);
+        System.out.println("1 - " + tmpPassword);
         String tmpPswrd = tmpPassword.toString();
         int j = tmpPswrd.length() / 2;
         for (int i = 0; i < j; i++) {
@@ -198,7 +198,7 @@ public class Tools {
         }
         String tmpPswrd = tmpPassword.toString();
         System.out.println(tmpPswrd);
-
+        String s = encryptionA("123");
         while (tmpPswrd.length() > 2) {
             int number = Integer.parseInt(tmpPswrd.substring(0, 1));
             char tmpPart = (char) Integer.parseInt(tmpPswrd.substring(1, 1 + number));
@@ -227,7 +227,7 @@ public class Tools {
                     if (str.equals("")) {
                         frmLogin.setRememberLogin(false);
                     } else if (frmLogin.getRememberLogin()) {
-                        frmLogin.setLoginName(decryptionA(str));
+                        frmLogin.setLoginName(str);
                     }
                     break;
                 case "Password":
@@ -252,7 +252,7 @@ public class Tools {
                     if (str.equals("")) {
                         frmLogin.setRememberSQLSettings(false);
                     } else if (frmLogin.getRememberSQLSettings()) {
-                        frmLogin.setServerUserName(decryptionA(str));
+                        frmLogin.setServerUserName(str);
                         DAO.dbServerUserName = frmLogin.getServerUserName();
                     }
                     break;
@@ -277,7 +277,7 @@ public class Tools {
         str.append("\r\n");
         str.append("LoginName");
         str.append("=");
-        str.append(encryptionA(frmLogin.getLoginName()));
+        str.append(frmLogin.getLoginName());
         str.append("\r\n");
         str.append("Password");
         str.append("=");
@@ -294,7 +294,7 @@ public class Tools {
         str.append("\r\n");
         str.append("ServerUserName");
         str.append("=");
-        str.append(encryptionA(frmLogin.getServerUserName()));
+        str.append(frmLogin.getServerUserName());
         DAO.dbServerUserName = frmLogin.getServerUserName();
         str.append("\r\n");
         str.append("ServerPassword");
@@ -308,42 +308,8 @@ public class Tools {
     public static int saveUpdateUserProfile(SignUpForm frmSignUp, String command) {
         int rows = 0;
         System.out.println("btnSave");
-        if (frmSignUp.getLoginName().equals("")) {
-            JOptionPane.showMessageDialog(Personal_Organizer.signUpForm,
-                    "The field 'Login Name' can not be empty!");
-            System.out.println("The field 'Login Name' can not be empty!");
-        } else {
-            if (frmSignUp.getEmail().equals("")) {
-                JOptionPane.showMessageDialog(Personal_Organizer.signUpForm,
-                        "The field 'E-Mail' can not be empty!");
-                System.out.println("The field 'E-Mail' can not be empty!");
-            } else {
-                if (!frmSignUp.getPassword().equals(frmSignUp.getPasswordRepeat())) {
-                    JOptionPane.showMessageDialog(Personal_Organizer.signUpForm,
-                            "Passwords are not match!");
-                    System.out.println("Passwords are not match!");
-                } else {
-                    if (frmSignUp.getPassword().length() < 5) {
-                        JOptionPane.showMessageDialog(Personal_Organizer.signUpForm,
-                                "The minimal Password's length is 5 characters!");
-                        System.out.println("The minimal Password's length is 5 "
-                                + "characters!");
-                    } else {
-                        setUserProfile(frmSignUp);
-                        if (!DBFunctions.isTheLoginNameNotUsed()) {
-                            JOptionPane.showMessageDialog(Personal_Organizer.signUpForm,
-                                    "The Login name '" + Personal_Organizer.userProfile.getLoginName()
-                                    + "' is already used.");
-                            System.out.println("The Login name '"
-                                    + Personal_Organizer.userProfile.getLoginName()
-                                    + "' is already used.");
-                        } else {
-                            rows = DBFunctions.saveUpdateUserPassword(command);
-                        }
-                    }
-                }
-            }
-        }
+        setUserProfile(frmSignUp);
+        rows = DBFunctions.saveUpdateUserPassword(command);
         return rows;
     }
 
