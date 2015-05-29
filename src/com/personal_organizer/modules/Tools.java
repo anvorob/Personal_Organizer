@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 public class Tools {
 
     public static long time;
-    private static boolean showCommentForDebuging = false;
+    private static boolean showCommentForDebuging = true;
     // указываем путь к файлу с которым мы будем работать
     private static final String PATH = "PersonalOrganizer.ini";
     // класс для чтения файла
@@ -228,7 +228,7 @@ public class Tools {
                     if (str.equals("")) {
                         frmLogin.setRememberLogin(false);
                     } else if (frmLogin.getRememberLogin()) {
-                        frmLogin.setLoginName(decryptionA(str));
+                        frmLogin.setLoginName(str);
                     }
                     break;
                 case "Password":
@@ -253,7 +253,7 @@ public class Tools {
                     if (str.equals("")) {
                         frmLogin.setRememberSQLSettings(false);
                     } else if (frmLogin.getRememberSQLSettings()) {
-                        frmLogin.setServerUserName(decryptionA(str));
+                        frmLogin.setServerUserName(str);
                         DAO.dbServerUserName = frmLogin.getServerUserName();
                     }
                     break;
@@ -278,7 +278,7 @@ public class Tools {
         str.append("\r\n");
         str.append("LoginName");
         str.append("=");
-        str.append(encryptionA(frmLogin.getLoginName()));
+        str.append(frmLogin.getLoginName());
         str.append("\r\n");
         str.append("Password");
         str.append("=");
@@ -295,7 +295,7 @@ public class Tools {
         str.append("\r\n");
         str.append("ServerUserName");
         str.append("=");
-        str.append(encryptionA(frmLogin.getServerUserName()));
+        str.append(frmLogin.getServerUserName());
         DAO.dbServerUserName = frmLogin.getServerUserName();
         str.append("\r\n");
         str.append("ServerPassword");
@@ -319,7 +319,7 @@ public class Tools {
                         "The field 'E-Mail' can not be empty!");
                 System.out.println("The field 'E-Mail' can not be empty!");
             } else {
-                if (!frmSignUp.getPassword().equals(frmSignUp.getPassword1())) {
+                if (!frmSignUp.getPassword().equals(frmSignUp.getPasswordRepeat())) {
                     JOptionPane.showMessageDialog(Personal_Organizer.signUpForm,
                             "Passwords are not match!");
                     System.out.println("Passwords are not match!");
