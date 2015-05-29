@@ -8,7 +8,7 @@ package com.personal_organizer.db;
 import com.personal_organizer.LoginForm;
 import com.personal_organizer.MainForm;
 import com.personal_organizer.Personal_Organizer;
-import com.personal_organizer.UserProfile;
+import com.personal_organizer.modules.UserProfile;
 import com.personal_organizer.dao.DAO;
 import com.personal_organizer.modules.Tools;
 
@@ -49,5 +49,4 @@ public class DBFunctions {
     public static int saveUpdateUserPassword(String command) {
         return DAO.saveUpdateUserPassword(command);
     }
-    
 }

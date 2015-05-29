@@ -8,7 +8,6 @@ package com.personal_organizer.modules;
 import com.personal_organizer.LoginForm;
 import com.personal_organizer.Personal_Organizer;
 import com.personal_organizer.SignUpForm;
-import com.personal_organizer.UserProfile;
 import com.personal_organizer.dao.DAO;
 import com.personal_organizer.db.DBFunctions;
 //import java.io.File;
@@ -348,7 +347,7 @@ public class Tools {
         return rows;
     }
 
-    private static void setUserProfile(SignUpForm frmSignUp) {
+    public static void setUserProfile(SignUpForm frmSignUp) {
         System.out.println("setUserProfile");
 
         Personal_Organizer.userProfile = new UserProfile(frmSignUp.getLoginName(),

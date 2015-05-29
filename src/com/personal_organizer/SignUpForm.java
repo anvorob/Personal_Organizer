@@ -8,15 +8,21 @@ package com.personal_organizer;
 import com.personal_organizer.dao.DAO;
 import com.personal_organizer.db.DBFunctions;
 import com.personal_organizer.modules.Tools;
+import com.personal_organizer.modules.UserProfile;
+import com.personal_organizer.view.OLabel;
 import java.sql.Date;
 //import java.util.Date;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.BorderFactory;
@@ -41,7 +47,7 @@ public class SignUpForm extends JFrame {
     private JTextField txtFirstName, txtLastName;
     private JTextField txtPhone, txtEmail, txtLoginName;
     private JPasswordField txtPassword, txtPasswordRepeat;
-
+    private OLabel errLogin, errPassword, errPasswordRepeat, errEmail;
     private JComboBox birthDayYear, birthDayMonth, birthDayDay;
 
     private JScrollPane scrollPane;
@@ -49,8 +55,20 @@ public class SignUpForm extends JFrame {
     private JButton btnCancel, btnSave;
 
     private ImageIcon iconLogin, iconPassword, iconPasswordRepeat, iconEmail;
-    private static String[] imageList = {"yes.png", "yes.png"};
+    private JPanel pnlIconLogin, pnlIconPassword, pnlIconPasswordRepeat, pnlIconEmail;
+    private CardLayout cardLayout;
 
+    private static String[] imageList = {"no.png", "yes.png"};
+
+    boolean isLoginNameOk, isPasswordOk, isPasswordRepeatOk, isEmailOk;
+    
+    {
+        isLoginNameOk = false;
+        isPasswordOk = false;
+        isPasswordRepeatOk = false;
+        isEmailOk = false;
+
+    }
     public SignUpForm() {
         this.setTitle("Personal Organizer - Sign Up");
         GridBagConstraints gbc = new GridBagConstraints();
@@ -77,50 +95,110 @@ public class SignUpForm extends JFrame {
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLoginName = new JTextField("", 10), gbc);
                 txtLoginName.setText("mic");
+                txtLoginName.addFocusListener(new focusListener());
 
                 gbc.gridx = 2;
-                pnlPersonalInformation.add(new JLabel(iconLogin = new ImageIcon(imageList[0])), gbc);
+                pnlIconLogin = new JPanel();
+                cardLayout = new CardLayout();
+                pnlIconLogin.setLayout(cardLayout);
+                pnlIconLogin.add(new JLabel(new ImageIcon(imageList[0])));
+                pnlIconLogin.add(new JLabel(new ImageIcon(imageList[1])));
+                pnlPersonalInformation.add(pnlIconLogin, gbc);
 
                 gbc.gridy = 1;
-                pnlPersonalInformation.add(new JLabel(iconPassword = new ImageIcon(imageList[0])), gbc);
+                gbc.gridx = 0;
+                gbc.gridwidth = 3;
+                pnlPersonalInformation.add(errLogin = new OLabel(), gbc);
+                gbc.gridwidth = 1;
+                
+                gbc.gridx = 2;
+                gbc.gridy = 2;
+                pnlIconPassword = new JPanel();
+                pnlIconPassword.setLayout(cardLayout);
+                pnlIconPassword.add(new JLabel(new ImageIcon(imageList[0])));
+                pnlIconPassword.add(new JLabel(new ImageIcon(imageList[1])));
+                pnlPersonalInformation.add(pnlIconPassword, gbc);
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtPassword = new JPasswordField("", 10), gbc);
                 txtPassword.setText("micmic");
+                txtPassword.addFocusListener(new focusListener());
+                System.out.println("txtPassword.getText() = " + txtPassword.getText());
+                System.out.println("txtPassword.getPassword() = " + txtPassword.getPassword());
 
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("Password: *"), gbc);
 
-                gbc.gridy = 2;
+                gbc.gridy = 3;
+                gbc.gridx = 0;
+                gbc.gridwidth = 3;
+                pnlPersonalInformation.add(errPassword = new OLabel(), gbc);
+                gbc.gridwidth = 1;
+
+                gbc.gridx = 0;
+                gbc.gridy = 4;
                 pnlPersonalInformation.add(new JLabel("Repeat Password: *"), gbc);
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtPasswordRepeat = new JPasswordField("", 10), gbc);
+                txtPasswordRepeat.addFocusListener(new focusListener());
                 txtPasswordRepeat.setText("micmic");
 
                 gbc.gridx = 2;
-                pnlPersonalInformation.add(new JLabel(iconPasswordRepeat = new ImageIcon(imageList[0])), gbc);
+                pnlIconPasswordRepeat = new JPanel();
+                //cardIconPassword = new CardLayout();
+                pnlIconPasswordRepeat.setLayout(cardLayout);
+                pnlIconPasswordRepeat.add(new JLabel(new ImageIcon(imageList[0])));
+                pnlIconPasswordRepeat.add(new JLabel(new ImageIcon(imageList[1])));
+                pnlPersonalInformation.add(pnlIconPasswordRepeat, gbc);
 
-                gbc.gridy = 3;
+                gbc.gridy = 5;
+                gbc.gridx = 0;
+                gbc.gridwidth = 3;
+                pnlPersonalInformation.add(errPasswordRepeat = new OLabel(), gbc);
+                gbc.gridwidth = 1;
+
+                gbc.gridy = 6;
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtFirstName = new JTextField("", 10), gbc);
 
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("First Name: "), gbc);
 
-                gbc.gridy = 4;
+                gbc.gridy = 7;
+                gbc.gridx = 0;
+                gbc.gridwidth = 3;
+                pnlPersonalInformation.add(new OLabel(), gbc);
+                gbc.gridwidth = 1;
+
+                gbc.gridx = 0;
+                gbc.gridy = 8;
                 pnlPersonalInformation.add(new JLabel("Last Name: "), gbc);
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLastName = new JTextField("", 10), gbc);
 
-                gbc.gridy = 5;
+                gbc.gridy = 9;
+                gbc.gridx = 0;
+                gbc.gridwidth = 3;
+                pnlPersonalInformation.add(new OLabel(), gbc);
+                gbc.gridwidth = 1;
+
+                gbc.gridx = 1;
+                gbc.gridy = 10;
                 pnlPersonalInformation.add(txtPhone = new JTextField("", 10), gbc);
 
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("Phone No.: "), gbc);
 
-                gbc.gridy = 6;
+                gbc.gridy = 11;
+                gbc.gridx = 0;
+                gbc.gridwidth = 3;
+                pnlPersonalInformation.add(new OLabel(), gbc);
+                gbc.gridwidth = 1;
+
+                gbc.gridx = 0;
+                gbc.gridy = 12;
                 pnlPersonalInformation.add(new JLabel("E-mail: *"), gbc);
 
                 gbc.gridx = 1;
@@ -128,9 +206,19 @@ public class SignUpForm extends JFrame {
                 txtEmail.setText("mixnov@bk.ru");
 
                 gbc.gridx = 2;
-                pnlPersonalInformation.add(new JLabel(iconEmail = new ImageIcon(imageList[0])), gbc);
+                pnlIconEmail = new JPanel();
+                pnlIconEmail.setLayout(cardLayout);
+                pnlIconEmail.add(new JLabel(new ImageIcon(imageList[0])));
+                pnlIconEmail.add(new JLabel(new ImageIcon(imageList[1])));
+                pnlPersonalInformation.add(pnlIconEmail, gbc);
 
-                gbc.gridy = 7;
+                gbc.gridy = 13;
+                gbc.gridx = 0;
+                gbc.gridwidth = 3;
+                pnlPersonalInformation.add(errEmail = new OLabel(), gbc);
+                gbc.gridwidth = 1;
+
+                gbc.gridy = 14;
                 gbc.gridx = 1;
                 JPanel pnlBirthDay = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 5));
                 String[] days = {"", " 01", " 02", " 03", " 04", " 05", " 06",
@@ -182,6 +270,14 @@ public class SignUpForm extends JFrame {
 
     }
 
+    private void setImageNo(CardLayout card, JPanel pnl) {
+        card.first(pnl);
+    }
+
+    private void setImageYes(CardLayout card, JPanel pnl) {
+        card.last(pnl);
+    }
+
     private void saveUpdateUserProfile(String command) {
         int rows = Tools.saveUpdateUserProfile(this, command);
         if (rows > 0) {
@@ -192,21 +288,6 @@ public class SignUpForm extends JFrame {
             Personal_Organizer.loginForm.setPassword(txtPassword.getText());
             //Personal_Organizer.loginForm.setRememberLogin(false);
             Personal_Organizer.loginForm.setVisible(true);
-        }
-    }
-
-    class SignUpListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == btnCancel) {
-                setVisible(false);
-                Personal_Organizer.loginForm.setVisible(true);
-            } else {
-                if (e.getSource() == btnSave) {
-                    saveUpdateUserProfile(e.getActionCommand().toLowerCase());
-                }
-            }
         }
     }
 
@@ -300,43 +381,165 @@ public class SignUpForm extends JFrame {
         this.birthDayDay.setSelectedIndex(birthDayYear.getDate());
     }
 
-    class closingListener implements WindowListener {
+    class SignUpListener implements ActionListener {
 
         @Override
-        public void windowOpened(WindowEvent e) {
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == btnCancel) {
+//                setVisible(false);
+//                Personal_Organizer.loginForm.setVisible(true);
+                setImageNo(cardLayout, pnlIconLogin);
+                setImageYes(cardLayout, pnlIconPassword);
+                setImageNo(cardLayout, pnlIconPasswordRepeat);
+                setImageYes(cardLayout, pnlIconEmail);
+            } else {
+                if (e.getSource() == btnSave) {
+//                    String command = e.getActionCommand().toLowerCase();
+//                    saveUpdateUserProfile(command);
+                    setImageYes(cardLayout, pnlIconLogin);
+                    //cardLayout.last(pnlIconLogin);
+                    setImageNo(cardLayout, pnlIconPassword);
+                    //cardLayout.first(pnlIconPassword);
+                    setImageYes(cardLayout, pnlIconPasswordRepeat);
+                    //cardLayout.last(pnlIconPasswordRepeat);
+                    setImageNo(cardLayout, pnlIconEmail);
+                    //cardLayout.first(pnlIconEmail);
 
+                }
+            }
         }
+    }
 
+    class closingListener extends WindowAdapter {
+
+//        @Override
+//        public void windowOpened(WindowEvent e) {
+//
+//        }
+//
         @Override
         public void windowClosing(WindowEvent e) {
             setVisible(false);
             Personal_Organizer.loginForm.setVisible(true);
         }
 
+//
+//        @Override
+//        public void windowClosed(WindowEvent e) {
+//
+//        }
+//
+//        @Override
+//        public void windowIconified(WindowEvent e) {
+//
+//        }
+//
+//        @Override
+//        public void windowDeiconified(WindowEvent e) {
+//
+//        }
+//
+//        @Override
+//        public void windowActivated(WindowEvent e) {
+//
+//        }
+//
+//        @Override
+//        public void windowDeactivated(WindowEvent e) {
+//
+//        }
+//
+    }
+
+    class focusListener implements FocusListener {
+
         @Override
-        public void windowClosed(WindowEvent e) {
+        public void focusGained(FocusEvent e) {
 
         }
 
         @Override
-        public void windowIconified(WindowEvent e) {
+        public void focusLost(FocusEvent e) {
+            setUserProfile();
+            if (e.getSource() == txtLoginName) {
+                String logon = txtLoginName.getText();
+                if (logon.length() < 3) {
+                    setImageNo(cardLayout, pnlIconLogin);
+                    errLogin.setText("The user name can't be less then 3 characters.");
+                    System.out.println("The user name can't be less then 3 characters.");
+                } else if (DBFunctions.isTheLoginNameNotUsed()) {
+                    setImageYes(cardLayout, pnlIconLogin);
+                    errLogin.setText("");
+                    System.out.println("Login - Ok");
+                } else {
+                    setImageNo(cardLayout, pnlIconLogin);
+                    errLogin.setText("The user name is already used.");
+                    System.out.println("The user name is already used.");
+                }
+            } else if (e.getSource() == txtPassword) {
+                String password = txtPassword.getText();
+                if (password.length() < 6) {
+                    setImageNo(cardLayout, pnlIconPassword);
+                    errPassword.setToolTipText("The password can't be less then 6 characters.");
+                    System.out.println("The password can't be less then 6 characters.");
+                } else {
+                    boolean hasNumber = false;
+                    boolean hasCapital = false;
+                    boolean hasSmall = false;
+                    boolean hasSpecificCharacters = false;
+                    System.out.println(hasNumber + " - " + hasCapital + " - " + hasSmall + " - " + hasSpecificCharacters);
+                    for (int i = 0; i < password.length(); i++) {
+                        if (hasNumber && hasCapital && hasSmall && hasSpecificCharacters) {
+                            break;
+                        }
+                        if (!hasNumber && Character.isDigit(password.charAt(i))) {
+                            hasNumber = true;
+                        }
+                        if (!hasCapital && Character.isUpperCase(password.charAt(i))) {
+                            hasCapital = true;
+                        }
+                        if (!hasSmall && Character.isLowerCase(password.charAt(i))) {
+                            hasSmall = true;
+                        }
+                        //if(!hasNumber && Character.isDigit(password.charAt(i))) hasNumber = true;
+                    }
+                    String warning = "";
+                    if (!hasNumber) {
+                        warning = warning + "The password has ro contain numbers.\n";
+                    }
+                    if (!hasCapital) {
+                        warning = warning + "The password has ro contain Upper case letters.\n";
+                    }
+                    if (!hasSmall) {
+                        warning = warning + "The password has ro contain Lower case letters.\n";
+                    }
+                    if (warning.equals("")) {
+                        setImageYes(cardLayout, pnlIconPassword);
+                        errPassword.setText("");
+                        System.out.println("Password - Ok");
+                    } else {
+                        setImageNo(cardLayout, pnlIconPassword);
+                        errPassword.setText(warning);
+                        System.out.println(warning);
+                    }
+                }
+            } else if (e.getSource() == txtPasswordRepeat) {
+                if (!txtPassword.getText().equals(txtPasswordRepeat.getText())) {
+                    setImageNo(cardLayout, pnlIconPasswordRepeat);
+                    errPasswordRepeat.setText("The password and repeat password are not match.");
+                    System.out.println("The password and repeat password are not match. "+txtPassword.getText()+" != "+txtPasswordRepeat.getText());
+                } else {
+                    setImageYes(cardLayout, pnlIconPasswordRepeat);
+                    errPasswordRepeat.setText("");
+                    System.out.println("Password Repeat - Ok.");
+                }
+            }
 
         }
 
-        @Override
-        public void windowDeiconified(WindowEvent e) {
+    }
 
-        }
-
-        @Override
-        public void windowActivated(WindowEvent e) {
-
-        }
-
-        @Override
-        public void windowDeactivated(WindowEvent e) {
-
-        }
-
+    void setUserProfile() {
+        Tools.setUserProfile(this);
     }
 }
