@@ -48,15 +48,12 @@ public class LoginForm extends OFrame {
 
         if ((com.sun.awt.AWTUtilities.isTranslucencySupported(com.sun.awt.AWTUtilities.Translucency.PERPIXEL_TRANSLUCENT))
                 && (com.sun.awt.AWTUtilities.isTranslucencyCapable(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()))) {
-            this.setUndecorated(true);
+            //this.setUndecorated(true);
             //com.sun.awt.AWTUtilities.setWindowOpaque(this, false);
-            com.sun.awt.AWTUtilities.setWindowOpacity(this, .75);}
-            this.setTitle("Personal Organizer - Login");
-            
+            com.sun.awt.AWTUtilities.setWindowOpacity(this, 0.75F);
         }
-        
-        
-        
+        this.setTitle("Personal Organizer - Login");
+
         //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.addWindowListener(new CloseListener());
         JPanel pnlMain = new JPanel();

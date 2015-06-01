@@ -7,6 +7,7 @@ package com.personal_organizer;
 
 import com.personal_organizer.modules.UserProfile;
 import com.personal_organizer.LoginForm;
+import com.personal_organizer.modules.EventProfile;
 import com.personal_organizer.messenger.Gui;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -39,7 +40,7 @@ public class Personal_Organizer {
 //          if(welcomeform.isRunning()==false){
 //              welcomeform.setVisible(false);
 //          }
-//          
+//          new EventProfile();
           loginForm.setVisible(true);
 //          mainform=new MainForm();
 //          mainform.setVisible(true);

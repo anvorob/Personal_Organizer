@@ -21,7 +21,7 @@ public class EventProfile {
     private String description;
     private String type;
     private String[] contacts;
-    
+
     public EventProfile(){
         this("","","","","","",new String[2]);
     }
@@ -35,6 +35,9 @@ public class EventProfile {
         type=t;
         contacts=cont;
         //DAO.fetchEvents();
+        System.out.println("Print piski");
+        DAO.getEvent();
+        System.out.println("Print siski");
     }
-    
+
 }

@@ -273,4 +273,22 @@ public class DAO {
         dbClose();
         return unswer;
     }
+    
+    public static void getEvent(){
+        String query = "select * from " + TBL_EVENTS + " where "
+                + T1COLUMN_ID + " = 'YRKV2H5QGV'";
+        dbConnect();
+        executeQuery(query);
+        try {
+            
+                while (rs.next()) {
+                    Tools.print(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6));
+                }
+            
+        } catch (SQLException ex) {
+            //Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        dbClose();
+    }
 }
