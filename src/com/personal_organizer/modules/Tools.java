@@ -17,6 +17,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 //import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -329,6 +332,31 @@ public class Tools {
         int day = frmSignUp.getBirthDayDay();
         Personal_Organizer.userProfile.setBirthDay(new Date(year, month, day));
 
+    }
+
+    public static String md5Custom(String st) {
+        MessageDigest messageDigest = null;
+        byte[] digest = new byte[0];
+
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.reset();
+            messageDigest.update(st.getBytes());
+            digest = messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            // С‚СѓС‚ РјРѕР¶РЅРѕ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ РѕС€РёР±РєСѓ
+            // РІРѕР·РЅРёРєР°РµС‚ РѕРЅР° РµСЃР»Рё РІ РїРµСЂРµРґР°РІР°РµРјС‹Р№ Р°Р»РіРѕСЂРёС‚Рј РІ getInstance(,,,) РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+            e.printStackTrace();
+        }
+
+        BigInteger bigInt = new BigInteger(1, digest);
+        String md5Hex = bigInt.toString(16);
+
+        while (md5Hex.length() < 32) {
+            md5Hex = "0" + md5Hex;
+        }
+
+        return md5Hex;
     }
 
 }

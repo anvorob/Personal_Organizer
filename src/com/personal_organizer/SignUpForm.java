@@ -395,6 +395,34 @@ public class SignUpForm extends JFrame {
         this.birthDayDay.setSelectedIndex(birthDayYear.getDate());
     }
 
+    public void setCommand(String command) {
+        btnSave.setText(command);
+        UserProfile userProfile = Personal_Organizer.userProfile;
+        if (command == "Update") {
+            txtLoginName.setText(userProfile.getLoginName());
+            if (userProfile.getFirstName() != null) {
+                txtFirstName.setText(userProfile.getFirstName());
+            }
+            if (userProfile.getLastName() != null) {
+                txtLastName.setText(userProfile.getLastName());
+            }
+            if (userProfile.getPhone() != null) {
+                txtPhone.setText(userProfile.getPhone());
+            }
+            txtEmail.setText(userProfile.getUserEmail());
+            txtPassword.setText(userProfile.getPassword());
+            txtPasswordRepeat.setText(userProfile.getPassword());
+            System.out.println(userProfile.getPassword());
+            System.out.println(txtPassword.getText());
+            System.out.println(txtPasswordRepeat.getText());
+            txtLoginName.setEnabled(false);
+            setImageYes(cardLayout, pnlIconLogin);
+            setImageYes(cardLayout, pnlIconPassword);
+            setImageYes(cardLayout, pnlIconPasswordRepeat);
+            setImageYes(cardLayout, pnlIconEmail);
+        }
+    }
+
     class SignUpListener implements ActionListener {
 
         @Override
@@ -434,7 +462,11 @@ public class SignUpForm extends JFrame {
         @Override
         public void windowClosing(WindowEvent e) {
             setVisible(false);
-            Personal_Organizer.loginForm.setVisible(true);
+            if(btnSave.getText().equals("Update")){
+                Personal_Organizer.mainform.setVisible(true);
+            } else {
+                Personal_Organizer.loginForm.setVisible(true);
+            }
         }
 
 //
@@ -578,7 +610,7 @@ public class SignUpForm extends JFrame {
                     }
 
                 }
-                if(warning.equals("")){
+                if (warning.equals("")) {
                     errEmail.setText("");
                     cardLayout.last(pnlIconEmail);
                 } else {

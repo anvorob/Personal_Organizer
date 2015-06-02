@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 //import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -129,6 +130,8 @@ public class DAO {
             String db_connect_string = "jdbc:sqlserver://" + dbServerAddress;
             Tools.diff("String db_connect_string = ", System.currentTimeMillis());
             // establish a connection with the database
+            System.out.println("conn = DriverManager.getConnection(" + db_connect_string + ","
+                    + dbServerUserName + "," + dbServerPassword + ";");
             conn = DriverManager.getConnection(db_connect_string,
                     dbServerUserName, dbServerPassword);
             Tools.diff("this.conn = DriverManager.getConnection(db_connect_string,", System.currentTimeMillis());
@@ -189,15 +192,37 @@ public class DAO {
         dbConnect();
         boolean unswer = false;
         String loginName = userProfile.getLoginName();
-        String password = userProfile.getPassword();
+        String password = Tools.md5Custom(userProfile.getPassword());
 
-        String query = "select " + T1COLUMN_ID + " from " + TBL_USERS + " where "
+        String query = "select * from " + TBL_USERS + " where "
                 + T1COLUMN_LOGIN_NAME + " = '" + loginName + "' and " + T1COLUMN_PASSWORD
                 + " = '" + password + "'";
         executeQuery(query);
         try {
             if (rs.next()) {
                 unswer = true;
+//                System.out.println();
+//                System.out.println("1 UserID = " + rs.getString(1));
+//                System.out.println("2 FirstName = " + rs.getString(2));
+//                System.out.println("3 LastName = " + rs.getString(3));
+//                System.out.println("5 UserEmail = " + rs.getString(5));
+//                
+////                new SimpleDateFormat("yyyy-MM-dd").format(date)
+////                SimpleDateFormat dt1 = new SimpleDateFormat("dd/mmmm/yyyy");
+//                System.out.println("6 BirthDay = " + new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate(7)));
+                Personal_Organizer.userProfile.setUserID(rs.getString(1));
+                Personal_Organizer.userProfile.setFirstName(rs.getString(2));
+                Personal_Organizer.userProfile.setLastName(rs.getString(3));
+                Personal_Organizer.userProfile.setUserEmail(rs.getString(5));
+                Personal_Organizer.userProfile.setBirthDay(rs.getDate(7));
+                Personal_Organizer.userProfile.setPhone(rs.getString(8));
+//                userProfile.setUserID(rs.getString(1));
+//                userProfile.setFirstName(rs.getString(2));
+//                userProfile.setLastName(rs.getString(3));
+//                userProfile.setUserEmail(rs.getString(4));
+//                userProfile.setBirthDay(rs.getDate(7));
+//                userProfile.setPhone(rs.getString(8));
+                //userProfile.getPassword();
             }
             if (unswer) {
                 while (rs.next()) {
@@ -273,18 +298,18 @@ public class DAO {
         dbClose();
         return unswer;
     }
-    
-    public static void getEvent(){
+
+    public static void getEvent() {
         String query = "select * from " + TBL_EVENTS + " where "
                 + T1COLUMN_ID + " = 'YRKV2H5QGV'";
         dbConnect();
         executeQuery(query);
         try {
-            
-                while (rs.next()) {
-                    Tools.print(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6));
-                }
-            
+
+            while (rs.next()) {
+                Tools.print(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6));
+            }
+
         } catch (SQLException ex) {
             //Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
         }
