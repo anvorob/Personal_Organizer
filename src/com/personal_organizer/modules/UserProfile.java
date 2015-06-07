@@ -48,22 +48,12 @@ public class UserProfile {
         this.userEmail = userEmail;
         this.password = password;
         this.phone = phone;
-        this.userID = (userID.equals("")) ? generateCode() : userID;
+        this.userID = (userID.equals("")) ? Tools.generateCode(10) : userID;
     }
     
     private UserProfile setUserID(UserProfile userProfile){
-        this.userID = generateCode();
+        this.userID = Tools.generateCode(10);
         return userProfile;
-    }
-
-    private String generateCode() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // используемые символы
-        String code = "";
-        Random r = new Random();
-        for(int i = 0; i < 10; i++) { // длинна кода  от 10
-            code = code + chars.charAt(r.nextInt(chars.length()));
-        }
-        return code;
     }
 
     public String getLoginName(){

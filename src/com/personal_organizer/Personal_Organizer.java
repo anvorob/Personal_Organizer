@@ -11,6 +11,7 @@ import com.personal_organizer.modules.EventProfile;
 import com.personal_organizer.messenger.Gui;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +26,7 @@ public class Personal_Organizer {
     public static SignUpForm signUpForm;
     public static UserProfile userProfile;
     public static boolean dbExist;
+    public static ArrayList<EventProfile> events;
     
     /**
      * @param args the command line arguments

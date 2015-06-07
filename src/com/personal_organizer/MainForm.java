@@ -195,8 +195,13 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 
         this.pack();
         this.setLocationRelativeTo(null);
+        fechEvents();
     }
 
+    private void fechEvents(){
+        
+    }
+    
     public void frameSize() {
         fw = this.getWidth();
         Point p = this.getLocationOnScreen();

@@ -21,6 +21,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
+import java.util.Random;
 //import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -332,6 +333,16 @@ public class Tools {
         int day = frmSignUp.getBirthDayDay();
         Personal_Organizer.userProfile.setBirthDay(new Date(year, month, day));
 
+    }
+
+    public static String generateCode(int length) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // используемые символы
+        String code = "";
+        Random r = new Random();
+        for(int i = 0; i < length; i++) { // длинна кода  от 10
+            code = code + chars.charAt(r.nextInt(chars.length()));
+        }
+        return code;
     }
 
     public static String md5Custom(String st) {
