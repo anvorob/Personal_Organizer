@@ -17,6 +17,7 @@ public class EventProfile {
 
     private String userID;
     private String eventID;
+    private String eventTitle;
     private Date day;
     private Time timeFrom;
     private Time timeTill;
@@ -44,4 +45,75 @@ public class EventProfile {
         System.out.println("Print siski");
     }
 
+    public void setUserID(String userID){
+        this.userID = userID;
+    }
+    
+    public String getUserID(){
+        return this.userID;
+    }
+
+    public void setEventID(String eventID){
+        this.eventID = eventID;
+    }
+    
+    public String getEventID(){
+        return this.eventID;
+    }
+    
+    public void setEventTitle(String eventTitle){
+        this.eventTitle = eventTitle;
+    }
+    
+    public String getEventTitle(){
+        return this.eventTitle;
+    }
+    
+   public void setDay(Date day){
+        this.day = day;
+    }
+    
+    public Date getDay(){
+        return this.day;
+    }
+    
+    public void setTimeFrom(Time timeFrom){
+        this.timeFrom = timeFrom;
+    }
+    
+    public Time getTimeFrom(){
+        return this.timeFrom;
+    }
+    
+    public void setTimeTill(Time timeTill){
+        this.timeTill = timeTill;
+    }
+    
+    public Time getTimeTill(){
+        return this.timeTill;
+        
+    }
+    public void setDescription(String description){
+        this.description = description;
+    }
+    
+    public String getDescription(){
+        return this.description;
+    }
+    
+    public void setType(int type){
+        this.type = type;
+    }
+    
+    public int getType(){
+        return type;
+    }
+    
+    public void setContacts(String[] contacts){
+        this.contacts = contacts;
+    }
+    
+    public String[] getContacts(){
+        return this.contacts;
+    }
 }

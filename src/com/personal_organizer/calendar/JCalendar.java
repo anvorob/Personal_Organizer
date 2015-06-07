@@ -52,6 +52,7 @@ public class JCalendar extends JPanel {
 
 	public JCalendar(int day, int month, int year) {
 		this(new CalendarModel(day, month, year));
+                selectCurrentDay();
 	}
 
 	private JCalendar(CalendarModel model) {

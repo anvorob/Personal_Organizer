@@ -70,6 +70,8 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 
     MemoForm memoForm;
     ContactListForm contactList;
+    
+    String columns[] = {"Title", "Description", "Time From", "Time Till", "Type", "Contacts"};
 
     public MainForm() {
 
@@ -106,28 +108,39 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
+        eventsDate = date;
+        eventtitle.setText(dateFormat.format(date));
         System.out.println(dateFormat.format(date)); //2014/08/06 15:59:48        
-        JCalendar cal = new JCalendar(date.getDate(), date.getMonth(), date.getYear());
+        JCalendar cal = new JCalendar(date.getDate()-1, date.getMonth(), date.getYear()-100);
+        //DateListener cl;
         cal.addDateListener(new DateListener() {
 
             @Override
             public void dateChanged(Calendar new_c) {
                 int day = new_c.get(Calendar.DAY_OF_MONTH);
-                int month = new_c.get(Calendar.MONTH) + 1;
+                int month = new_c.get(Calendar.MONTH)+1;
                 int year = new_c.get(Calendar.YEAR);
 
                 System.out.println("Selected: " + new_c.getTime() + " (dd/MM/yyyy)");
-                String date = new SimpleDateFormat("dd/MM/yyyy").format(new_c.getTime());
-                System.out.println("Selected: " + date + " (dd/MM/yyyy)");
-                date = ((("" + day).length() == 1) ? "0" : "") + day + "/"
+                String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(new_c.getTime());
+                System.out.println("Selected: " + dateFormat + " (dd/MM/yyyy)");
+                dateFormat = ((("" + day).length() == 1) ? "0" : "") + day + "/"
                         + ((("" + month).length() == 1) ? "0" : "") + month + "/"
                         + year;
-                System.out.println("Selected: " + date + " (DD/MM/YYYY)");
-                eventtitle.setText(date);
+                System.out.println("Selected: " + dateFormat + " (DD/MM/YYYY)");
+                eventtitle.setText(dateFormat);
                 eventsDate = new Date(year, month, day);
             }
 
         });
+        //cl.dateChanged(new Calendar);
+//                String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(new_c.getTime());
+//                System.out.println("Selected: " + date + " (dd/MM/yyyy)");
+//                dateFormat = ((("" + day).length() == 1) ? "0" : "") + day + "/"
+//                        + ((("" + month).length() == 1) ? "0" : "") + month + "/"
+//                        + year;
+//                System.out.println("Selected: " + dateFormat + " (DD/MM/YYYY)");
+        
         this.getContentPane().add(cal, BorderLayout.NORTH);
 
         pnlevents = new JPanel(new BorderLayout());
@@ -150,7 +163,6 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         pnleventscontrol.add(btneventnext, BorderLayout.EAST);
 
         pnleventstable = new JPanel();
-        String columns[] = {"Title", "Description", "Time From", "Time Till", "Type", "Contacts"};
         Object[][] data = {{"Business meeting", "140 Hobson", "9:00", "10:00", "Meeting", "Tom"},
         {"", "", "", "", "", ""},
         {"", "", "", "", "", ""},
@@ -227,12 +239,42 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         System.out.println("width: " + fw + " x: " + fx + " y: " + fy);
     }
 
+    private String getEventType(int index){
+        String eventType = "";
+        switch(index){
+            case 0: 
+                eventType =  "Business meeting";
+                break;
+            case 1: 
+                eventType =  "Birthday";
+                break;
+            case 2: 
+                eventType =  "Party";
+                break;
+        }
+         return eventType;
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnaddevent) {
             EventForm event = new EventForm(eventsDate);
             event.setVisible(true);
-            new EventProfile();
+            Object[][] data = {{"Business meeting", "140 Hobson", "9:00", "10:00", "Meeting", "Tom"}};
+            int i = 1;
+            for(EventProfile currentEvent : Personal_Organizer.events){
+                data[i][0]=currentEvent.getEventTitle();
+                data[i][1]=currentEvent.getDescription();
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                System.out.println(dateFormat.format(currentEvent.getTimeFrom())); //2014/08/06 15:59:48        
+                data[i][2]=dateFormat.format(currentEvent.getTimeFrom());
+                System.out.println(dateFormat.format(currentEvent.getTimeTill())); //2014/08/06 15:59:48        
+                data[i][3]=dateFormat.format(currentEvent.getTimeTill());
+                data[i][4]=getEventType(currentEvent.getType());
+                //data[i][5]=currentEvent.getEventTitle();
+                
+            }
+        tblevents = new JTable(data, columns);
 
         }
         if (e.getSource() == infohelp) {

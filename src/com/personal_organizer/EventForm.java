@@ -219,6 +219,7 @@ public class EventForm extends JFrame implements ActionListener {
                             timeTill,
                             txteEventDescription.getText(), cbxType.getSelectedIndex(),
                             contactList);
+                    Personal_Organizer.events.add(event);
                     this.setVisible(false);
                     break;
                 case "Update":
