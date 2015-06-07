@@ -5,8 +5,9 @@
  */
 package com.personal_organizer.modules;
 
-import java.sql.Date;
+import java.util.Date;
 import com.personal_organizer.dao.DAO;
+import java.sql.Time;
 
 /**
  *
@@ -17,18 +18,18 @@ public class EventProfile {
     private String userID;
     private String eventID;
     private Date day;
-    private String timeFrom;
-    private String timeTill;
+    private Time timeFrom;
+    private Time timeTill;
     private String description;
-    private String type;
+    private int type;
     private String[] contacts;
 
     public EventProfile() {
-        this("", "", new Date(12,12,15), "", "", "", "", new String[2]);
+        this("", "", new Date(1,1,15), new Time(0, 0, 0), new Time(0, 0, 0), "", 0, new String[2]);
     }
 
-    public EventProfile(String userID, String eventID, Date day, String timeFrom, String timeTill,
-            String description, String type, String[] contacts) {
+    public EventProfile(String userID, String eventID, Date day, Time timeFrom, Time timeTill,
+            String description, int type, String[] contacts) {
         this.userID = userID;
         this.eventID = eventID;
         this.day = day;

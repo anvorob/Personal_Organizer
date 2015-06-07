@@ -5,10 +5,21 @@
  */
 package com.personal_organizer;
 
+import com.personal_organizer.modules.EventProfile;
+import com.personal_organizer.modules.Tools;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.sql.Time;
+//import java.sql.Date;
+//import java.sql.Time;
+import java.util.Date;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.border.Border;
@@ -30,15 +41,27 @@ public class EventForm extends JFrame implements ActionListener {
     JButton btnSave, btnCancel;
     JLabel errorMessage;
     boolean allFealdsAreFilled = false;
+    Date eventDate;
 
-    public EventForm() {
-        this("New Event");
+    public EventForm(Date eventDate) {
+        this(eventDate, "New Event");
     }
 
-    public EventForm(String title) {
+    public EventForm(Date eventDate, String title) {
+
+//        this.getRootPane().addComponentListener(new ComponentAdapter() {
+//            public void componentResized(ComponentEvent e) {
+//                // This is only called when the user releases the mouse button.
+//                System.out.println("componentResized\nWidth = " + getWidth() + " Height = " + getHeight());
+//            }
+//        });
+        this.eventDate = eventDate;
         this.setTitle(title);
         //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
+        if (Personal_Organizer.loginForm == null) {
+            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
         pnlEvent = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -46,47 +69,42 @@ public class EventForm extends JFrame implements ActionListener {
         gbc.gridheight = 1;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.BOTH;
         pnlEvent.add(new JLabel("Event title: "), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         pnlEvent.add(txtEventTitle = new JTextField(10), gbc);
 
         gbc.gridwidth = 1;
-        gbc.gridheight = 1;
+        gbc.gridheight = 2;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         pnlEvent.add(new JLabel("Event description: "), gbc);
 
         gbc.gridwidth = 1;
-        gbc.gridheight = 1;
+        gbc.gridheight = 2;
         gbc.gridx = 1;
         gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        pnlEvent.add(txteEventDescription = new JTextArea(4, 10), gbc);
-        Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
-        txteEventDescription.setBorder(border);
+        txteEventDescription = new JTextArea(4, 10);
         txteEventDescription.setWrapStyleWord(true);
         txteEventDescription.setLineWrap(true);
-        txteEventDescription.setColumns(18);
+        JScrollPane scrlPane = new JScrollPane(txteEventDescription);
+//        scrlPane.setSize(new Dimension(10, 4));
+        pnlEvent.add(scrlPane, gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 3;
         pnlEvent.add(new JLabel("Event time start: "), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 3;
         JPanel pnl = new JPanel();
         String[] hours = new String[25];
         hours[0] = "";
@@ -101,83 +119,89 @@ public class EventForm extends JFrame implements ActionListener {
         }
         cbxTimeFromMinutes = new JComboBox(minutes);
         pnl.add(cbxTimeFromHours);
+        pnl.add(new JLabel(" : "));
         pnl.add(cbxTimeFromMinutes);
         pnlEvent.add(pnl, gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 4;
         pnlEvent.add(new JLabel("Event time finish: "), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 1;
-        gbc.gridy = 3;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 4;
         pnl = new JPanel();
         cbxTimeTillHours = new JComboBox(hours);
         cbxTimeTillMinutes = new JComboBox(minutes);
         pnl.add(cbxTimeTillHours);
+        pnl.add(new JLabel(" : "));
         pnl.add(cbxTimeTillMinutes);
         pnlEvent.add(pnl, gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 5;
         pnlEvent.add(new JLabel("Event type: "), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 1;
-        gbc.gridy = 4;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 5;
         pnlEvent.add(cbxType = new JComboBox(eventTypes), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 6;
         pnlEvent.add(new JLabel("Related contacts: "), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 1;
-        gbc.gridy = 5;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 6;
         pnlEvent.add(cbxContacts = new JComboBox(contactList), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 7;
         pnlEvent.add(btnSave = new JButton("Save"), gbc);
-
+        btnSave.addActionListener(this);
+        
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 1;
-        gbc.gridy = 6;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 7;
         pnlEvent.add(btnCancel = new JButton("Cancel"), gbc);
+        btnCancel.addActionListener(this);
 
-//        gbc.gridwidth = 2;
-//        gbc.gridheight = 1;
-//        gbc.gridx = 0;
-//        gbc.gridy = 7;
-//        gbc.fill = GridBagConstraints.HORIZONTAL;
-//        pnlEvent.add(errorMessage = new JLabel(""), gbc);
-//        errorMessage.setForeground(Color.red);
-        
+        gbc.gridwidth = 2;
+        gbc.gridheight = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        pnlEvent.add(errorMessage = new JLabel(""), gbc);
+        errorMessage.setHorizontalAlignment(JLabel.CENTER);
+        errorMessage.setFont(new Font("Serif", Font.BOLD+Font.ITALIC, 11));
+
         this.add(pnlEvent);
-        this.pack();
+        //this.pack();
+        this.setSize(new Dimension(279, 369));
         this.setLocationRelativeTo(null);
         CheckFilledFealds check = new CheckFilledFealds();
         check.start();
+        txtEventTitle.setText("New Event");
+        txteEventDescription.setText("New Event");
+        cbxTimeFromHours.setSelectedIndex(1);
+        cbxTimeFromMinutes.setSelectedIndex(1);
+        cbxTimeTillHours.setSelectedIndex(1);
+        cbxTimeTillMinutes.setSelectedIndex(1);
+        cbxType.setSelectedIndex(1);
+        
+        
     }
 
     @Override
@@ -185,16 +209,23 @@ public class EventForm extends JFrame implements ActionListener {
         if (e.getSource() == btnCancel) {
             this.setVisible(false);
         } else if (e.getSource() == btnSave) {
-            if (e.getActionCommand().equals("Save")) {
-                this.setVisible(false);
-
-            } else if (e.getActionCommand().equals("Update")) {
-                this.setVisible(false);
-
+            switch (e.getActionCommand()) {
+                case "Save":
+                    Time timeFrom = new Time(cbxTimeFromHours.getSelectedIndex()-1, cbxTimeFromMinutes.getSelectedIndex()-1, 00);
+                    Time timeTill = new Time(cbxTimeTillHours.getSelectedIndex()-1, cbxTimeTillMinutes.getSelectedIndex()-1, 00);
+                    EventProfile event = new EventProfile(Personal_Organizer.userProfile.getUserID(),
+                            Tools.generateCode(10), eventDate,
+                            timeFrom,
+                            timeTill,
+                            txteEventDescription.getText(), cbxType.getSelectedIndex(),
+                            contactList);
+                    this.setVisible(false);
+                    break;
+                case "Update":
+                    this.setVisible(false);
+                    break;
             }
-
         }
-
     }
 
     class CheckFilledFealds extends Thread {
@@ -209,18 +240,18 @@ public class EventForm extends JFrame implements ActionListener {
                     message = "Title feald is empty!";
                 } else if (txteEventDescription.getText().equals("")) {
                     message = "Description feald is empty!";
-                } else if (cbxTimeFromHours.getSelectedIndex() == 0 ||
-                        cbxTimeFromMinutes.getSelectedIndex() == 0) {
+                } else if (cbxTimeFromHours.getSelectedIndex() == 0
+                        || cbxTimeFromMinutes.getSelectedIndex() == 0) {
                     message = "Time from is not set!";
-                } else if (cbxTimeTillHours.getSelectedIndex() == 0 ||
-                        cbxTimeTillMinutes.getSelectedIndex() == 0) {
+                } else if (cbxTimeTillHours.getSelectedIndex() == 0
+                        || cbxTimeTillMinutes.getSelectedIndex() == 0) {
                     message = "Time till is not set!";
-                } else if (cbxTimeFromHours.getSelectedIndex() > 
-                        cbxTimeTillHours.getSelectedIndex()
-                        || (cbxTimeFromHours.getSelectedIndex() == 
-                        cbxTimeTillHours.getSelectedIndex()
-                        && cbxTimeFromMinutes.getSelectedIndex() > 
-                        cbxTimeTillMinutes.getSelectedIndex())) {
+                } else if (cbxTimeFromHours.getSelectedIndex()
+                        > cbxTimeTillHours.getSelectedIndex()
+                        || (cbxTimeFromHours.getSelectedIndex()
+                        == cbxTimeTillHours.getSelectedIndex()
+                        && cbxTimeFromMinutes.getSelectedIndex()
+                        > cbxTimeTillMinutes.getSelectedIndex())) {
                     message = "Time till is less then from!";
                 } else if (cbxType.getSelectedIndex() == 0) {
                     message = "Event type in not selected!";
@@ -228,17 +259,20 @@ public class EventForm extends JFrame implements ActionListener {
                     allFealdsAreFilled = true;
                 }
                 btnSave.setEnabled(allFealdsAreFilled);
-                btnSave.setToolTipText(message);
-                errorMessage.setText(message);
+                if (allFealdsAreFilled) {
+                    errorMessage.setText("Now you can save the event!");
+                    errorMessage.setForeground(Color.blue);
+                } else {
+                    errorMessage.setText(message);
+                    errorMessage.setForeground(Color.red);
+                }
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     System.out.println("Error");
                 }
-                        
             }
         }
-
     }
 
 }

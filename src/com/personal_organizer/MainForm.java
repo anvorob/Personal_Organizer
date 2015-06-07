@@ -15,8 +15,11 @@ import com.personal_organizer.modules.EventProfile;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+//import java.sql.Date;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -60,11 +63,13 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
     JButton btnaddevent;
     JButton btndeleteevent;
     JButton btnviewevent;
+    Date eventsDate;
 
     static public Object[] rowData;
     static public int fw, fx, fy;
 
-    MemoForm memoform;
+    MemoForm memoForm;
+    ContactListForm contactList;
 
     public MainForm() {
 
@@ -99,7 +104,10 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         eventtitle = new JLabel("", SwingConstants.CENTER);
         pnlcalendar = new JPanel();
 
-        JCalendar cal = new JCalendar();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println(dateFormat.format(date)); //2014/08/06 15:59:48        
+        JCalendar cal = new JCalendar(date.getDate(), date.getMonth(), date.getYear());
         cal.addDateListener(new DateListener() {
 
             @Override
@@ -107,7 +115,7 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
                 int day = new_c.get(Calendar.DAY_OF_MONTH);
                 int month = new_c.get(Calendar.MONTH) + 1;
                 int year = new_c.get(Calendar.YEAR);
-                
+
                 System.out.println("Selected: " + new_c.getTime() + " (dd/MM/yyyy)");
                 String date = new SimpleDateFormat("dd/MM/yyyy").format(new_c.getTime());
                 System.out.println("Selected: " + date + " (dd/MM/yyyy)");
@@ -116,6 +124,7 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
                         + year;
                 System.out.println("Selected: " + date + " (DD/MM/YYYY)");
                 eventtitle.setText(date);
+                eventsDate = new Date(year, month, day);
             }
 
         });
@@ -200,10 +209,10 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         fechEvents();
     }
 
-    private void fechEvents(){
-        
+    private void fechEvents() {
+
     }
-    
+
     public void frameSize() {
         fw = this.getWidth();
         Point p = this.getLocationOnScreen();
@@ -221,24 +230,24 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnaddevent) {
-            EventForm event = new EventForm();
+            EventForm event = new EventForm(eventsDate);
             event.setVisible(true);
             new EventProfile();
-            
-       } 
-       if(e.getSource()==infohelp){
-           Help help=new Help();
-           help.setVisible(true);
-       }
-       if(e.getSource()==infoabout){
-           About about=new About();
-           about.setVisible(true);
-       }
-       if(e.getSource()==btndeleteevent){
-           System.out.println("Delete");
-       }
-       if(e.getSource()==btnviewevent){
-           EventForm event=new EventForm();
+
+        }
+        if (e.getSource() == infohelp) {
+            Help help = new Help();
+            help.setVisible(true);
+        }
+        if (e.getSource() == infoabout) {
+            About about = new About();
+            about.setVisible(true);
+        }
+        if (e.getSource() == btndeleteevent) {
+            System.out.println("Delete");
+        }
+        if (e.getSource() == btnviewevent) {
+            EventForm event = new EventForm(eventsDate);
             event.setVisible(true);
         } else if (e.getSource() == btneventprev) {
 //           Icon backward = new ImageIcon(getClass().getResource("/resources/backward_32_pressed.png"));
@@ -277,17 +286,17 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         @Override
         public void menuSelected(MenuEvent e) {
             if (e.getSource() == memo) {
-                memoform = new MemoForm(fw, fx, fy);
-                memoform.setVisible(true);
+                memoForm = new MemoForm(fw, fx, fy);
+                memoForm.setVisible(true);
             }
-            if(e.getSource()==contacts){
-                if(contact==null){
-                    contact=new ContactListForm();
-                    contact.setVisible(true);
-                }else{
-                    contact.setVisible(true);
-                    contact.toFront();
-                    contact.repaint();
+            if (e.getSource() == contacts) {
+                if (contactList == null) {
+                    contactList = new ContactListForm();
+                    contactList.setVisible(true);
+                } else {
+                    contactList.setVisible(true);
+                    contactList.toFront();
+                    contactList.repaint();
                 }
             }
         }

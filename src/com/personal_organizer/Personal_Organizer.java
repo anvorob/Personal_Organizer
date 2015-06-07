@@ -11,6 +11,7 @@ import com.personal_organizer.modules.EventProfile;
 import com.personal_organizer.messenger.Gui;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +34,6 @@ public class Personal_Organizer {
      */
     public static void main(String[] args) {        
             //          WelcomeForm welcomeform=new WelcomeForm();
-          //loginForm = new LoginForm();
 //          welcomeform.setVisible(true);
 //          Thread t=new Thread(welcomeform);
 //          t.start();
@@ -44,7 +44,11 @@ public class Personal_Organizer {
 //              welcomeform.setVisible(false);
 //          }
 //          new EventProfile();
+          loginForm = new LoginForm();
           loginForm.setVisible(true);
+//        EventForm eventFrm = new EventForm(new Date(1,1,15));
+//        eventFrm.setVisible(true);
+        
 //          mainform=new MainForm();
 //          mainform.setVisible(true);
 //          mainform.frameSize();
