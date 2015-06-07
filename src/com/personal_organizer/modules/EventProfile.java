@@ -34,9 +34,9 @@ public class EventProfile {
         description=descript;
         type=t;
         contacts=cont;
-        System.out.println("Print piski");
-        DAO.getEvent();
-        System.out.println("Print siski");
+        //System.out.println("Print piski");
+        //DAO.getEvent();
+        //System.out.println("Print siski");
     }
     
 }

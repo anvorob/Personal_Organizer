@@ -5,168 +5,198 @@
  */
 package com.personal_organizer;
 
-import com.personal_organizer.calendar.DateListener;
-import com.personal_organizer.calendar.JCalendar;
-import com.personal_organizer.modules.Tools;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import static java.awt.Component.CENTER_ALIGNMENT;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Calendar;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
+
+//import com.personal_organizer.modules.Tools;
+import com.personal_organizer.view.OFrame;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 
 /**
  *
  * @author Mikhail
  */
-public class ContactListForm extends JFrame implements ActionListener {
+public class ContactListForm extends OFrame implements ActionListener,ListSelectionListener {
+   
+    JPanel pnlContacts;
+    JPanel pnlEventsControl;
+    JPanel pnlContactsTable;
+    JPanel pnlContactBtns;
+    JPanel pnlContactForm;
+    
+    JTable tblContacts;
+    
+    JTextField contactFirstName;
+    JTextField contactLastName;
+    JTextField contactPhoneNumber;
+    JTextField contactEmail;
+    JTextField contactBirthday;
+    JTextArea contactNotes;
+    
+    
+    JButton btnAddContact;
+    JButton btnDeleteContact;
+    
+    static public Object[] rowContactData;
 
-    JMenuBar topMenu;
-    JMenu memo;
-    JMenu calendar;
-    JMenu contacts;
-    JMenu messenger;
-    JMenu info;
-
-    JMenuItem showMessenger;
-    JMenuItem messengerContact;
-
-    JMenuItem infoAbout;
-    JMenuItem infoHelp;
-
-    JPanel pnlCalendar;
-    JPanel pnlEvents;
-    JPanel pnlEventscontrol;
-    JPanel pnlEventsTable;
-    JPanel pnlEventBtns;
-    JPanel pnlStatusBar;
-
-    JTable tblEvents;
-
-    JLabel statusTitle;
-    JLabel statusDescript;
-    JLabel eventTitle;
-
-    JButton btnEventNext;
-    JButton btnEventPrev;
-    JButton btnAddEvent;
-    JButton btnDeleteEvent;
-    JButton btnViewEvent;
-
-    MemoForm memoForm;
-
+    
     public ContactListForm() {
 
-        this.setTitle(Tools.caption());
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        topMenu = new JMenuBar();
-        memo = new JMenu("Memo");
-        calendar = new JMenu("Calendar");
-        contacts = new JMenu("Contacts");
-        messenger = new JMenu("Messenger");
-        info = new JMenu("Info");
-
-        messenger.add(showMessenger = new JMenuItem("Show Messenger"));
-        messenger.add(messengerContact = new JMenuItem("Contact List"));
-
-        info.add(infoAbout = new JMenuItem("About"));
-        info.add(infoHelp = new JMenuItem("Help"));
-
-        memo.addMenuListener(new MListeners());
-
+        //this.setTitle(Tools.caption());
+        this.setTitle("Contact List");
+        this.setDefaultCloseOperation(HIDE_ON_CLOSE);
         this.setLayout(new BorderLayout());
-        topMenu.add(memo);
-        topMenu.add(calendar);
-        topMenu.add(contacts);
-        topMenu.add(messenger);
-        topMenu.add(info);
-
-        this.setJMenuBar(topMenu);
-        eventTitle = new JLabel("", SwingConstants.CENTER);
-        pnlCalendar = new JPanel();
-
-        JCalendar cal = new JCalendar();
-        cal.addDateListener(new DateListener() {
-
-            @Override
-            public void dateChanged(Calendar new_c) {
-                int day = new_c.get(Calendar.DAY_OF_MONTH);
-                int month = new_c.get(Calendar.MONTH) + 1;
-                int year = new_c.get(Calendar.YEAR);
-                System.out.println("Selected: " + day + "/"
-                        + month + "/" + year + " (DD/MM/YYYY)");
-                eventTitle.setText("" + day + "/" + month + "/" + year);
-            }
-
-        });
-        this.getContentPane().add(cal, BorderLayout.NORTH);
-
-        pnlEvents = new JPanel(new BorderLayout());
-        pnlEventscontrol = new JPanel(new BorderLayout());
-        //eventtitle=new JLabel("Title");
-        pnlEventscontrol.add(btnEventPrev = new JButton("Prev"), BorderLayout.WEST);
-        pnlEventscontrol.add(eventTitle, BorderLayout.CENTER);
-        pnlEventscontrol.add(btnEventNext = new JButton("Next"), BorderLayout.EAST);
-
-        pnlEventsTable = new JPanel();
-        String columns[] = {"Title", "Description", "Time From", "Time Till", "Type", "Contacts"};
-        Object[][] data = {{"Business meeting", "140 Hobson", "9:00", "10:00", "Meeting", "Tom"},
+        
+        
+        pnlContactsTable = new JPanel();
+        String columns[] = {"First Name", "Last Name", "Phone Number", "Email", "Birthday", "Notes"};
+        Object[][] data = {{"Mikhail", "Novozhilov", "021034020", "micnov@mail.ru", "10/04/1980", "Dude from school"},
         {"", "", "", "", "", ""},
         {"", "", "", "", "", ""},
         {"", "", "", "", "", ""},
         {"", "", "", "", "", ""},
         {"", "", "", "", "", ""}};
-        tblEvents = new JTable(data, columns);
-        tblEvents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        System.out.println("" + tblEvents.getModel().getValueAt(0, 2));
+        tblContacts = new JTable(data, columns);
+        rowContactData = new Object[tblContacts.getColumnCount()];
+        tblContacts.getSelectionModel().addListSelectionListener(this);
+        tblContacts.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        System.out.println("" + tblContacts.getModel().getValueAt(0, 2));
 
-//            tblEvents.getColumnModel().getColumn(0).setPreferredWidth(27);
-//            tblEvents.getColumnModel().getColumn(1).setPreferredWidth(120);
-//            tblEvents.getColumnModel().getColumn(2).setPreferredWidth(100);
-//            tblEvents.getColumnModel().getColumn(3).setPreferredWidth(90);
-//            tblEvents.getColumnModel().getColumn(4).setPreferredWidth(90);
-//            tblEvents.getColumnModel().getColumn(6).setPreferredWidth(120);
-//            tblEvents.getColumnModel().getColumn(7).setPreferredWidth(100);
-//            tblEvents.getColumnModel().getColumn(8).setPreferredWidth(95);
-//            tblEvents.getColumnModel().getColumn(9).setPreferredWidth(40);
-//            tblEvents.getColumnModel().getColumn(10).setPreferredWidth(400);
-        JScrollPane scroll = new JScrollPane(tblEvents);
-        pnlEventsTable.add(scroll);
+        JScrollPane scroll = new JScrollPane(tblContacts);
+        pnlContactsTable.add(scroll);
 
-        pnlEventBtns = new JPanel(new FlowLayout((int) CENTER_ALIGNMENT, 10, 5));
-        pnlEventBtns.add(btnAddEvent = new JButton("Add Event"));
-        pnlEventBtns.add(btnDeleteEvent = new JButton("Delete Event"));
-        pnlEventBtns.add(btnViewEvent = new JButton("View Event"));
+        pnlContactBtns = new JPanel(new FlowLayout((int) CENTER_ALIGNMENT, 10, 5));
+        pnlContactBtns.add(btnAddContact = new JButton("Add Contact"));
+        pnlContactBtns.add(btnDeleteContact = new JButton("Delete Contact"));
+        
+        btnAddContact.addActionListener(this);
+        btnDeleteContact.addActionListener(this);
+            
+        btnDeleteContact.setEnabled(false);
+        
+        pnlContactForm=new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets=new Insets(5, 5, 5, 5);
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=0;
+        gbc.gridy=0;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(new JLabel("First Name: "),gbc);
+        
+        
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=1;
+        gbc.gridy=0;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(contactFirstName=new JTextField(10),gbc);      
+        
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=0;
+        gbc.gridy=1;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(new JLabel("Last Name: "),gbc);
 
-        pnlEvents.add(pnlEventscontrol, BorderLayout.NORTH);
-        pnlEvents.add(pnlEventsTable, BorderLayout.CENTER);
-        pnlEvents.add(pnlEventBtns, BorderLayout.SOUTH);
-        this.add(pnlEvents, BorderLayout.CENTER);
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=1;
+        gbc.gridy=1;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(contactLastName=new JTextField(10),gbc); 
+        
+        
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=0;
+        gbc.gridy=2;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(new JLabel("Phone number: "),gbc);
+ 
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=1;
+        gbc.gridy=2;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(contactPhoneNumber=new JTextField(10),gbc); 
+        
+        
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=0;
+        gbc.gridy=3;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(new JLabel("Email: "),gbc);
+        
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=1;
+        gbc.gridy=3;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(contactEmail=new JTextField(10),gbc); 
+        
+        
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=0;
+        gbc.gridy=4;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(new JLabel("Birthday: "),gbc);
 
-        pnlStatusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pnlStatusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        pnlStatusBar.setBackground(Color.GRAY);
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=1;
+        gbc.gridy=4;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(contactBirthday=new JTextField(10),gbc);
+        
+        
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=0;
+        gbc.gridy=5;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(new JLabel("Notes: "),gbc);
 
-        pnlStatusBar.add(statusTitle = new JLabel("Title", SwingConstants.RIGHT));
-        pnlStatusBar.add(statusDescript = new JLabel("Description"));
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=1;
+        gbc.gridy=5;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContactForm.add(contactNotes=new JTextArea(4,10),gbc); 
+        Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
+        contactNotes.setBorder(border);
+        
+        pnlContacts=new JPanel(new GridBagLayout());
+        //GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets=new Insets(5, 5, 5, 5);
+        gbc.gridwidth=1;
+        gbc.gridheight=2;
+        gbc.gridx=0;
+        gbc.gridy=0;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContacts.add(pnlContactsTable,gbc);
+        
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=1;
+        gbc.gridy=0;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContacts.add(pnlContactForm,gbc);
+        
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.gridx=1;
+        gbc.gridy=1;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        pnlContacts.add(pnlContactBtns,gbc);
 
-        statusTitle.setText("" + tblEvents.getModel().getValueAt(0, 0));
-        statusDescript.setText(": " + tblEvents.getModel().getValueAt(0, 1));
-        this.add(pnlStatusBar, BorderLayout.SOUTH);
+        this.add(pnlContacts, BorderLayout.CENTER);
 
         this.pack();
         this.setLocationRelativeTo(null);
@@ -175,28 +205,43 @@ public class ContactListForm extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        if(e.getSource()==btnAddContact){
+            contactFirstName.setText(null);
+            contactLastName.setText(null);
+            contactPhoneNumber.setText(null);
+            contactEmail.setText(null);
+            contactBirthday.setText(null);
+            contactNotes.setText(null);
+        }
+        if(e.getSource()==btnDeleteContact){
+            System.out.println("Misha, dobav SQL sdes");
+        }
     }
 
-    class MListeners implements MenuListener {
-
-        @Override
-        public void menuSelected(MenuEvent e) {
-            if (e.getSource() == memo) {
-                memoForm = new MemoForm(1,1,1);
-                memoForm.setVisible(true);
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        //
+        //This piece of code load things from table and put into forms
+        // when you click on particula row.
+        //
+        int row = tblContacts.getSelectedRow();
+        
+        Object[] rowContactData = new Object[tblContacts.getColumnCount()];
+        btnDeleteContact.setEnabled(true);
+        for (int i = 0; i < tblContacts.getColumnCount(); i++) {
+            rowContactData[i] = tblContacts.getValueAt(row, i);
+            switch(i){
+                case 0: contactFirstName.setText((String)tblContacts.getValueAt(row, i));break;
+                case 1: contactLastName.setText((String)tblContacts.getValueAt(row, i));break;
+                case 2: contactPhoneNumber.setText((String)tblContacts.getValueAt(row, i));break;
+                case 3: contactEmail.setText((String)tblContacts.getValueAt(row, i));break;
+                case 4: contactBirthday.setText((String)tblContacts.getValueAt(row, i));break;
+                case 5: contactNotes.setText((String)tblContacts.getValueAt(row, i));break;
+                default:    System.out.println("sas");break;
             }
+           
         }
-
-        @Override
-        public void menuDeselected(MenuEvent e) {
-            System.out.println("Menu deselected");
-        }
-
-        @Override
-        public void menuCanceled(MenuEvent e) {
-            System.out.println("Menu cenceled");
-        }
-
+        
     }
 }

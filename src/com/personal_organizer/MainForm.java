@@ -21,6 +21,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuKeyEvent;
+import javax.swing.event.MenuKeyListener;
 import javax.swing.event.MenuListener;
 public class MainForm extends JFrame implements ActionListener,ListSelectionListener{
     
@@ -60,6 +62,7 @@ public class MainForm extends JFrame implements ActionListener,ListSelectionList
     static public int fw,fx,fy;
     
     MemoForm memoform;
+    ContactListForm contact;
         public MainForm(){
             
             this.setTitle("MainForm");
@@ -78,7 +81,9 @@ public class MainForm extends JFrame implements ActionListener,ListSelectionList
             info.add(infohelp=new JMenuItem("Help"));
             
             memo.addMenuListener(new MListeners());
-            
+            infohelp.addActionListener(this);
+            infoabout.addActionListener(this);
+            contacts.addMenuListener(new MListeners());
             
             this.setLayout(new BorderLayout());
             topmenu.add(memo);
@@ -209,6 +214,14 @@ public class MainForm extends JFrame implements ActionListener,ListSelectionList
             new EventProfile();
             
        } 
+       if(e.getSource()==infohelp){
+           Help help=new Help();
+           help.setVisible(true);
+       }
+       if(e.getSource()==infoabout){
+           About about=new About();
+           about.setVisible(true);
+       }
        if(e.getSource()==btndeleteevent){
            System.out.println("Delete");
        }
@@ -250,6 +263,16 @@ public class MainForm extends JFrame implements ActionListener,ListSelectionList
             if(e.getSource()==memo){
                 memoform=new MemoForm(fw,fx,fy);
                 memoform.setVisible(true);
+            }
+            if(e.getSource()==contacts){
+                if(contact==null){
+                    contact=new ContactListForm();
+                    contact.setVisible(true);
+                }else{
+                    contact.setVisible(true);
+                    contact.toFront();
+                    contact.repaint();
+                }
             }
         }
 

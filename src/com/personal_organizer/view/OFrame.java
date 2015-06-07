@@ -16,7 +16,7 @@ import javax.swing.*;
 public class OFrame extends JFrame{
     
     public OFrame(){
-        this("Welcome to Caldnedar");
+        this("Welcome to Calendar");
     }
     
     public OFrame(String title){

@@ -30,7 +30,7 @@ public class Personal_Organizer {
      */
     public static void main(String[] args) {        
             //          WelcomeForm welcomeform=new WelcomeForm();
-          loginForm = new LoginForm();
+          //loginForm = new LoginForm();
 //          welcomeform.setVisible(true);
 //          Thread t=new Thread(welcomeform);
 //          t.start();
@@ -40,11 +40,12 @@ public class Personal_Organizer {
 //          if(welcomeform.isRunning()==false){
 //              welcomeform.setVisible(false);
 //          }
-          new EventProfile();
-          loginForm.setVisible(true);
-//          mainform=new MainForm();
-//          mainform.setVisible(true);
-//          mainform.frameSize();
+          //new EventProfile();
+          //loginForm.setVisible(true);
+            mainform=new MainForm();
+            mainform.setVisible(true);
+            mainform.frameSize();
+            
 //        try {
 //            System.out.println(InetAddress.getLocalHost().getHostAddress());
 //        } catch (UnknownHostException ex) {
