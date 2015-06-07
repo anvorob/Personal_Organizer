@@ -102,7 +102,7 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLoginName = new JTextField("", 10), gbc);
-                txtLoginName.setText("mic");
+                //txtLoginName.setText("mic");
                 txtLoginName.addFocusListener(new focusListener());
 
                 gbc.gridx = 2;
@@ -129,7 +129,7 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtPassword = new JPasswordField("", 10), gbc);
-                txtPassword.setText("micmic");
+                //txtPassword.setText("micmic");
                 txtPassword.addFocusListener(new focusListener());
                 System.out.println("txtPassword.getText() = " + txtPassword.getText());
                 System.out.println("txtPassword.getPassword() = " + txtPassword.getPassword());
@@ -152,7 +152,7 @@ public class SignUpForm extends JFrame {
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtPasswordRepeat = new JPasswordField("", 10), gbc);
                 txtPasswordRepeat.addFocusListener(new focusListener());
-                txtPasswordRepeat.setText("123");
+                //txtPasswordRepeat.setText("123");
 
                 gbc.gridx = 2;
                 pnlIconPasswordRepeat = new JPanel();
@@ -217,7 +217,7 @@ public class SignUpForm extends JFrame {
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtEmail = new JTextField("", 10), gbc);
                 txtEmail.addFocusListener(new focusListener());
-                txtEmail.setText("mixnov@bk.ru");
+                //txtEmail.setText("mixnov@bk.ru");
 
                 gbc.gridx = 2;
                 pnlIconEmail = new JPanel();
@@ -276,6 +276,7 @@ public class SignUpForm extends JFrame {
         //scrollPane.setBounds(0, 0, 500, 700);
         this.add(pnlButtons, BorderLayout.SOUTH);
 
+        txtPasswordRepeat.setEnabled(false);
         //this.setSize(550, 180);
         this.addWindowListener(new closingListener());
         this.pack();
@@ -428,25 +429,14 @@ public class SignUpForm extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == btnCancel) {
-//                setVisible(false);
-//                Personal_Organizer.loginForm.setVisible(true);
-//                setImageNo(cardLayout, pnlIconLogin);
-//                setImageYes(cardLayout, pnlIconPassword);
-//                setImageNo(cardLayout, pnlIconPasswordRepeat);
-//                setImageYes(cardLayout, pnlIconEmail);
+                setVisible(false);
+                if (btnSave.getText().equals("Save")) {
+                    Personal_Organizer.loginForm.setVisible(true);
+                }
             } else {
                 if (e.getSource() == btnSave) {
                     String command = e.getActionCommand().toLowerCase();
                     saveUpdateUserProfile(command);
-//                    setImageYes(cardLayout, pnlIconLogin);
-                    //cardLayout.last(pnlIconLogin);
-//                    setImageNo(cardLayout, pnlIconPassword);
-                    //cardLayout.first(pnlIconPassword);
-//                    setImageYes(cardLayout, pnlIconPasswordRepeat);
-                    //cardLayout.last(pnlIconPasswordRepeat);
-//                    setImageNo(cardLayout, pnlIconEmail);
-                    //cardLayout.first(pnlIconEmail);
-
                 }
             }
         }
@@ -462,7 +452,7 @@ public class SignUpForm extends JFrame {
         @Override
         public void windowClosing(WindowEvent e) {
             setVisible(false);
-            if(btnSave.getText().equals("Update")){
+            if (btnSave.getText().equals("Update")) {
                 Personal_Organizer.mainform.setVisible(true);
             } else {
                 Personal_Organizer.loginForm.setVisible(true);
@@ -526,7 +516,7 @@ public class SignUpForm extends JFrame {
                 String password = txtPassword.getText();
                 if (password.length() < 6) {
                     setImageNo(cardLayout, pnlIconPassword);
-                    errPassword.setToolTipText("The password can't be less then 6 characters.");
+                    errPassword.setText("The password can't be less then 6 characters.");
                     System.out.println("The password can't be less then 6 characters.");
                 } else {
                     boolean hasNumber = false;
@@ -562,9 +552,11 @@ public class SignUpForm extends JFrame {
                     if (warning.equals("")) {
                         setImageYes(cardLayout, pnlIconPassword);
                         errPassword.setText("");
+                        txtPasswordRepeat.setEnabled(true);
                         System.out.println("Password - Ok");
                     } else {
-                        warning = "The password has ro contain" + warning;
+                        txtPasswordRepeat.setEnabled(false);
+                        warning = "The password doesn't contain" + warning;
                         warning = warning.substring(0, warning.length() - 1) + ".";
                         setImageNo(cardLayout, pnlIconPassword);
                         errPassword.setText(warning);

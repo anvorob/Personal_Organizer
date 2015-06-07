@@ -232,9 +232,7 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 //            btneventnext=new JButton(forward);
             System.out.println("Pressed next");
         } else if (e.getSource() == myInfo) {
-            if(Personal_Organizer.signUpForm == null){
-                Personal_Organizer.signUpForm = new SignUpForm();
-            }
+            Personal_Organizer.signUpForm = new SignUpForm();
             Personal_Organizer.signUpForm.setCommand("Update");
             //this.setVisible(false);
             Personal_Organizer.signUpForm.setVisible(true);

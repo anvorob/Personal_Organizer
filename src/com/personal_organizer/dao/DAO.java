@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 //import java.util.Date;
 import java.util.logging.Level;
@@ -37,83 +38,68 @@ public class DAO {
     //private String db_connect_string, db_userid, db_password;
     private static String dbPath;
     private static final String DB_NAME = "OrganizerDB";
-    private static final String TBL_USERS = "tblUsers";
-    private static final String TBL_CONTACT_BOOK = "tblContactBook";
-    private static final String TBL_EVENTS = "tblEvents";
+    //private static final String TBL_USERS = "tblUsers";
+    //private static final String TBL_CONTACT_BOOK = "tblContactBook";
+    //private static final String TBL_EVENTS = "tblEvents";
     private static final String TBL_MEMOS = "tblMemos";
 
-    private static final String T1COLUMN_ID = "_user_id";
-    private static final String T1COLUMN_ID_TYPE = " varchar(10) NOT NULL PRIMARY KEY, ";
-    private static final String T1COLUMN_FIRST_NAME = "_first_name";
-    private static final String T1COLUMN_FIRST_NAME_TYPE = " varchar(15) NOT NULL, ";
-    private static final String T1COLUMN_LAST_NAME = "_last_name";
-    private static final String T1COLUMN_LARST_NAME_TYPE = " varchar(15) NOT NULL, ";
-    private static final String T1COLUMN_LOGIN_NAME = "_login_name";
-    private static final String T1COLUMN_LOGIN_NAME_TYPE = " varchar(10) NOT NULL, ";
-    private static final String T1COLUMN_USER_EMAIL = "_user_email";
-    private static final String T1COLUMN_USER_EMAIL_TYPE = " varchar(30) NOT NULL, ";
-    private static final String T1COLUMN_PASSWORD = "_password";
-    private static final String T1COLUMN_PASSWORD_TYPE = " char(32) NOT NULL, ";
-    private static final String T1COLUMN_BIRTH_DAY = "_user_birth_day";
-    private static final String T1COLUMN_BIRTH_DAY_TYPE = " date, ";
-    private static final String T1COLUMN_PHONE = "_phone";
-    private static final String T1COLUMN_PHONE_TYPE = " varchar(10)";
-
-//    public static final String T2COLUMN_ID = "_id2";
-//    public static final String T2COLUMN_CATEGORY = "_category2";
-//    public static final String T2COLUMN_NUMBER = "_number";
-//    public static final String T2COLUMN_WORD = "_word";
-//    public static final String T2COLUMN_WORDR = "_wordr";
     private static final String CREATE_DATABASE
             = "use master\nIF DB_ID (N'" + DB_NAME + "') IS NULL\n"
             + "CREATE DATABASE OrganizerDB\nCOLLATE  Latin1_General_BIN\nWITH "
             + "TRUSTWORTHY ON, DB_CHAINING ON";
+
     private static final String USE_DATABASE
             = "use OrganizerDB";
-//    private static final String CREATE_DATABASE
-//            = "USE master;\nGO\nIF DB_ID (N'" + DB_NAME + "') IS NOT NULL\n"
-//            + "DROP DATABASE OrganizerDB;\nGO\nCREATE DATABASE OrganizerDB\n"
-//            + "COLLATE  Latin1_General_BIN\nWITH TRUSTWORTHY ON, DB_CHAINING ON;\nGO";
-    private static final String CREATE_TABLE_USERS = "IF not EXISTS (SELECT 1 FROM "
-            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" + TBL_USERS + "')"
-            + "CREATE TABLE " + TBL_USERS + " (" + T1COLUMN_ID + T1COLUMN_ID_TYPE
-            + T1COLUMN_FIRST_NAME + T1COLUMN_FIRST_NAME_TYPE + T1COLUMN_LAST_NAME
-            + T1COLUMN_LARST_NAME_TYPE + T1COLUMN_LOGIN_NAME + T1COLUMN_LOGIN_NAME_TYPE
-            + T1COLUMN_USER_EMAIL + T1COLUMN_USER_EMAIL_TYPE + T1COLUMN_PASSWORD
-            + T1COLUMN_PASSWORD_TYPE + T1COLUMN_BIRTH_DAY + T1COLUMN_BIRTH_DAY_TYPE
-            + T1COLUMN_PHONE + T1COLUMN_PHONE_TYPE + ")";
-//    private static final String CREATE_TABLE_USERS = "IF not EXISTS (SELECT 1 FROM "
-//            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" + TBL_USERS + "')"
-//            + "CREATE TABLE " + TBL_USERS + " (" + T1COLUMN_ID + T1COLUMN_ID_TYPE
-//            + T1COLUMN_USER_NAME + T1COLUMN_USER_EMAIL_TYPE + T1COLUMN_USER_EMAIL
-//            + T1COLUMN_USER_EMAIL_TYPE + T1COLUMN_PASSWORD + T1COLUMN_PASSWORD_TYPE
-//            + T1COLUMN_PHONE + T1COLUMN_PHONE_TYPE;
-//    private static final String CREATE_TABLE_USERS = "IF not EXISTS (SELECT 1 FROM "
-//            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" + TBL_USERS + "')"
-//            + "CREATE TABLE " + TBL_USERS + " (" + T1COLUMN_ID + T1COLUMN_ID_TYPE
-//            + T1COLUMN_USER_NAME + T1COLUMN_USER_EMAIL_TYPE + T1COLUMN_USER_EMAIL
-//            + T1COLUMN_USER_EMAIL_TYPE + T1COLUMN_PASSWORD + T1COLUMN_PASSWORD_TYPE
-//            + T1COLUMN_PHONE + T1COLUMN_PHONE_TYPE;
-//    private static final String CREATE_TABLE_USERS = "IF not EXISTS (SELECT 1 FROM "
-//            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" + TBL_USERS + "')"
-//            + "CREATE TABLE " + TBL_USERS + " (" + T1COLUMN_ID + T1COLUMN_ID_TYPE
-//            + T1COLUMN_USER_NAME + T1COLUMN_USER_EMAIL_TYPE + T1COLUMN_USER_EMAIL
-//            + T1COLUMN_USER_EMAIL_TYPE + T1COLUMN_PASSWORD + T1COLUMN_PASSWORD_TYPE
-//            + T1COLUMN_PHONE + T1COLUMN_PHONE_TYPE;
 
-//    public static final String CREATE_TABLE2 = "CREATE TABLE " + TABLE2_NAME + " ( "
-//            + T2COLUMN_ID + " int, " + T2COLUMN_CATEGORY + " int, " + T2COLUMN_NUMBER + " INT, "
-//            + T2COLUMN_WORD + " TEXT, " + T2COLUMN_WORDR + " TEXT)";
-//  public DAO (String db_server_name, String db_userid, String db_password){
-//    public DAO() {
-//        dbConnect();
-//        Tools.diff("dbConnect();", System.currentTimeMillis());
-//    }
+    private static final String CREATE_TABLE_USERS = "IF not EXISTS (SELECT 1 FROM "
+            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblUsers')\n"
+            + "CREATE TABLE tblUsers (_user_id char(10) NOT NULL PRIMARY KEY, "
+            + "_user_first_name varchar(15),\n"
+            + "_user_last_name varchar(15),\n"
+            + "_login_name varchar(10) NOT NULL,\n"
+            + "_user_email varchar(30) NOT NULL,\n"
+            + "_password char(32) NOT NULL,\n"
+            + "_user_birth_day date,\n"
+            + "_phone varchar(10))";
+
+    private static final String CREATE_TABLE_CONTACT_BOOK = "IF not EXISTS (SELECT 1 FROM "
+            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblContactBook')\n"
+            + "CREATE TABLE tblContactBook "
+            + "(_contact_id char(10) NOT NULL PRIMARY KEY,\n"
+            + "_user_id char(10) NOT NULL FOREIGN KEY REFERENCES tblUsers(_user_id),\n"
+            + "_first_name varchar(15) NOT NULL,\n"
+            + "_last_name varchar(15) NOT NULL,\n"
+            + "_email varchar(30) NOT NULL,\n"
+            + "_phone varchar(10),\n"
+            + "_notes varchar(50))";
+
+    private static final String CREATE_TABLE_EVENTS = "IF not EXISTS (SELECT 1 FROM "
+            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblEvents')"
+            + "CREATE TABLE tblEvents"
+            + "(_user_id char(10) NOT NULL FOREIGN KEY REFERENCES tblUsers(_user_id),\n"
+            + "	_event_id char(10) NOT NULL PRIMARY KEY,\n"
+            + "	_day date NOT NULL,\n"
+            + "	_time_from time NOT NULL,\n"
+            + "	_time_till time NOT NULL,\n"
+            + "	_description varchar(100) NOT NULL,\n"
+            + "	_type int NOT NULL,\n"
+            + "	_contacts varchar(100))";
+
+    private static final String CREATE_MEMOS = "IF not EXISTS (SELECT 1 FROM "
+            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblMemos')"
+            + "CREATE TABLE tblMemos "
+            + "(_user_id char(10) NOT NULL FOREIGN KEY REFERENCES tblUsers(_user_id),\n"
+            + "	_memo_id char(10) NOT NULL PRIMARY KEY,\n"
+            + "	_memo_description varchar(100) NOT NULL,\n"
+            + "	_due date NOT NULL,\n"
+            + "	_color int NOT NULL)";
+
     private static void createDataBase() {
         // create database if not exist
         executeUpdate(CREATE_DATABASE);
         executeUpdate(USE_DATABASE);
         createTables();
+        Personal_Organizer.dbExist = true;
     }
 
     private static void createTables() {
@@ -138,7 +124,9 @@ public class DAO {
             //print("connected");
             // create a Statement object
             statement = conn.createStatement();
-            createDataBase();
+            if (!Personal_Organizer.dbExist) {
+                createDataBase();
+            }
             Tools.diff("this.statement = conn.createStatement();", System.currentTimeMillis());
             // create query
 //            String queryString = "select * from sysobjects where type='u'";
@@ -174,6 +162,22 @@ public class DAO {
         }
     }
 
+    private static void executeQueryP(String queryString, String[] params) {
+        try {
+            Tools.print("================ NEW QUERY ====================");
+            Tools.print(queryString);
+            PreparedStatement prepStmt = conn.prepareStatement(queryString);
+            for (int i = 0; i < params.length; i++) {
+                prepStmt.setString(i + 1, params[i]);
+            }
+
+            rs = prepStmt.executeQuery();
+        } catch (SQLException ex) {
+//            Tools.print("3");
+//            Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private static int executeUpdate(String queryString) {
         int rows = 0;
         try {
@@ -194,10 +198,16 @@ public class DAO {
         String loginName = userProfile.getLoginName();
         String password = Tools.md5Custom(userProfile.getPassword());
 
-        String query = "select * from " + TBL_USERS + " where "
-                + T1COLUMN_LOGIN_NAME + " = '" + loginName + "' and " + T1COLUMN_PASSWORD
-                + " = '" + password + "'";
-        executeQuery(query);
+        String query = "select * from tblUsers where "
+                + "_login_name = '" + loginName + "' and _password = "
+                + "'" + password + "'";
+        String query1 = "select * from tblUsers where "
+                + "_login_name = ? and _password = ?";
+        String[] params;
+        params = new String[2];
+        params[0] = loginName;
+        params[1] = password;
+        executeQueryP(query1, params);
         try {
             if (rs.next()) {
                 unswer = true;
@@ -241,6 +251,22 @@ public class DAO {
         int rows = 0;
         dbConnect();
         String query;
+//        String[] params;
+//        params = new String[5];
+//        
+//        params[0] = Personal_Organizer.userProfile.getFirstName(); // firstName
+//        params[1] = Personal_Organizer.userProfile.getLastName(); // lastName
+//        params[2] = Personal_Organizer.userProfile.getLoginName(); // loginName
+//        params[3] = Personal_Organizer.userProfile.getUserEmail(); // userEmail
+//        params[4] = Personal_Organizer.userProfile.getPassword(); // password
+//        int birthDayYear = Personal_Organizer.userProfile.getBirthDayYear();
+//        int birthDayMonth = Personal_Organizer.userProfile.getBirthDayMonth();
+//        int birthDayDay = Personal_Organizer.userProfile.getBirthDayDay();
+//        Date birthDay = Personal_Organizer.userProfile.getBirthDay();
+//        
+//        params[5] = Personal_Organizer.userProfile.getPhone(); // phone
+//        params[6] = Personal_Organizer.userProfile.getUserID(); // userID
+
         String firstName = Personal_Organizer.userProfile.getFirstName();
         String lastName = Personal_Organizer.userProfile.getLastName();
         String loginName = Personal_Organizer.userProfile.getLoginName();
@@ -253,19 +279,17 @@ public class DAO {
         String phone = Personal_Organizer.userProfile.getPhone();
         String userID = Personal_Organizer.userProfile.getUserID();
         if (command.equals("save")) {
-            query = "insert into " + TBL_USERS + " values ('" + userID + "', '"
+            query = "insert into tblUsers values ('" + userID + "', '"
                     + firstName + "', '" + lastName + "', '" + loginName + "', '"
                     + userEmail + "', '" + password + "', '" + birthDay.getYear()
                     + ((birthDay.getMonth() < 10) ? "0" : "") + birthDay.getMonth()
                     + ((birthDay.getDate() < 10) ? "0" : "") + birthDay.getDate()
                     + "', '" + phone + "')";
         } else {
-            query = "update " + TBL_USERS + " set " + T1COLUMN_FIRST_NAME + " = "
-                    + firstName + ", " + T1COLUMN_LAST_NAME + " = "
-                    + T1COLUMN_USER_EMAIL + " = '"
-                    + userEmail + "', " + T1COLUMN_PASSWORD + " = '" + password
-                    + "', " + T1COLUMN_PHONE + " = '" + phone + "' where "
-                    + T1COLUMN_ID + " = '" + userID + "'";
+            query = "update tblUsers set _user_first_name = " + firstName
+                    + ", _user_last_name  = " + lastName + ", _user_email = '"
+                    + userEmail + "', _password = '" + password + "', _phone = '"
+                    + phone + "' where " + "_user_id = '" + userID + "'";
         }
         System.out.println(query);
         rows = executeUpdate(query);
@@ -277,8 +301,8 @@ public class DAO {
         boolean unswer = false;
 
         String userName = Personal_Organizer.userProfile.getLoginName();
-        String query = "select " + T1COLUMN_ID + " from " + TBL_USERS + " where "
-                + T1COLUMN_LOGIN_NAME + " = '" + userName + "'";
+        String query = "select _user_id from tblUsers where _login_name = '"
+                + userName + "'";
         System.out.println(query);
         dbConnect();
         executeQuery(query);
@@ -300,8 +324,8 @@ public class DAO {
     }
 
     public static void getEvent() {
-        String query = "select * from " + TBL_EVENTS + " where "
-                + T1COLUMN_ID + " = 'YRKV2H5QGV'";
+        String query = "select * from  tblEvents where "
+                + "_user_id = 'YRKV2H5QGV'";
         dbConnect();
         executeQuery(query);
         try {

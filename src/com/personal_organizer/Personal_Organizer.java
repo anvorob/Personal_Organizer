@@ -24,6 +24,7 @@ public class Personal_Organizer {
     public static MainForm mainform;
     public static SignUpForm signUpForm;
     public static UserProfile userProfile;
+    public static boolean dbExist;
     
     /**
      * @param args the command line arguments
