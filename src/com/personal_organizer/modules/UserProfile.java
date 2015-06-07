@@ -46,7 +46,7 @@ public class UserProfile {
     public UserProfile(String loginName, String password, String userEmail, String phone, String userID) {
         this.loginName = loginName;
         this.userEmail = userEmail;
-        this.password = md5Custom(password);
+        this.password = password;
         this.phone = phone;
         this.userID = (userID.equals("")) ? generateCode() : userID;
     }
@@ -66,31 +66,6 @@ public class UserProfile {
         return code;
     }
 
-    private static String md5Custom(String st) {
-        MessageDigest messageDigest = null;
-        byte[] digest = new byte[0];
-
-        try {
-            messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.reset();
-            messageDigest.update(st.getBytes());
-            digest = messageDigest.digest();
-        } catch (NoSuchAlgorithmException e) {
-            // тут можно обработать ошибку
-            // возникает она если в передаваемый алгоритм в getInstance(,,,) не существует
-            e.printStackTrace();
-        }
-
-        BigInteger bigInt = new BigInteger(1, digest);
-        String md5Hex = bigInt.toString(16);
-
-        while (md5Hex.length() < 32) {
-            md5Hex = "0" + md5Hex;
-        }
-
-        return md5Hex;
-    }
-
     public String getLoginName(){
         return this.loginName;
     }
@@ -103,7 +78,7 @@ public class UserProfile {
         return this.password;
     }
 
-    public void getPassword(String password){
+    public void setPassword(String password){
         this.password = password;
     }
 
@@ -111,7 +86,7 @@ public class UserProfile {
         return this.userEmail;
     }
 
-    public void getUserEmail(String userEmail){
+    public void setUserEmail(String userEmail){
         this.userEmail = userEmail;
     }
 
@@ -119,7 +94,7 @@ public class UserProfile {
         return this.phone;
     }
 
-    public void getPhone(String phone){
+    public void setPhone(String phone){
         this.phone = phone;
     }
 

@@ -24,6 +24,7 @@ public class Personal_Organizer {
     public static MainForm mainform;
     public static SignUpForm signUpForm;
     public static UserProfile userProfile;
+    public static boolean dbExist;
     
     /**
      * @param args the command line arguments
@@ -40,12 +41,11 @@ public class Personal_Organizer {
 //          if(welcomeform.isRunning()==false){
 //              welcomeform.setVisible(false);
 //          }
-          //new EventProfile();
-          //loginForm.setVisible(true);
-            mainform=new MainForm();
-            mainform.setVisible(true);
-            mainform.frameSize();
-            
+//          new EventProfile();
+          loginForm.setVisible(true);
+//          mainform=new MainForm();
+//          mainform.setVisible(true);
+//          mainform.frameSize();
 //        try {
 //            System.out.println(InetAddress.getLocalHost().getHostAddress());
 //        } catch (UnknownHostException ex) {
