@@ -37,7 +37,7 @@ public class EventForm extends JFrame implements ActionListener {
 
     public EventForm(String title) {
         this.setTitle(title);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         pnlEvent = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

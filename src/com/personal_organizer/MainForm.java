@@ -22,6 +22,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuKeyEvent;
+import javax.swing.event.MenuKeyListener;
 import javax.swing.event.MenuListener;
 
 public class MainForm extends JFrame implements ActionListener, ListSelectionListener {
@@ -222,11 +224,21 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
             EventForm event = new EventForm();
             event.setVisible(true);
             new EventProfile();
-
-        } else if (e.getSource() == btndeleteevent) {
-            System.out.println("Delete");
-        } else if (e.getSource() == btnviewevent) {
-            EventForm event = new EventForm();
+            
+       } 
+       if(e.getSource()==infohelp){
+           Help help=new Help();
+           help.setVisible(true);
+       }
+       if(e.getSource()==infoabout){
+           About about=new About();
+           about.setVisible(true);
+       }
+       if(e.getSource()==btndeleteevent){
+           System.out.println("Delete");
+       }
+       if(e.getSource()==btnviewevent){
+           EventForm event=new EventForm();
             event.setVisible(true);
         } else if (e.getSource() == btneventprev) {
 //           Icon backward = new ImageIcon(getClass().getResource("/resources/backward_32_pressed.png"));
@@ -267,6 +279,16 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
             if (e.getSource() == memo) {
                 memoform = new MemoForm(fw, fx, fy);
                 memoform.setVisible(true);
+            }
+            if(e.getSource()==contacts){
+                if(contact==null){
+                    contact=new ContactListForm();
+                    contact.setVisible(true);
+                }else{
+                    contact.setVisible(true);
+                    contact.toFront();
+                    contact.repaint();
+                }
             }
         }
 
