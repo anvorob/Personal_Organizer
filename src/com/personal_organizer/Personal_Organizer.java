@@ -9,6 +9,7 @@ import com.personal_organizer.modules.UserProfile;
 import com.personal_organizer.LoginForm;
 import com.personal_organizer.modules.EventProfile;
 import com.personal_organizer.messenger.Gui;
+import com.personal_organizer.modules.EventType;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Date;
@@ -28,6 +29,7 @@ public class Personal_Organizer {
     public static UserProfile userProfile;
     public static boolean dbExist;
     public static ArrayList<EventProfile> events;
+    public static ArrayList<EventType> eventTypes;
     
     /**
      * @param args the command line arguments

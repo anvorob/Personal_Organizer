@@ -36,7 +36,7 @@ import javax.swing.JOptionPane;
 public class Tools {
 
     public static long time;
-    private static boolean showCommentForDebuging = false;
+    private static boolean showCommentForDebuging = true;
     // указываем путь к файлу с которым мы будем работать
     private static final String PATH = "PersonalOrganizer.ini";
     // класс для чтения файла

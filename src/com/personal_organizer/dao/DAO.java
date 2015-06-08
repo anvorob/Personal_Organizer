@@ -10,6 +10,7 @@ import com.personal_organizer.Personal_Organizer;
 import com.personal_organizer.modules.UserProfile;
 import com.personal_organizer.db.DBFunctions;
 import com.personal_organizer.modules.EventProfile;
+import com.personal_organizer.modules.EventType;
 import com.personal_organizer.modules.Tools;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,7 +20,9 @@ import java.sql.Statement;
 //import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -182,23 +185,31 @@ public class DAO {
             rs = statement.executeQuery(queryString);
         } catch (SQLException ex) {
 //            Tools.print("3");
-//            Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private static void executeQueryP(String queryString, String[] params) {
+    private static void executeQueryP(String queryString, ArrayList<Object> params) {
         try {
             Tools.print("================ NEW QUERY ====================");
             Tools.print(queryString);
             PreparedStatement prepStmt = conn.prepareStatement(queryString);
-            for (int i = 0; i < params.length; i++) {
-                prepStmt.setString(i + 1, params[i]);
+            int i = 1;
+            for (Object param : params) {
+//                switch(param.getClass().getSimpleName()){
+//                case "String":
+                prepStmt.setObject(i, param);
+                i++;
+//            }
+
             }
 
             rs = prepStmt.executeQuery();
+            //prepStmt.close();
+
         } catch (SQLException ex) {
-//            Tools.print("3");
-//            Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
+            Tools.print("3");
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -210,7 +221,36 @@ public class DAO {
             rows = statement.executeUpdate(queryString);
         } catch (SQLException ex) {
 //            Tools.print("3");
-//            Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(queryString + " ==> " + rows);
+        return rows;
+    }
+
+    private static int executeUpdateP(String queryString, ArrayList<Object> params) {
+        int rows = 0;
+        try {
+            Tools.print("================ NEW QUERY ====================");
+            Tools.print(queryString);
+            PreparedStatement prepStmt = conn.prepareStatement(queryString);
+            int i = 1;
+            for (Object param : params) {
+                if (param.getClass().getSimpleName().equals("Date")) {
+                    DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                    prepStmt.setString(i, dateFormat.format(param));
+                } else if (param.getClass().getSimpleName().equals("Time")) {
+                    DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                    prepStmt.setString(i, dateFormat.format(param));
+                } else {
+                    prepStmt.setObject(i, param);
+                }
+                i++;
+            }
+            rows = prepStmt.executeUpdate();
+            prepStmt.close();
+        } catch (SQLException ex) {
+            Tools.print("3");
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println(queryString + " ==> " + rows);
         return rows;
@@ -222,15 +262,11 @@ public class DAO {
         String loginName = userProfile.getLoginName();
         String password = Tools.md5Custom(userProfile.getPassword());
 
-        String query = "select * from tblUsers where "
-                + "_login_name = '" + loginName + "' and _password = "
-                + "'" + password + "'";
         String query1 = "select * from tblUsers where "
                 + "_login_name = ? and _password = ?";
-        String[] params;
-        params = new String[2];
-        params[0] = loginName;
-        params[1] = password;
+        ArrayList<Object> params = new ArrayList<Object>();
+        params.add(loginName);
+        params.add(password);
         executeQueryP(query1, params);
         try {
             if (rs.next()) {
@@ -264,7 +300,7 @@ public class DAO {
                 }
             }
         } catch (SQLException ex) {
-            //Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         dbClose();
 
@@ -325,60 +361,103 @@ public class DAO {
                 }
             }
         } catch (SQLException ex) {
-            //Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         dbClose();
         return unswer;
     }
 
-    public static void getEvent() {
-        String query = "select * from  tblEvents where "
-                + "_user_id = 'YRKV2H5QGV'";
+    public static void getUserEvents() {
         dbConnect();
-        executeQuery(query);
+        String query = "{call OrganizerDB.dbo.usp_GetUserEvents(?)}";
+
+        String userID = Personal_Organizer.userProfile.getUserID();
+
+        ArrayList<Object> params = new ArrayList<Object>();
+        params.add(userID);
+
+        executeQueryP(query, params);
+
         try {
 
             while (rs.next()) {
-                Tools.print(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6));
+                Tools.print(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6) + " " + rs.getString(7) + " " + rs.getString(8) + " " + rs.getString(9));
             }
 
         } catch (SQLException ex) {
-            //Logger.getLogger(DBFunctions.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         dbClose();
     }
 
-    public int saveUpdateEvent(EventProfile event, String actionCommand) {
+    public static void getEventTypes() {
+        dbConnect();
+        String query = "{call OrganizerDB.dbo.usp_GetEventTypes()}";
+
+        ArrayList<Object> params = new ArrayList<Object>();
+
+        executeQueryP(query, params);
+
+        try {
+
+            while (rs.next()) {
+                Personal_Organizer.eventTypes.add(new EventType(rs.getString(1),rs.getString(2)));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        dbClose();
+    }
+
+    public static int saveUpdateEvent(EventProfile event, String actionCommand) {
         int rows = 0;
         dbConnect();
         String query;
+        ArrayList<Object> params = new ArrayList<Object>();
+
+        String eventID = event.getEventID();
+        params.add(eventID);
 
         String userID = event.getUserID();
-        String eventID = event.getEventID();
+        params.add(userID);
+
         String eventTitle = event.getEventTitle();
+        params.add(eventTitle);
+
         Date day = event.getDay();
+        params.add(day);
+
         Time timeFrom = event.getTimeFrom();
+        params.add(timeFrom);
+
         Time timeTill = event.getTimeTill();
+        params.add(timeTill);
+
         String description = event.getDescription();
-        int type = event.getType();
-        String[] contacts = event.getContacts();
+        params.add(description);
+
+        String typeID = event.getTypeID();
+        params.add(typeID);
+
+        String contacts = event.getContacts();
+        params.add(contacts);
+
         if (actionCommand.equals("Save")) {
-            query = "insert into tblUsers values ('" + eventID + "', '"
-                    + userID + "', '" + eventTitle + "', '" + description + "', '"
-                    + userEmail + "', '" + password + "', '" + birthDay.getYear()
-                    + ((birthDay.getMonth() < 10) ? "0" : "") + birthDay.getMonth()
-                    + ((birthDay.getDate() < 10) ? "0" : "") + birthDay.getDate()
-                    + "', '" + phone + "')";
+            query = "{call OrganizerDB.dbo.usp_AddEvent(?,?,?,?,?,?,?,?,?)}";
+
         } else {
-            query = "update tblUsers set _user_first_name = " + firstName
-                    + ", _user_last_name  = " + lastName + ", _user_email = '"
-                    + userEmail + "', _password = '" + password + "', _phone = '"
-                    + phone + "' where " + "_user_id = '" + userID + "'";
+            query = "{call OrganizerDB.dbo.usp_UpdateEvent(?,?,?,?,?,?,?,?,?)}";
+//            query = "update tblUsers set _user_first_name = " + firstName
+//                    + ", _user_last_name  = " + lastName + ", _user_email = '"
+//                    + userEmail + "', _password = '" + password + "', _phone = '"
+//                    + phone + "' where " + "_user_id = '" + userID + "'";
         }
         System.out.println(query);
-        rows = executeUpdate(query);
+        rows = executeUpdateP(query, params);
         dbClose();
         return rows;
 

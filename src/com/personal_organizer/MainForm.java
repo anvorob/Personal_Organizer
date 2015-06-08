@@ -11,6 +11,7 @@ package com.personal_organizer;
  */
 import com.personal_organizer.calendar.DateListener;
 import com.personal_organizer.calendar.JCalendar;
+import com.personal_organizer.dao.DAO;
 import com.personal_organizer.modules.EventProfile;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -242,14 +243,15 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 
         this.pack();
         this.setLocationRelativeTo(null);
-        fechEvents();
+        getEvents();
         FillTheTable fill = new FillTheTable();
         Thread fillTheTable = new Thread(fill);
         fillTheTable.start();
     }
 
-    private void fechEvents() {
-
+    private void getEvents() {
+        DAO.getEventTypes();
+        DAO.getUserEvents();
     }
 
     public void frameSize() {

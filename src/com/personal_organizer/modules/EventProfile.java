@@ -22,15 +22,15 @@ public class EventProfile {
     private Time timeFrom;
     private Time timeTill;
     private String description;
-    private int type;
-    private String[] contacts;
+    private String type;
+    private String contacts;
 
     public EventProfile() {
-        this("", "", "New event", new Date(1,1,15), new Time(0, 0, 0), new Time(0, 0, 0), "", 0, new String[2]);
+        this("", "", "New event", new Date(1,1,15), new Time(0, 0, 0), new Time(0, 0, 0), "", "", "");
     }
 
     public EventProfile(String userID, String eventID, String eventTitle, Date day, Time timeFrom, Time timeTill,
-            String description, int type, String[] contacts) {
+            String description, String type, String contacts) {
         this.userID = userID;
         this.eventID = eventID;
         this.eventTitle = eventTitle;
@@ -41,9 +41,9 @@ public class EventProfile {
         this.type = type;
         this.contacts = contacts;
         //DAO.fetchEvents();
-        System.out.println("Print piski");
-        DAO.getEvent();
-        System.out.println("Print siski");
+//        System.out.println("Print piski");
+//        DAO.getEvent();
+//        System.out.println("Print siski");
     }
 
     public void setUserID(String userID){
@@ -102,19 +102,35 @@ public class EventProfile {
         return this.description;
     }
     
-    public void setType(int type){
+    public void setType(String type){
         this.type = type;
     }
     
-    public int getType(){
+    public String getType(){
         return type;
     }
     
-    public void setContacts(String[] contacts){
+    public String getTypeID(){
+        String result = "";
+        switch(type){
+            case "Business meeting":
+                result = "ZHKH4KH5BD";
+                break;
+            case "Birthday":
+                result = "FKSHSNS87S";
+                break;
+            case "Party":
+                result = "JHEKMDNV86";
+                break;
+        }
+        return result;
+    }
+
+    public void setContacts(String contacts){
         this.contacts = contacts;
     }
     
-    public String[] getContacts(){
+    public String getContacts(){
         return this.contacts;
     }
 }
