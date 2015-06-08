@@ -382,7 +382,8 @@ public class DAO {
         try {
 
             while (rs.next()) {
-                Tools.print(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6) + " " + rs.getString(7) + " " + rs.getString(8) + " " + rs.getString(9));
+                Personal_Organizer.events.add(new EventProfile(rs.getString(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getTime(5), rs.getTime(6), rs.getString(7), rs.getString(8), rs.getString(9)));
+                //Tools.print(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6) + " " + rs.getString(7) + " " + rs.getString(8) + " " + rs.getString(9));
             }
 
         } catch (SQLException ex) {

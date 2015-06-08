@@ -5,6 +5,7 @@
  */
 package com.personal_organizer.modules;
 
+import com.personal_organizer.Personal_Organizer;
 import java.util.Date;
 import com.personal_organizer.dao.DAO;
 import java.sql.Time;
@@ -38,7 +39,7 @@ public class EventProfile {
         this.timeFrom = timeFrom;
         this.timeTill = timeTill;
         this.description = description;
-        this.type = type;
+        this.setType(type);
         this.contacts = contacts;
         //DAO.fetchEvents();
 //        System.out.println("Print piski");
@@ -103,7 +104,15 @@ public class EventProfile {
     }
     
     public void setType(String type){
-        this.type = type;
+        String result = "";
+        for(EventType eventType : Personal_Organizer.eventTypes){
+            if(type.equals(eventType.getTypeID())){
+                result = eventType.getTitle();
+                break;
+            }
+        
+        }
+        this.type = result;
     }
     
     public String getType(){
@@ -112,16 +121,12 @@ public class EventProfile {
     
     public String getTypeID(){
         String result = "";
-        switch(type){
-            case "Business meeting":
-                result = "ZHKH4KH5BD";
+        for(EventType eventType : Personal_Organizer.eventTypes){
+            if(this.type.equals(eventType.getTitle())){
+                result = eventType.getTypeID();
                 break;
-            case "Birthday":
-                result = "FKSHSNS87S";
-                break;
-            case "Party":
-                result = "JHEKMDNV86";
-                break;
+            }
+        
         }
         return result;
     }

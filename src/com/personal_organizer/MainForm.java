@@ -188,17 +188,17 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 //        tblevents = new JTable(data, columns);
         tblevents = new JTable();
         tblevents.setModel(mod);
-        Vector<String> newRow = new Vector<String>();
-        newRow.add("AaValue");
-        newRow.add("BbValue");
-        newRow.add("CcValue");
-        newRow.add("DdValue");
-        mod.addRow(newRow);
-        numberOfRows = 1;
+//        Vector<String> newRow = new Vector<String>();
+//        newRow.add("AaValue");
+//        newRow.add("BbValue");
+//        newRow.add("CcValue");
+//        newRow.add("DdValue");
+//        mod.addRow(newRow);
+        numberOfRows = 0;
         rowData = new Object[tblevents.getColumnCount()];
         tblevents.getSelectionModel().addListSelectionListener(this);
         tblevents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        System.out.println("" + tblevents.getModel().getValueAt(0, 2));
+        //System.out.println("" + tblevents.getModel().getValueAt(0, 2));
 
 //            tblevents.getColumnModel().getColumn(0).setPreferredWidth(27);
 //            tblevents.getColumnModel().getColumn(1).setPreferredWidth(120);
@@ -237,8 +237,8 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         pnlstatusbar.add(statustitle = new JLabel("Title", SwingConstants.RIGHT));
         pnlstatusbar.add(statusdescript = new JLabel("Description"));
 
-        statustitle.setText("" + tblevents.getModel().getValueAt(0, 0));
-        statusdescript.setText(": " + tblevents.getModel().getValueAt(0, 1));
+        //statustitle.setText("" + tblevents.getModel().getValueAt(0, 0));
+        //statusdescript.setText(": " + tblevents.getModel().getValueAt(0, 1));
         this.add(pnlstatusbar, BorderLayout.SOUTH);
 
         this.pack();
@@ -377,24 +377,24 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         @Override
         public void run() {
             while (true) {
-                Object[][] data = new Object[10][6];
+                //Object[][] data = new Object[10][6];
 //                data = {
 //                    {"Business meeting"
 //                    
 //                    
 //                , "140 Hobson", "9:00", "10:00", "Meeting", "Tom"}};
-                if (numberOfRows < 2) {
-
-                    Vector<String> newRow = new Vector<String>();
-                    newRow.add("Business meeting");
-                    newRow.add("140 Hobson");
-                    newRow.add("09:00");
-                    newRow.add("10:00");
-                    newRow.add("Meeting");
-                    newRow.add("Tom");
-                    mod.addRow(newRow);
-                    numberOfRows++;
-                }
+//                if (numberOfRows < 2) {
+//
+//                    Vector<String> newRow = new Vector<String>();
+//                    newRow.add("Business meeting");
+//                    newRow.add("140 Hobson");
+//                    newRow.add("09:00");
+//                    newRow.add("10:00");
+//                    newRow.add("Meeting");
+//                    newRow.add("Tom");
+//                    mod.addRow(newRow);
+//                    numberOfRows++;
+//                }
 //                data[i][0] = "Business meeting";
 //                data[i][1] = "140 Hobson";
 //                data[i][2] = "09:00";
@@ -404,10 +404,10 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 //                
 //
                 int i = 0;
-                if (Personal_Organizer.events.size() > numberOfRows - 2) {
+                if (Personal_Organizer.events.size() > numberOfRows) {
                     for (EventProfile currentEvent : Personal_Organizer.events) {
                         i++;
-                        if (i > numberOfRows - 2) {
+                        if (i > numberOfRows) {
                             Vector<String> newRow = new Vector<String>();
                             newRow.add(currentEvent.getEventTitle());
                             newRow.add(currentEvent.getDescription());
@@ -416,13 +416,15 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
                             newRow.add(dateFormat.format(currentEvent.getTimeFrom()));
                             System.out.println(dateFormat.format(currentEvent.getTimeTill())); //2014/08/06 15:59:48        
                             newRow.add(dateFormat.format(currentEvent.getTimeTill()));
-                            newRow.add(getEventType(currentEvent.getType()));
+                            newRow.add(currentEvent.getType());
                             //data[i][5]=currentEvent.getEventTitle();}
                             mod.addRow(newRow);
                             numberOfRows++;
                         }
                     }
 
+        statustitle.setText("" + tblevents.getModel().getValueAt(0, 0));
+        statusdescript.setText(": " + tblevents.getModel().getValueAt(0, 1));
                 }
 //                tblevents.set = new JTable(data, columns);
                 try {

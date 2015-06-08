@@ -36,6 +36,7 @@ public class Personal_Organizer {
      */
     public static void main(String[] args) {  
         events = new ArrayList<EventProfile>();
+        eventTypes = new ArrayList<EventType>();
             //          WelcomeForm welcomeform=new WelcomeForm();
 //          welcomeform.setVisible(true);
 //          Thread t=new Thread(welcomeform);
