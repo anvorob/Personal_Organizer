@@ -25,6 +25,7 @@ public class EventProfile {
     private String description;
     private String type;
     private String contacts;
+    private boolean show = false;
 
     public EventProfile() {
         this("", "", "New event", new Date(1,1,15), new Time(0, 0, 0), new Time(0, 0, 0), "", "", "");
@@ -39,7 +40,7 @@ public class EventProfile {
         this.timeFrom = timeFrom;
         this.timeTill = timeTill;
         this.description = description;
-        this.setType(type);
+        this.type = type;
         this.contacts = contacts;
         //DAO.fetchEvents();
 //        System.out.println("Print piski");
@@ -137,5 +138,13 @@ public class EventProfile {
     
     public String getContacts(){
         return this.contacts;
+    }
+
+    public void setShow(boolean show){
+        this.show = show;
+    }
+    
+    public boolean getShow(){
+        return this.show;
     }
 }

@@ -8,8 +8,8 @@ package com.personal_organizer.modules;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Date;
-//import java.util.Date;
+//import java.sql.Date;
+import java.util.Date;
 import java.util.Random;
 
 /**

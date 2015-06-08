@@ -20,9 +20,9 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Date;
+//import java.sql.Date;
 import java.util.Random;
-//import java.util.Date;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +36,7 @@ import javax.swing.JOptionPane;
 public class Tools {
 
     public static long time;
-    private static boolean showCommentForDebuging = true;
+    private static boolean showCommentForDebuging = false;
     // указываем путь к файлу с которым мы будем работать
     private static final String PATH = "PersonalOrganizer.ini";
     // класс для чтения файла

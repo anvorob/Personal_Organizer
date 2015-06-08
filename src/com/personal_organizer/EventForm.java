@@ -7,6 +7,7 @@ package com.personal_organizer;
 
 import com.personal_organizer.dao.DAO;
 import com.personal_organizer.modules.EventProfile;
+import com.personal_organizer.modules.EventType;
 import com.personal_organizer.modules.Tools;
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +19,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.Time;
 //import java.sql.Date;
-//import java.sql.Time;
 import java.util.Date;
 
 import java.util.logging.Level;
@@ -37,18 +37,18 @@ public class EventForm extends JFrame implements ActionListener {
     JComboBox cbxTimeTillHours, cbxTimeTillMinutes;
     JComboBox cbxContacts, cbxType;
     JPanel pnlEvent;
-    String[] eventTypes = {"", "Business meeting", "Birthday", "Party"};
+    //String[] eventTypes = {"", "Business meeting", "Birthday", "Party"};
     String[] contactList = {"", "Anatolii", "Shuaib", "Mikhail"};
     JButton btnSave, btnCancel;
     JLabel errorMessage;
     boolean allFealdsAreFilled = false;
-    Date eventDate;
 
-    public EventForm(Date eventDate) {
-        this(eventDate, "New Event");
+
+    public EventForm() {
+        this("New Event");
     }
 
-    public EventForm(Date eventDate, String title) {
+    public EventForm(String title) {
 
 //        this.getRootPane().addComponentListener(new ComponentAdapter() {
 //            public void componentResized(ComponentEvent e) {
@@ -56,7 +56,6 @@ public class EventForm extends JFrame implements ActionListener {
 //                System.out.println("componentResized\nWidth = " + getWidth() + " Height = " + getHeight());
 //            }
 //        });
-        this.eventDate = eventDate;
         this.setTitle(title);
         //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -152,7 +151,7 @@ public class EventForm extends JFrame implements ActionListener {
         gbc.gridheight = 1;
         gbc.gridx = 1;
         gbc.gridy = 5;
-        pnlEvent.add(cbxType = new JComboBox(eventTypes), gbc);
+        pnlEvent.add(cbxType = new JComboBox(EventType.getEventTypes()), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
@@ -194,13 +193,13 @@ public class EventForm extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         CheckFilledFealds check = new CheckFilledFealds();
         check.start();
-        txtEventTitle.setText("New Event");
-        txteEventDescription.setText("New Event");
-        cbxTimeFromHours.setSelectedIndex(1);
-        cbxTimeFromMinutes.setSelectedIndex(1);
-        cbxTimeTillHours.setSelectedIndex(1);
-        cbxTimeTillMinutes.setSelectedIndex(1);
-        cbxType.setSelectedIndex(1);
+//        txtEventTitle.setText("New Event");
+//        txteEventDescription.setText("New Event");
+//        cbxTimeFromHours.setSelectedIndex(1);
+//        cbxTimeFromMinutes.setSelectedIndex(1);
+//        cbxTimeTillHours.setSelectedIndex(1);
+//        cbxTimeTillMinutes.setSelectedIndex(1);
+//        cbxType.setSelectedIndex(1);
         
         
     }
@@ -216,7 +215,7 @@ public class EventForm extends JFrame implements ActionListener {
                     Time timeTill = new Time(cbxTimeTillHours.getSelectedIndex()-1, cbxTimeTillMinutes.getSelectedIndex()-1, 00);
                     EventProfile event = new EventProfile(Personal_Organizer.userProfile.getUserID(),
                             Tools.generateCode(10), txtEventTitle.getText(),
-                            eventDate,
+                            MainForm.eventsDate,
                             timeFrom,
                             timeTill,
                             txteEventDescription.getText(), cbxType.getSelectedItem().toString(),
