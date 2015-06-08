@@ -20,6 +20,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -28,6 +31,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuKeyEvent;
 import javax.swing.event.MenuKeyListener;
 import javax.swing.event.MenuListener;
+import javax.swing.table.DefaultTableModel;
 
 public class MainForm extends JFrame implements ActionListener, ListSelectionListener {
 
@@ -70,10 +74,20 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 
     MemoForm memoForm;
     ContactListForm contactList;
-    
-    String columns[] = {"Title", "Description", "Time From", "Time Till", "Type", "Contacts"};
+
+    //String columns[] = {"Title", "Description", "Time From", "Time Till", "Type", "Contacts"};
+    Vector<String> columns = new Vector<String>();
+    DefaultTableModel mod = new DefaultTableModel(columns, 0);
+    int numberOfRows;
 
     public MainForm() {
+
+        columns.add("Title");
+        columns.add("Description");
+        columns.add("Time From");
+        columns.add("Time Till");
+        columns.add("Type");
+        columns.add("Contacts");
 
         this.setTitle("MainForm");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -111,14 +125,14 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         eventsDate = date;
         eventtitle.setText(dateFormat.format(date));
         System.out.println(dateFormat.format(date)); //2014/08/06 15:59:48        
-        JCalendar cal = new JCalendar(date.getDate()-1, date.getMonth(), date.getYear()-100);
+        JCalendar cal = new JCalendar(date.getDate() - 1, date.getMonth(), date.getYear() - 100);
         //DateListener cl;
         cal.addDateListener(new DateListener() {
 
             @Override
             public void dateChanged(Calendar new_c) {
                 int day = new_c.get(Calendar.DAY_OF_MONTH);
-                int month = new_c.get(Calendar.MONTH)+1;
+                int month = new_c.get(Calendar.MONTH) + 1;
                 int year = new_c.get(Calendar.YEAR);
 
                 System.out.println("Selected: " + new_c.getTime() + " (dd/MM/yyyy)");
@@ -140,7 +154,7 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 //                        + ((("" + month).length() == 1) ? "0" : "") + month + "/"
 //                        + year;
 //                System.out.println("Selected: " + dateFormat + " (DD/MM/YYYY)");
-        
+
         this.getContentPane().add(cal, BorderLayout.NORTH);
 
         pnlevents = new JPanel(new BorderLayout());
@@ -163,13 +177,23 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         pnleventscontrol.add(btneventnext, BorderLayout.EAST);
 
         pnleventstable = new JPanel();
-        Object[][] data = {{"Business meeting", "140 Hobson", "9:00", "10:00", "Meeting", "Tom"},
-        {"", "", "", "", "", ""},
-        {"", "", "", "", "", ""},
-        {"", "", "", "", "", ""},
-        {"", "", "", "", "", ""},
-        {"", "", "", "", "", ""}};
-        tblevents = new JTable(data, columns);
+//        Object[][] data = new Object[5][6];
+//                int i = 0;
+//
+//                data[i][0] = "Business meeting";
+//                data[i][4] = "Meeting";
+//                data[i][5] = "Tom";
+//        
+//        tblevents = new JTable(data, columns);
+        tblevents = new JTable();
+        tblevents.setModel(mod);
+        Vector<String> newRow = new Vector<String>();
+        newRow.add("AaValue");
+        newRow.add("BbValue");
+        newRow.add("CcValue");
+        newRow.add("DdValue");
+        mod.addRow(newRow);
+        numberOfRows = 1;
         rowData = new Object[tblevents.getColumnCount()];
         tblevents.getSelectionModel().addListSelectionListener(this);
         tblevents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -219,6 +243,9 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         this.pack();
         this.setLocationRelativeTo(null);
         fechEvents();
+        FillTheTable fill = new FillTheTable();
+        Thread fillTheTable = new Thread(fill);
+        fillTheTable.start();
     }
 
     private void fechEvents() {
@@ -239,42 +266,30 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         System.out.println("width: " + fw + " x: " + fx + " y: " + fy);
     }
 
-    private String getEventType(int index){
+    private String getEventType(int index) {
         String eventType = "";
-        switch(index){
-            case 0: 
-                eventType =  "Business meeting";
+        switch (index) {
+            case 0:
+                eventType = "Business meeting";
                 break;
-            case 1: 
-                eventType =  "Birthday";
+            case 1:
+                eventType = "Birthday";
                 break;
-            case 2: 
-                eventType =  "Party";
+            case 2:
+                eventType = "Party";
                 break;
         }
-         return eventType;
+        return eventType;
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnaddevent) {
             EventForm event = new EventForm(eventsDate);
             event.setVisible(true);
-            Object[][] data = {{"Business meeting", "140 Hobson", "9:00", "10:00", "Meeting", "Tom"}};
-            int i = 1;
-            for(EventProfile currentEvent : Personal_Organizer.events){
-                data[i][0]=currentEvent.getEventTitle();
-                data[i][1]=currentEvent.getDescription();
-                DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-                System.out.println(dateFormat.format(currentEvent.getTimeFrom())); //2014/08/06 15:59:48        
-                data[i][2]=dateFormat.format(currentEvent.getTimeFrom());
-                System.out.println(dateFormat.format(currentEvent.getTimeTill())); //2014/08/06 15:59:48        
-                data[i][3]=dateFormat.format(currentEvent.getTimeTill());
-                data[i][4]=getEventType(currentEvent.getType());
-                //data[i][5]=currentEvent.getEventTitle();
-                
-            }
-        tblevents = new JTable(data, columns);
+//            FillTheTable fill = new FillTheTable();
+//            Thread fillTheTable = new Thread(fill);
+//            fillTheTable.start();
 
         }
         if (e.getSource() == infohelp) {
@@ -351,6 +366,69 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         @Override
         public void menuCanceled(MenuEvent e) {
             System.out.println("Menu cenceled");
+        }
+
+    }
+
+    class FillTheTable implements Runnable {
+
+        @Override
+        public void run() {
+            while (true) {
+                Object[][] data = new Object[10][6];
+//                data = {
+//                    {"Business meeting"
+//                    
+//                    
+//                , "140 Hobson", "9:00", "10:00", "Meeting", "Tom"}};
+                if (numberOfRows < 2) {
+
+                    Vector<String> newRow = new Vector<String>();
+                    newRow.add("Business meeting");
+                    newRow.add("140 Hobson");
+                    newRow.add("09:00");
+                    newRow.add("10:00");
+                    newRow.add("Meeting");
+                    newRow.add("Tom");
+                    mod.addRow(newRow);
+                    numberOfRows++;
+                }
+//                data[i][0] = "Business meeting";
+//                data[i][1] = "140 Hobson";
+//                data[i][2] = "09:00";
+//                data[i][3] = "10:00";
+//                data[i][4] = "Meeting";
+//                data[i][5] = "Tom";
+//                
+//
+                int i = 0;
+                if (Personal_Organizer.events.size() > numberOfRows - 2) {
+                    for (EventProfile currentEvent : Personal_Organizer.events) {
+                        i++;
+                        if (i > numberOfRows - 2) {
+                            Vector<String> newRow = new Vector<String>();
+                            newRow.add(currentEvent.getEventTitle());
+                            newRow.add(currentEvent.getDescription());
+                            DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                            System.out.println(dateFormat.format(currentEvent.getTimeFrom())); //2014/08/06 15:59:48        
+                            newRow.add(dateFormat.format(currentEvent.getTimeFrom()));
+                            System.out.println(dateFormat.format(currentEvent.getTimeTill())); //2014/08/06 15:59:48        
+                            newRow.add(dateFormat.format(currentEvent.getTimeTill()));
+                            newRow.add(getEventType(currentEvent.getType()));
+                            //data[i][5]=currentEvent.getEventTitle();}
+                            mod.addRow(newRow);
+                            numberOfRows++;
+                        }
+                    }
+
+                }
+//                tblevents.set = new JTable(data, columns);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    //Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
 
     }

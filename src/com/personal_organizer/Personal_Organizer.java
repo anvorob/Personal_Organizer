@@ -32,7 +32,8 @@ public class Personal_Organizer {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {        
+    public static void main(String[] args) {  
+        events = new ArrayList<EventProfile>();
             //          WelcomeForm welcomeform=new WelcomeForm();
 //          welcomeform.setVisible(true);
 //          Thread t=new Thread(welcomeform);

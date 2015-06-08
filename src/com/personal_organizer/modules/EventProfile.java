@@ -26,13 +26,14 @@ public class EventProfile {
     private String[] contacts;
 
     public EventProfile() {
-        this("", "", new Date(1,1,15), new Time(0, 0, 0), new Time(0, 0, 0), "", 0, new String[2]);
+        this("", "", "New event", new Date(1,1,15), new Time(0, 0, 0), new Time(0, 0, 0), "", 0, new String[2]);
     }
 
-    public EventProfile(String userID, String eventID, Date day, Time timeFrom, Time timeTill,
+    public EventProfile(String userID, String eventID, String eventTitle, Date day, Time timeFrom, Time timeTill,
             String description, int type, String[] contacts) {
         this.userID = userID;
         this.eventID = eventID;
+        this.eventTitle = eventTitle;
         this.day = day;
         this.timeFrom = timeFrom;
         this.timeTill = timeTill;

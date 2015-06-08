@@ -5,6 +5,7 @@
  */
 package com.personal_organizer;
 
+import com.personal_organizer.dao.DAO;
 import com.personal_organizer.modules.EventProfile;
 import com.personal_organizer.modules.Tools;
 import javax.swing.*;
@@ -214,11 +215,13 @@ public class EventForm extends JFrame implements ActionListener {
                     Time timeFrom = new Time(cbxTimeFromHours.getSelectedIndex()-1, cbxTimeFromMinutes.getSelectedIndex()-1, 00);
                     Time timeTill = new Time(cbxTimeTillHours.getSelectedIndex()-1, cbxTimeTillMinutes.getSelectedIndex()-1, 00);
                     EventProfile event = new EventProfile(Personal_Organizer.userProfile.getUserID(),
-                            Tools.generateCode(10), eventDate,
+                            Tools.generateCode(10), txtEventTitle.getText(),
+                            eventDate,
                             timeFrom,
                             timeTill,
                             txteEventDescription.getText(), cbxType.getSelectedIndex(),
                             contactList);
+                    DAO.saveUpdateEvent(event, e.getActionCommand());
                     Personal_Organizer.events.add(event);
                     this.setVisible(false);
                     break;

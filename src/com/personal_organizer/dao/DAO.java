@@ -5,21 +5,25 @@
  */
 package com.personal_organizer.dao;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import com.personal_organizer.Personal_Organizer;
 import com.personal_organizer.modules.UserProfile;
 import com.personal_organizer.db.DBFunctions;
+import com.personal_organizer.modules.EventProfile;
 import com.personal_organizer.modules.Tools;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Date;
+//import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
-//import java.util.Date;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -136,8 +140,28 @@ public class DAO {
 //            while (this.rs.next()) {
 //                print(this.rs.getString(1));
 //            }
+        } catch (SQLServerException e) {
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null,
+                    "ClassNotFoundException.\n"
+                    + "Please, check that you installed JDBC Driver.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,
+                    "SQLException.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "Some Exception.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -251,21 +275,6 @@ public class DAO {
         int rows = 0;
         dbConnect();
         String query;
-//        String[] params;
-//        params = new String[5];
-//        
-//        params[0] = Personal_Organizer.userProfile.getFirstName(); // firstName
-//        params[1] = Personal_Organizer.userProfile.getLastName(); // lastName
-//        params[2] = Personal_Organizer.userProfile.getLoginName(); // loginName
-//        params[3] = Personal_Organizer.userProfile.getUserEmail(); // userEmail
-//        params[4] = Personal_Organizer.userProfile.getPassword(); // password
-//        int birthDayYear = Personal_Organizer.userProfile.getBirthDayYear();
-//        int birthDayMonth = Personal_Organizer.userProfile.getBirthDayMonth();
-//        int birthDayDay = Personal_Organizer.userProfile.getBirthDayDay();
-//        Date birthDay = Personal_Organizer.userProfile.getBirthDay();
-//        
-//        params[5] = Personal_Organizer.userProfile.getPhone(); // phone
-//        params[6] = Personal_Organizer.userProfile.getUserID(); // userID
 
         String firstName = Personal_Organizer.userProfile.getFirstName();
         String lastName = Personal_Organizer.userProfile.getLastName();
@@ -339,5 +348,39 @@ public class DAO {
         }
 
         dbClose();
+    }
+
+    public int saveUpdateEvent(EventProfile event, String actionCommand) {
+        int rows = 0;
+        dbConnect();
+        String query;
+
+        String userID = event.getUserID();
+        String eventID = event.getEventID();
+        String eventTitle = event.getEventTitle();
+        Date day = event.getDay();
+        Time timeFrom = event.getTimeFrom();
+        Time timeTill = event.getTimeTill();
+        String description = event.getDescription();
+        int type = event.getType();
+        String[] contacts = event.getContacts();
+        if (actionCommand.equals("Save")) {
+            query = "insert into tblUsers values ('" + eventID + "', '"
+                    + userID + "', '" + eventTitle + "', '" + description + "', '"
+                    + userEmail + "', '" + password + "', '" + birthDay.getYear()
+                    + ((birthDay.getMonth() < 10) ? "0" : "") + birthDay.getMonth()
+                    + ((birthDay.getDate() < 10) ? "0" : "") + birthDay.getDate()
+                    + "', '" + phone + "')";
+        } else {
+            query = "update tblUsers set _user_first_name = " + firstName
+                    + ", _user_last_name  = " + lastName + ", _user_email = '"
+                    + userEmail + "', _password = '" + password + "', _phone = '"
+                    + phone + "' where " + "_user_id = '" + userID + "'";
+        }
+        System.out.println(query);
+        rows = executeUpdate(query);
+        dbClose();
+        return rows;
+
     }
 }
