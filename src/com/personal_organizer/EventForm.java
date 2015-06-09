@@ -218,7 +218,7 @@ public class EventForm extends JFrame implements ActionListener {
                             MainForm.eventsDate,
                             timeFrom,
                             timeTill,
-                            txteEventDescription.getText(), cbxType.getSelectedItem().toString(),
+                            txteEventDescription.getText(), EventProfile.getTypesID(cbxType.getSelectedItem().toString()),
                             cbxContacts.getSelectedItem().toString());
                     DAO.saveUpdateEvent(event, e.getActionCommand());
                     Personal_Organizer.events.add(event);

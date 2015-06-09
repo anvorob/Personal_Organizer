@@ -132,6 +132,18 @@ public class EventProfile {
         return result;
     }
 
+    public static String getTypesID(String typeTitle){
+        String result = "";
+        for(EventType eventType : Personal_Organizer.eventTypes){
+            if(typeTitle.equals(eventType.getTitle())){
+                result = eventType.getTypeID();
+                break;
+            }
+        
+        }
+        return result;
+    }
+
     public void setContacts(String contacts){
         this.contacts = contacts;
     }

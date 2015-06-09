@@ -13,6 +13,7 @@ import com.personal_organizer.calendar.DateListener;
 import com.personal_organizer.calendar.JCalendar;
 import com.personal_organizer.dao.DAO;
 import com.personal_organizer.modules.EventProfile;
+import com.personal_organizer.modules.EventType;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,10 +78,8 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
     MemoForm memoForm;
     ContactListForm contactList;
 
-    //String columns[] = {"Title", "Description", "Time From", "Time Till", "Type", "Contacts"};
     Vector<String> columns = new Vector<String>();
     DefaultTableModel mod = new DefaultTableModel(columns, 0);
-    //int numberOfRows;
 
     public MainForm() {
 
@@ -127,12 +126,9 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         eventsDate = date;
         eventtitle.setText(dateFormat.format(date));
         System.out.println(dateFormat.format(date)); //2014/08/06 15:59:48        
-//        JCalendar cal = new JCalendar(date.getDate() - 1, date.getMonth(), date.getYear() - 100);
         cal = new JCalendar();
         cal.selectDay(date.getYear(), date.getMonth(), date.getDate());
-        //cal.selectCurrentDay();
 
-        //DateListener cl;
         cal.addDateListener(new DateListener() {
 
             @Override
@@ -141,32 +137,16 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
                 int month = new_c.get(Calendar.MONTH) + 1;
                 int year = new_c.get(Calendar.YEAR);
 
-                //System.out.println("Selected: " + new_c.getTime() + " (dd/MM/yyyy)");
                 String dateFormat = new SimpleDateFormat("dd/MM/yy").format(new_c.getTime());
-//                System.out.println("Selected: " + dateFormat + " (dd/MM/yyyy)");
-//                dateFormat = ((("" + day).length() == 1) ? "0" : "") + day + "/"
-//                        + ((("" + month).length() == 1) ? "0" : "") + month + "/"
-//                        + year;
-//                System.out.println("Selected: " + dateFormat + " (DD/MM/YYYY)");
                 eventtitle.setText(dateFormat);
                 eventsDate = new Date(year, month - 1, day);
                 int rowCount = mod.getRowCount();
                 for (int i = 0; i < rowCount; i++) {
                     mod.removeRow(0);
                 }
-                //tblevents.setModel(mod);
                 resetEventsShow();
-
             }
-
         });
-        //cl.dateChanged(new Calendar);
-//                String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(new_c.getTime());
-//                System.out.println("Selected: " + date + " (dd/MM/yyyy)");
-//                dateFormat = ((("" + day).length() == 1) ? "0" : "") + day + "/"
-//                        + ((("" + month).length() == 1) ? "0" : "") + month + "/"
-//                        + year;
-//                System.out.println("Selected: " + dateFormat + " (DD/MM/YYYY)");
 
         this.getContentPane().add(cal, BorderLayout.NORTH);
 
@@ -184,43 +164,16 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         btneventprev.setContentAreaFilled(false);
         btneventprev.setBorderPainted(false);
         btneventprev.addActionListener(this);
-        //eventtitle=new JLabel("Title");
         pnleventscontrol.add(btneventprev, BorderLayout.WEST);
         pnleventscontrol.add(eventtitle, BorderLayout.CENTER);
         pnleventscontrol.add(btneventnext, BorderLayout.EAST);
 
         pnleventstable = new JPanel();
-//        Object[][] data = new Object[5][6];
-//                int i = 0;
-//
-//                data[i][0] = "Business meeting";
-//                data[i][4] = "Meeting";
-//                data[i][5] = "Tom";
-//        
-//        tblevents = new JTable(data, columns);
         tblevents = new JTable();
         tblevents.setModel(mod);
-//        Vector<String> newRow = new Vector<String>();
-//        newRow.add("AaValue");
-//        newRow.add("BbValue");
-//        newRow.add("CcValue");
-//        newRow.add("DdValue");
-//        mod.addRow(newRow);
         rowData = new Object[tblevents.getColumnCount()];
         tblevents.getSelectionModel().addListSelectionListener(this);
         tblevents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        //System.out.println("" + tblevents.getModel().getValueAt(0, 2));
-
-//            tblevents.getColumnModel().getColumn(0).setPreferredWidth(27);
-//            tblevents.getColumnModel().getColumn(1).setPreferredWidth(120);
-//            tblevents.getColumnModel().getColumn(2).setPreferredWidth(100);
-//            tblevents.getColumnModel().getColumn(3).setPreferredWidth(90);
-//            tblevents.getColumnModel().getColumn(4).setPreferredWidth(90);
-//            tblevents.getColumnModel().getColumn(6).setPreferredWidth(120);
-//            tblevents.getColumnModel().getColumn(7).setPreferredWidth(100);
-//            tblevents.getColumnModel().getColumn(8).setPreferredWidth(95);
-//            tblevents.getColumnModel().getColumn(9).setPreferredWidth(40);
-//            tblevents.getColumnModel().getColumn(10).setPreferredWidth(400);
         JScrollPane scroll = new JScrollPane(tblevents);
         pnleventstable.add(scroll);
 
@@ -248,8 +201,6 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         pnlstatusbar.add(statustitle = new JLabel("Title", SwingConstants.RIGHT));
         pnlstatusbar.add(statusdescript = new JLabel("Description"));
 
-        //statustitle.setText("" + tblevents.getModel().getValueAt(0, 0));
-        //statusdescript.setText(": " + tblevents.getModel().getValueAt(0, 1));
         this.add(pnlstatusbar, BorderLayout.SOUTH);
 
         this.pack();
@@ -272,10 +223,6 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         Rectangle r = this.getBounds();
         fx = (int) r.getX();
         fy = (int) r.getY();
-//        fx=this.getLocation().x;
-//        fy=this.getLocation().y;
-//            fx=p.x;
-//            fy=p.y;
         System.out.println("width: " + fw + " x: " + fx + " y: " + fy);
     }
 
@@ -300,9 +247,6 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         if (e.getSource() == btnaddevent) {
             EventForm event = new EventForm();
             event.setVisible(true);
-//            FillTheTable fill = new FillTheTable();
-//            Thread fillTheTable = new Thread(fill);
-//            fillTheTable.start();
 
         }
         if (e.getSource() == infohelp) {
@@ -320,45 +264,31 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
             EventForm event = new EventForm();
             event.setVisible(true);
         } else if (e.getSource() == btneventprev) {
-//           Icon backward = new ImageIcon(getClass().getResource("/resources/backward_32_pressed.png"));
-//           btneventprev=new JButton(backward);
-            //System.out.println("Pressed prev");
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
             eventsDate.setDate(eventsDate.getDate() - 1);
             eventtitle.setText(dateFormat.format(eventsDate));
-            //System.out.println(dateFormat.format(eventsDate)); //2014/08/06 15:59:48        
             cal.selectDay(eventsDate.getYear(), eventsDate.getMonth(), eventsDate.getDate());
 
-//            numberOfRows = 0;
             int rowCount = mod.getRowCount();
             for (int i = 0; i < rowCount; i++) {
                 mod.removeRow(0);
             }
-            //tblevents.setModel(mod);
             resetEventsShow();
         } else if (e.getSource() == btneventnext) {
-//            Icon forward =new ImageIcon(getClass().getResource("/resources/forward_32_pressed.png"));
-//            btneventnext=new JButton(forward);
-//            System.out.println("Pressed next");
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
             eventsDate.setDate(eventsDate.getDate() + 1);
             eventtitle.setText(dateFormat.format(eventsDate));
-            //          System.out.println(dateFormat.format(eventsDate)); //2014/08/06 15:59:48        
             cal.selectDay(eventsDate.getYear(), eventsDate.getMonth(), eventsDate.getDate());
-//            numberOfRows = 0;
             int rowCount = mod.getRowCount();
             for (int i = 0; i < rowCount; i++) {
                 mod.removeRow(0);
             }
-            //tblevents.setModel(mod);
             resetEventsShow();
         } else if (e.getSource() == myInfo) {
             Personal_Organizer.signUpForm = new SignUpForm();
             Personal_Organizer.signUpForm.setCommand("Update");
-            //this.setVisible(false);
             Personal_Organizer.signUpForm.setVisible(true);
         }
-
     }
 
     protected void resetEventsShow() {
@@ -381,7 +311,6 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
             selectedObj += tblevents.getValueAt(row, i);
         }
         System.out.println(selectedObj);
-
     }
 
     class MListeners implements MenuListener {
@@ -406,14 +335,13 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 
         @Override
         public void menuDeselected(MenuEvent e) {
-            System.out.println("Menu deselected");
+            //System.out.println("Menu deselected");
         }
 
         @Override
         public void menuCanceled(MenuEvent e) {
-            System.out.println("Menu cenceled");
+            //System.out.println("Menu cenceled");
         }
-
     }
 
     class FillTheTable implements Runnable {
@@ -421,32 +349,6 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         @Override
         public void run() {
             while (true) {
-                //Object[][] data = new Object[10][6];
-//                data = {
-//                    {"Business meeting"
-//                    
-//                    
-//                , "140 Hobson", "9:00", "10:00", "Meeting", "Tom"}};
-//                if (numberOfRows < 2) {
-//
-//                    Vector<String> newRow = new Vector<String>();
-//                    newRow.add("Business meeting");
-//                    newRow.add("140 Hobson");
-//                    newRow.add("09:00");
-//                    newRow.add("10:00");
-//                    newRow.add("Meeting");
-//                    newRow.add("Tom");
-//                    mod.addRow(newRow);
-//                    numberOfRows++;
-//                }
-//                data[i][0] = "Business meeting";
-//                data[i][1] = "140 Hobson";
-//                data[i][2] = "09:00";
-//                data[i][3] = "10:00";
-//                data[i][4] = "Meeting";
-//                data[i][5] = "Tom";
-//                
-//
                 int i = 0;
                 for (EventProfile currentEvent : Personal_Organizer.events) {
                     i++;
@@ -461,8 +363,9 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
                         newRow.add(dateFormat.format(currentEvent.getTimeFrom()));
                         System.out.println(dateFormat.format(currentEvent.getTimeTill())); //2014/08/06 15:59:48        
                         newRow.add(dateFormat.format(currentEvent.getTimeTill()));
-                        newRow.add(currentEvent.getType());
+                        newRow.add(EventType.getEventType(currentEvent.getType()));
                         newRow.add(currentEvent.getContacts());
+                        newRow.add("" + Personal_Organizer.events.indexOf(currentEvent));
                         //data[i][5]=currentEvent.getEventTitle();}
                         mod.addRow(newRow);
                         currentEvent.setShow(true);
@@ -477,11 +380,9 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 
                     }
                 }
-//                tblevents.set = new JTable(data, columns);
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
-                    //Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
