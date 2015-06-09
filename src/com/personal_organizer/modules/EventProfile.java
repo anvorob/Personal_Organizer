@@ -42,10 +42,6 @@ public class EventProfile {
         this.description = description;
         this.type = type;
         this.contacts = contacts;
-        //DAO.fetchEvents();
-//        System.out.println("Print piski");
-//        DAO.getEvent();
-//        System.out.println("Print siski");
     }
 
     public void setUserID(String userID){

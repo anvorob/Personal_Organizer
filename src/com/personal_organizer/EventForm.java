@@ -50,14 +50,7 @@ public class EventForm extends JFrame implements ActionListener {
 
     public EventForm(String title) {
 
-//        this.getRootPane().addComponentListener(new ComponentAdapter() {
-//            public void componentResized(ComponentEvent e) {
-//                // This is only called when the user releases the mouse button.
-//                System.out.println("componentResized\nWidth = " + getWidth() + " Height = " + getHeight());
-//            }
-//        });
         this.setTitle(title);
-        //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         if (Personal_Organizer.loginForm == null) {
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -92,7 +85,6 @@ public class EventForm extends JFrame implements ActionListener {
         txteEventDescription.setWrapStyleWord(true);
         txteEventDescription.setLineWrap(true);
         JScrollPane scrlPane = new JScrollPane(txteEventDescription);
-//        scrlPane.setSize(new Dimension(10, 4));
         pnlEvent.add(scrlPane, gbc);
 
         gbc.gridwidth = 1;
@@ -193,15 +185,6 @@ public class EventForm extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         CheckFilledFealds check = new CheckFilledFealds();
         check.start();
-//        txtEventTitle.setText("New Event");
-//        txteEventDescription.setText("New Event");
-//        cbxTimeFromHours.setSelectedIndex(1);
-//        cbxTimeFromMinutes.setSelectedIndex(1);
-//        cbxTimeTillHours.setSelectedIndex(1);
-//        cbxTimeTillMinutes.setSelectedIndex(1);
-//        cbxType.setSelectedIndex(1);
-        
-        
     }
 
     @Override

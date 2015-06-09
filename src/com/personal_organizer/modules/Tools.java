@@ -10,7 +10,6 @@ import com.personal_organizer.Personal_Organizer;
 import com.personal_organizer.SignUpForm;
 import com.personal_organizer.dao.DAO;
 import com.personal_organizer.db.DBFunctions;
-//import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,14 +19,12 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-//import java.sql.Date;
 import java.util.Random;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-//import java.io.*;
 
 /**
  *
@@ -135,7 +132,7 @@ public class Tools {
     }
 
     public static String encryption(String password) {
-        System.out.println(password);
+        //System.out.println(password);
         StringBuilder newPassword = new StringBuilder("");
         for (int i = 0; i < password.length(); i++) {
             int k = i + 1;
@@ -149,7 +146,7 @@ public class Tools {
     public static String encryptionA(String password) {
         StringBuilder tmpPassword = new StringBuilder("");
 
-        System.out.println("0 - " + password);
+        //System.out.println("0 - " + password);
         StringBuilder newPassword = new StringBuilder("");
         for (int i = 0; i < password.length(); i++) {
             int k = i + 1;
@@ -158,11 +155,11 @@ public class Tools {
             tmpPassword.append(l);
             tmpPassword.append(j);
         }
-        System.out.println("1 - " + tmpPassword);
+        //System.out.println("1 - " + tmpPassword);
         String tmpPswrd = tmpPassword.toString();
         int j = tmpPswrd.length() / 2;
         for (int i = 0; i < j; i++) {
-            System.out.println(Integer.parseInt(tmpPswrd.substring(0, 2)));
+            //System.out.println(Integer.parseInt(tmpPswrd.substring(0, 2)));
             char tmpPart = (char) Integer.parseInt(tmpPswrd.substring(0, 2));
             tmpPswrd = tmpPswrd.substring(2);
             newPassword.append(tmpPart);
@@ -201,12 +198,12 @@ public class Tools {
             tmpPassword.append(j);
         }
         String tmpPswrd = tmpPassword.toString();
-        System.out.println(tmpPswrd);
+        //System.out.println(tmpPswrd);
         String s = encryptionA("123");
         while (tmpPswrd.length() > 2) {
             int number = Integer.parseInt(tmpPswrd.substring(0, 1));
             char tmpPart = (char) Integer.parseInt(tmpPswrd.substring(1, 1 + number));
-            System.out.println(number + " " + Integer.parseInt(tmpPswrd.substring(0, 1 + number)) + " " + Integer.parseInt(tmpPswrd.substring(1, 1 + number)));
+            //System.out.println(number + " " + Integer.parseInt(tmpPswrd.substring(0, 1 + number)) + " " + Integer.parseInt(tmpPswrd.substring(1, 1 + number)));
             newPassword.append(tmpPart);
             tmpPswrd = tmpPswrd.substring(1 + number);
         }
@@ -216,12 +213,12 @@ public class Tools {
     public static void readSettings(LoginForm frmLogin) {
         String str = read();
         String[] str1 = str.split("\r\n");
-        System.out.println(str1.length);
+        //System.out.println(str1.length);
 
         for (int i = 0; i < str1.length; i++) {
             String param = str1[i].substring(0, str1[i].indexOf('='));
             str = str1[i].replaceAll(param + "=", "");
-            System.out.println(str1[i] + " - " + str1[i].indexOf('=') + " - " + param + " = " + str);
+            //System.out.println(str1[i] + " - " + str1[i].indexOf('=') + " - " + param + " = " + str);
 
             switch (param) {
                 case "RememberLogin":
@@ -311,14 +308,14 @@ public class Tools {
 
     public static int saveUpdateUserProfile(SignUpForm frmSignUp, String command) {
         int rows = 0;
-        System.out.println("btnSave");
+        //System.out.println("btnSave");
         setUserProfile(frmSignUp);
         rows = DBFunctions.saveUpdateUserPassword(command);
         return rows;
     }
 
     public static void setUserProfile(SignUpForm frmSignUp) {
-        System.out.println("setUserProfile");
+        //System.out.println("setUserProfile");
 
         Personal_Organizer.userProfile = new UserProfile(frmSignUp.getLoginName(),
                 frmSignUp.getPassword(), frmSignUp.getEmail());
@@ -369,5 +366,4 @@ public class Tools {
 
         return md5Hex;
     }
-
 }

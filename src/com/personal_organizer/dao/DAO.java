@@ -17,7 +17,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-//import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.text.DateFormat;
@@ -123,8 +122,8 @@ public class DAO {
             String db_connect_string = "jdbc:sqlserver://" + dbServerAddress;
             Tools.diff("String db_connect_string = ", System.currentTimeMillis());
             // establish a connection with the database
-            System.out.println("conn = DriverManager.getConnection(" + db_connect_string + ","
-                    + dbServerUserName + "," + dbServerPassword + ";");
+//            System.out.println("conn = DriverManager.getConnection(" + db_connect_string + ","
+//                    + dbServerUserName + "," + dbServerPassword + ";");
             conn = DriverManager.getConnection(db_connect_string,
                     dbServerUserName, dbServerPassword);
             Tools.diff("this.conn = DriverManager.getConnection(db_connect_string,", System.currentTimeMillis());
@@ -157,12 +156,14 @@ public class DAO {
                     JOptionPane.PLAIN_MESSAGE);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null,
-                    "SQLException.",
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
                     "Output",
                     JOptionPane.PLAIN_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
-                    "Some Exception.",
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
                     "Output",
                     JOptionPane.PLAIN_MESSAGE);
         }
@@ -174,7 +175,11 @@ public class DAO {
             conn.close();
             statement.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -184,8 +189,11 @@ public class DAO {
             Tools.print(queryString);
             rs = statement.executeQuery(queryString);
         } catch (SQLException ex) {
-//            Tools.print("3");
-//            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -208,8 +216,11 @@ public class DAO {
             //prepStmt.close();
 
         } catch (SQLException ex) {
-            Tools.print("3");
-            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -220,10 +231,12 @@ public class DAO {
             Tools.print(queryString);
             rows = statement.executeUpdate(queryString);
         } catch (SQLException ex) {
-//            Tools.print("3");
-//            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
-        System.out.println(queryString + " ==> " + rows);
         return rows;
     }
 
@@ -249,10 +262,13 @@ public class DAO {
             rows = prepStmt.executeUpdate();
             prepStmt.close();
         } catch (SQLException ex) {
-            Tools.print("3");
-            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
-        System.out.println(queryString + " ==> " + rows);
+        //System.out.println(queryString + " ==> " + rows);
         return rows;
     }
 
@@ -271,28 +287,12 @@ public class DAO {
         try {
             if (rs.next()) {
                 unswer = true;
-//                System.out.println();
-//                System.out.println("1 UserID = " + rs.getString(1));
-//                System.out.println("2 FirstName = " + rs.getString(2));
-//                System.out.println("3 LastName = " + rs.getString(3));
-//                System.out.println("5 UserEmail = " + rs.getString(5));
-//                
-////                new SimpleDateFormat("yyyy-MM-dd").format(date)
-////                SimpleDateFormat dt1 = new SimpleDateFormat("dd/mmmm/yyyy");
-//                System.out.println("6 BirthDay = " + new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate(7)));
                 Personal_Organizer.userProfile.setUserID(rs.getString(1));
                 Personal_Organizer.userProfile.setFirstName(rs.getString(2));
                 Personal_Organizer.userProfile.setLastName(rs.getString(3));
                 Personal_Organizer.userProfile.setUserEmail(rs.getString(5));
                 Personal_Organizer.userProfile.setBirthDay(rs.getDate(7));
                 Personal_Organizer.userProfile.setPhone(rs.getString(8));
-//                userProfile.setUserID(rs.getString(1));
-//                userProfile.setFirstName(rs.getString(2));
-//                userProfile.setLastName(rs.getString(3));
-//                userProfile.setUserEmail(rs.getString(4));
-//                userProfile.setBirthDay(rs.getDate(7));
-//                userProfile.setPhone(rs.getString(8));
-                //userProfile.getPassword();
             }
             if (unswer) {
                 while (rs.next()) {
@@ -300,7 +300,11 @@ public class DAO {
                 }
             }
         } catch (SQLException ex) {
-            //Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
         dbClose();
 
@@ -336,7 +340,7 @@ public class DAO {
                     + userEmail + "', _password = '" + password + "', _phone = '"
                     + phone + "' where " + "_user_id = '" + userID + "'";
         }
-        System.out.println(query);
+        //System.out.println(query);
         rows = executeUpdate(query);
         dbClose();
         return rows;
@@ -348,7 +352,7 @@ public class DAO {
         String userName = Personal_Organizer.userProfile.getLoginName();
         String query = "select _user_id from tblUsers where _login_name = '"
                 + userName + "'";
-        System.out.println(query);
+        //System.out.println(query);
         dbConnect();
         executeQuery(query);
         try {
@@ -361,7 +365,11 @@ public class DAO {
                 }
             }
         } catch (SQLException ex) {
-            //Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
 
         dbClose();
@@ -387,7 +395,11 @@ public class DAO {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
 
         dbClose();
@@ -408,7 +420,11 @@ public class DAO {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,
+                    "SQL Server connection issue.\n"
+                    + "Please, check Server address, user name and password.",
+                    "Output",
+                    JOptionPane.PLAIN_MESSAGE);
         }
 
         dbClose();
@@ -452,12 +468,7 @@ public class DAO {
 
         } else {
             query = "{call OrganizerDB.dbo.usp_UpdateEvent(?,?,?,?,?,?,?,?,?)}";
-//            query = "update tblUsers set _user_first_name = " + firstName
-//                    + ", _user_last_name  = " + lastName + ", _user_email = '"
-//                    + userEmail + "', _password = '" + password + "', _phone = '"
-//                    + phone + "' where " + "_user_id = '" + userID + "'";
         }
-        System.out.println(query);
         rows = executeUpdateP(query, params);
         dbClose();
         return rows;

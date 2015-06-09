@@ -3,17 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/SignUpForm.java</file>
             <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/EventForm.java</file>
             <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/modules/Tools.java</file>
-            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/modules/UserProfile.java</file>
             <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/MainForm.java</file>
+            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/modules/EventType.java</file>
             <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/modules/EventProfile.java</file>
-            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/Personal_Organizer.java</file>
             <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/calendar/JCalendar.java</file>
-            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/LoginForm.java</file>
             <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/dao/DAO.java</file>
-            <file>file:/C:/Users/Mikhail/Documents/NetBeansProjects/!Project/Personal_Organizer/src/com/personal_organizer/calendar/CalendarModel.java</file>
         </group>
     </open-files>
 </project-private>
