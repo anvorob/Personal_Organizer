@@ -24,16 +24,19 @@ public class EventProfile {
     private Time timeTill;
     private String description;
     private String type;
-    private String contacts;
     private boolean show = false;
-    private int numberOfRow;
+    private String fieldToFind;
 
     public EventProfile() {
-        this("", "", "New event", new Date(1,1,15), new Time(0, 0, 0), new Time(0, 0, 0), "", "", "");
+        this("", "", "New event", new Date(1, 1, 15), new Time(0, 0, 0), new Time(0, 0, 0), "", "")
+                //, "")
+                ;
     }
 
-    public EventProfile(String userID, String eventID, String eventTitle, Date day, Time timeFrom, Time timeTill,
-            String description, String type, String contacts) {
+    public EventProfile(String eventID, String userID, String eventTitle, Date day, Time timeFrom, Time timeTill,
+            String description, String type)
+            //, String contacts) 
+    {
         this.userID = userID;
         this.eventID = eventID;
         this.eventTitle = eventTitle;
@@ -42,126 +45,126 @@ public class EventProfile {
         this.timeTill = timeTill;
         this.description = description;
         this.type = type;
-        this.contacts = contacts;
     }
 
-    public void setUserID(String userID){
+    public void setUserID(String userID) {
         this.userID = userID;
     }
-    
-    public String getUserID(){
+
+    public String getUserID() {
         return this.userID;
     }
 
-    public void setEventID(String eventID){
+    public void setEventID(String eventID) {
         this.eventID = eventID;
     }
-    
-    public String getEventID(){
+
+    public String getEventID() {
         return this.eventID;
     }
-    
-    public void setEventTitle(String eventTitle){
+
+    public void setEventTitle(String eventTitle) {
         this.eventTitle = eventTitle;
     }
-    
-    public String getEventTitle(){
+
+    public String getEventTitle() {
         return this.eventTitle;
     }
-    
-   public void setDay(Date day){
+
+    public void setDay(Date day) {
         this.day = day;
     }
-    
-    public Date getDay(){
+
+    public Date getDay() {
         return this.day;
     }
-    
-    public void setTimeFrom(Time timeFrom){
+
+    public void setTimeFrom(Time timeFrom) {
         this.timeFrom = timeFrom;
     }
-    
-    public Time getTimeFrom(){
+
+    public Time getTimeFrom() {
         return this.timeFrom;
     }
-    
-    public void setTimeTill(Time timeTill){
+
+    public void setTimeTill(Time timeTill) {
         this.timeTill = timeTill;
     }
-    
-    public Time getTimeTill(){
+
+    public Time getTimeTill() {
         return this.timeTill;
-        
+
     }
-    public void setDescription(String description){
+
+    public void setDescription(String description) {
         this.description = description;
     }
-    
-    public String getDescription(){
+
+    public String getDescription() {
         return this.description;
     }
-    
-    public void setType(String type){
-        String result = "";
-        for(EventType eventType : Personal_Organizer.eventTypes){
-            if(type.equals(eventType.getTypeID())){
-                result = eventType.getTitle();
-                break;
-            }
-        
-        }
-        this.type = result;
+
+    public void setType(String type) {
+//        String result = "";
+//        for (EventType eventType : Personal_Organizer.eventTypes) {
+//            if (type.equals(eventType.getTypeID())) {
+//                result = eventType.getTitle();
+//                break;
+//            }
+//
+//        }
+        this.type = type;
     }
-    
-    public String getType(){
+
+    public String getType() {
         return type;
     }
-    
-    public String getTypeID(){
+
+    public String getTypeID() {
         String result = "";
-        for(EventType eventType : Personal_Organizer.eventTypes){
-            if(this.type.equals(eventType.getTitle())){
+        for (EventType eventType : Personal_Organizer.eventTypes) {
+            if (this.type.equals(eventType.getTitle())) {
                 result = eventType.getTypeID();
                 break;
             }
-        
+
         }
         return result;
     }
 
-    public static String getTypesID(String typeTitle){
+    public static String getTypeID(String typeTitle) {
         String result = "";
-        for(EventType eventType : Personal_Organizer.eventTypes){
-            if(typeTitle.equals(eventType.getTitle())){
+        for (EventType eventType : Personal_Organizer.eventTypes) {
+            if (typeTitle.equals(eventType.getTitle())) {
                 result = eventType.getTypeID();
                 break;
             }
-        
+
         }
         return result;
     }
 
-    public void setContacts(String contacts){
-        this.contacts = contacts;
-    }
-    
-    public String getContacts(){
-        return this.contacts;
-    }
-
-    public void setShow(boolean show){
+    public void setShow(boolean show) {
         this.show = show;
     }
-    
-    public boolean getShow(){
+
+    public boolean getShow() {
         return this.show;
     }
 
-    public void setNumberOfRow(int numberOfRow){
-        this.numberOfRow = numberOfRow;
+//    public void setNumberOfRow(int numberOfRow) {
+//        this.numberOfRow = numberOfRow;
+//    }
+//
+//    public int getNumberOfRow() {
+//        return this.numberOfRow;
+//    }
+//
+    public void setFieldToFind(String fieldToFind) {
+        this.fieldToFind = fieldToFind;
     }
-    
-    public int getТumberOfRow(){
-        return this.numberOfRow;
+
+    public String getFieldToFind() {
+        return this.fieldToFind;
     }
 }

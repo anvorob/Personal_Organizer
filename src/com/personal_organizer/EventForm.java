@@ -35,21 +35,25 @@ public class EventForm extends JFrame implements ActionListener {
     JTextArea txteEventDescription;
     JComboBox cbxTimeFromHours, cbxTimeFromMinutes;
     JComboBox cbxTimeTillHours, cbxTimeTillMinutes;
-    JComboBox cbxContacts, cbxType;
+    JComboBox cbxDateDate, cbxDateMonth, cbxDateYear;
+    JComboBox cbxType;
     JPanel pnlEvent;
     //String[] eventTypes = {"", "Business meeting", "Birthday", "Party"};
     String[] contactList = {"", "Anatolii", "Shuaib", "Mikhail"};
     JButton btnSave, btnCancel;
     JLabel errorMessage;
-    boolean allFealdsAreFilled = false;
+    EventProfile event;
 
+    boolean allFealdsAreFilled = false;
+//    String 
 
     public EventForm() {
-        this("New Event");
+        this("New Event", null);
     }
 
-    public EventForm(String title) {
+    public EventForm(String title, EventProfile event) {
 
+        this.event = event;
         this.setTitle(title);
         this.setResizable(false);
         if (Personal_Organizer.loginForm == null) {
@@ -91,13 +95,60 @@ public class EventForm extends JFrame implements ActionListener {
         gbc.gridheight = 1;
         gbc.gridx = 0;
         gbc.gridy = 3;
-        pnlEvent.add(new JLabel("Event time start: "), gbc);
+        pnlEvent.add(new JLabel("Event Date: "), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 1;
         gbc.gridy = 3;
         JPanel pnl = new JPanel();
+        String[] days = new String[32];
+        days[0] = "";
+        for (int i = 0; i < 31; i++) {
+            days[i + 1] = ((i < 9) ? "0" : "") + Integer.toString(i + 1);
+        }
+        cbxDateDate = new JComboBox(days);
+        cbxDateDate.setSelectedIndex(MainForm.eventsDate.getDate());
+        cbxDateDate.setEnabled(false);
+
+        String[] months = new String[13];
+        months[0] = "";
+        for (int i = 0; i < 12; i++) {
+            months[i + 1] = ((i < 9) ? "0" : "") + Integer.toString(i + 1);
+        }
+        cbxDateMonth = new JComboBox(months);
+        cbxDateMonth.setSelectedIndex(MainForm.eventsDate.getMonth() + 1);
+        cbxDateMonth.setEnabled(false);
+
+        String[] years = new String[38];
+        years[0] = "";
+        for (int i = 0; i < 37; i++) {
+            int j = i + 2015;
+            years[i + 1] = Integer.toString(j);
+        }
+        cbxDateYear = new JComboBox(years);
+        cbxDateYear.setSelectedIndex(MainForm.eventsDate.getYear() - 114);
+        cbxDateYear.setEnabled(false);
+
+        pnl.add(cbxDateDate);
+        pnl.add(new JLabel("."));
+        pnl.add(cbxDateMonth);
+        pnl.add(new JLabel("."));
+        pnl.add(cbxDateYear);
+
+        pnlEvent.add(pnl, gbc);
+
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        pnlEvent.add(new JLabel("Event time start: "), gbc);
+
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        pnl = new JPanel();
         String[] hours = new String[25];
         hours[0] = "";
         for (int i = 0; i < 24; i++) {
@@ -118,13 +169,13 @@ public class EventForm extends JFrame implements ActionListener {
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         pnlEvent.add(new JLabel("Event time finish: "), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         pnl = new JPanel();
         cbxTimeTillHours = new JComboBox(hours);
         cbxTimeTillMinutes = new JComboBox(minutes);
@@ -136,40 +187,39 @@ public class EventForm extends JFrame implements ActionListener {
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         pnlEvent.add(new JLabel("Event type: "), gbc);
 
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.gridx = 1;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         pnlEvent.add(cbxType = new JComboBox(EventType.getEventTypes()), gbc);
 
-        gbc.gridwidth = 1;
-        gbc.gridheight = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        pnlEvent.add(new JLabel("Related contacts: "), gbc);
-
-        gbc.gridwidth = 1;
-        gbc.gridheight = 1;
-        gbc.gridx = 1;
-        gbc.gridy = 6;
-        pnlEvent.add(cbxContacts = new JComboBox(contactList), gbc);
-
-        gbc.gridwidth = 1;
+//        gbc.gridwidth = 1;
+//        gbc.gridheight = 1;
+//        gbc.gridx = 0;
+//        gbc.gridy = 6;
+//        pnlEvent.add(new JLabel("Related contacts: "), gbc);
+//
+//        gbc.gridwidth = 1;
+//        gbc.gridheight = 1;
+//        gbc.gridx = 1;
+//        gbc.gridy = 6;
+//        pnlEvent.add(cbxContacts = new JComboBox(contactList), gbc);
+//
+        gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.gridx = 0;
         gbc.gridy = 7;
-        pnlEvent.add(btnSave = new JButton("Save"), gbc);
+        pnl = new JPanel();
+        pnl.add(btnSave = new JButton("Save"));
         btnSave.addActionListener(this);
-        
-        gbc.gridwidth = 1;
-        gbc.gridheight = 1;
-        gbc.gridx = 1;
-        gbc.gridy = 7;
-        pnlEvent.add(btnCancel = new JButton("Cancel"), gbc);
+
+        pnl.add(btnCancel = new JButton("Cancel"));
         btnCancel.addActionListener(this);
+        pnl.setLayout(new FlowLayout(FlowLayout.CENTER));
+        pnlEvent.add(pnl, gbc);
 
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
@@ -177,37 +227,78 @@ public class EventForm extends JFrame implements ActionListener {
         gbc.gridy = 8;
         pnlEvent.add(errorMessage = new JLabel(""), gbc);
         errorMessage.setHorizontalAlignment(JLabel.CENTER);
-        errorMessage.setFont(new Font("Serif", Font.BOLD+Font.ITALIC, 11));
+        errorMessage.setFont(new Font("Serif", Font.BOLD + Font.ITALIC, 13));
 
         this.add(pnlEvent);
         //this.pack();
-        this.setSize(new Dimension(279, 369));
+        this.setSize(new Dimension(330, 386));
         this.setLocationRelativeTo(null);
         CheckFilledFealds check = new CheckFilledFealds();
         check.start();
+        if (this.event != null) {
+            txtEventTitle.setText(event.getEventTitle());
+            txteEventDescription.setText(event.getDescription());
+            cbxTimeFromHours.setSelectedIndex(event.getTimeFrom().getHours() + 1);
+            cbxTimeFromMinutes.setSelectedIndex(event.getTimeFrom().getMinutes() + 1);
+            cbxTimeTillHours.setSelectedIndex(event.getTimeTill().getHours() + 1);
+            cbxTimeTillMinutes.setSelectedIndex(event.getTimeTill().getMinutes() + 1);
+            for (int i = 1; i < cbxType.getItemCount(); i++) {
+                if (cbxType.getItemAt(i).toString().equals(EventType.getEventType(event.getType()))) {
+                    cbxType.setSelectedIndex(i);
+                    break;
+                }
+            }
+            btnSave.setText("Update");
+
+            cbxDateDate.setEnabled(true);
+            cbxDateMonth.setEnabled(true);
+            cbxDateYear.setEnabled(true);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnCancel) {
+            MainForm.isNotNecessaryToReFill = true;
             this.setVisible(false);
         } else if (e.getSource() == btnSave) {
+            Time timeFrom;
+            Time timeTill;
             switch (e.getActionCommand()) {
                 case "Save":
-                    Time timeFrom = new Time(cbxTimeFromHours.getSelectedIndex()-1, cbxTimeFromMinutes.getSelectedIndex()-1, 00);
-                    Time timeTill = new Time(cbxTimeTillHours.getSelectedIndex()-1, cbxTimeTillMinutes.getSelectedIndex()-1, 00);
-                    EventProfile event = new EventProfile(Personal_Organizer.userProfile.getUserID(),
-                            Tools.generateCode(10), txtEventTitle.getText(),
+                    timeFrom = new Time(cbxTimeFromHours.getSelectedIndex() - 1,
+                            cbxTimeFromMinutes.getSelectedIndex() - 1, 00);
+                    timeTill = new Time(cbxTimeTillHours.getSelectedIndex() - 1,
+                            cbxTimeTillMinutes.getSelectedIndex() - 1, 00);
+                    event = new EventProfile(Tools.generateCode(10),
+                            Personal_Organizer.userProfile.getUserID(),
+                            txtEventTitle.getText(),
                             MainForm.eventsDate,
                             timeFrom,
                             timeTill,
-                            txteEventDescription.getText(), EventProfile.getTypesID(cbxType.getSelectedItem().toString()),
-                            cbxContacts.getSelectedItem().toString());
+                            txteEventDescription.getText(),
+                            EventProfile.getTypeID(cbxType.getSelectedItem().toString()));
                     DAO.saveUpdateEvent(event, e.getActionCommand());
                     Personal_Organizer.events.add(event);
+                    MainForm.isNecessaryToReFill = true;
                     this.setVisible(false);
                     break;
                 case "Update":
+                    timeFrom = new Time(cbxTimeFromHours.getSelectedIndex() - 1,
+                            cbxTimeFromMinutes.getSelectedIndex() - 1, 00);
+                    timeTill = new Time(cbxTimeTillHours.getSelectedIndex() - 1,
+                            cbxTimeTillMinutes.getSelectedIndex() - 1, 00);
+                    Date newDate = new Date(cbxDateYear.getSelectedIndex() + 114,
+                            cbxDateMonth.getSelectedIndex() - 1, 
+                            cbxDateDate.getSelectedIndex());
+                    event.setEventTitle(txtEventTitle.getText());
+                    event.setDay(newDate);
+                    event.setTimeFrom(timeFrom);
+                    event.setTimeTill(timeTill);
+                    event.setDescription(txteEventDescription.getText());
+                    event.setType(EventProfile.getTypeID(cbxType.getSelectedItem().toString()));
+                    DAO.saveUpdateEvent(event, e.getActionCommand());
+                    MainForm.isNecessaryToReFill = true;
                     this.setVisible(false);
                     break;
             }
@@ -239,11 +330,54 @@ public class EventForm extends JFrame implements ActionListener {
                         && cbxTimeFromMinutes.getSelectedIndex()
                         > cbxTimeTillMinutes.getSelectedIndex())) {
                     message = "Time till is less then from!";
+                } else if (cbxDateDate.getSelectedIndex() == 0
+                        || cbxDateMonth.getSelectedIndex() == 0
+                        || cbxDateYear.getSelectedIndex() == 0) {
+                    message = "Date is not set!";
                 } else if (cbxType.getSelectedIndex() == 0) {
                     message = "Event type in not selected!";
                 } else {
                     allFealdsAreFilled = true;
                 }
+                Date date = new Date();
+                if (allFealdsAreFilled) {
+                    try {
+                        Date eventDate = new Date(cbxDateYear.getSelectedIndex() + 2014,
+                                cbxDateMonth.getSelectedIndex(), cbxDateDate.getSelectedIndex());
+                    } catch (Exception e) {
+                        message = "Date is wrong!";
+                        allFealdsAreFilled = false;
+                    }
+                }
+                if (allFealdsAreFilled) {
+                    if ((date.getYear() > cbxDateYear.getSelectedIndex() + 114)
+                            || (date.getYear() == cbxDateYear.getSelectedIndex() + 114)
+                            && (date.getMonth() + 1 > cbxDateMonth.getSelectedIndex())
+                            || (date.getYear() == cbxDateYear.getSelectedIndex() + 114
+                            && date.getMonth() + 1 == cbxDateMonth.getSelectedIndex()
+                            && date.getDate() > cbxDateDate.getSelectedIndex())) {
+                        message = "Date is in the past!";
+                        allFealdsAreFilled = false;
+                    } else if ((date.getDate() == cbxDateDate.getSelectedIndex()
+                            && date.getMonth() + 1 == cbxDateMonth.getSelectedIndex()
+                            && date.getYear() == cbxDateYear.getSelectedIndex() + 114)
+                            && (date.getHours() > cbxTimeFromHours.getSelectedIndex() - 1
+                            || (date.getHours() == cbxTimeFromHours.getSelectedIndex() - 1
+                            && date.getMinutes() > cbxTimeFromMinutes.getSelectedIndex() - 1))) {
+                        message = "Time from is in the past!";
+                        allFealdsAreFilled = false;
+                    }
+                }
+                if (allFealdsAreFilled) {
+
+//                    else if  {
+//                        message = "Event type in not selected!";
+//                        allFealdsAreFilled = false;
+//                    }
+                    errorMessage.setText("Now you can save the event!");
+                    errorMessage.setForeground(Color.blue);
+                }
+
                 btnSave.setEnabled(allFealdsAreFilled);
                 if (allFealdsAreFilled) {
                     errorMessage.setText("Now you can save the event!");

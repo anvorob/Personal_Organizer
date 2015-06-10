@@ -8,7 +8,6 @@ package com.personal_organizer.dao;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import com.personal_organizer.Personal_Organizer;
 import com.personal_organizer.modules.UserProfile;
-import com.personal_organizer.db.DBFunctions;
 import com.personal_organizer.modules.EventProfile;
 import com.personal_organizer.modules.EventType;
 import com.personal_organizer.modules.Tools;
@@ -31,11 +30,11 @@ import javax.swing.JOptionPane;
  *
  * @author Mikhail
  */
-public class DAO {
+public class DAO implements interface_dao {
 
-    public static String dbServerAddress;
-    public static String dbServerUserName;
-    public static String dbServerPassword;
+    private static String dbServerAddress;
+    private static String dbServerUserName;
+    private static String dbServerPassword;
 
     private static boolean showCommentForDebuging = false;
     private static ResultSet rs;
@@ -43,62 +42,6 @@ public class DAO {
     private static Statement statement;
     //private String db_connect_string, db_userid, db_password;
     private static String dbPath;
-    private static final String DB_NAME = "OrganizerDB";
-    //private static final String TBL_USERS = "tblUsers";
-    //private static final String TBL_CONTACT_BOOK = "tblContactBook";
-    //private static final String TBL_EVENTS = "tblEvents";
-    private static final String TBL_MEMOS = "tblMemos";
-
-    private static final String CREATE_DATABASE
-            = "use master\nIF DB_ID (N'" + DB_NAME + "') IS NULL\n"
-            + "CREATE DATABASE OrganizerDB\nCOLLATE  Latin1_General_BIN\nWITH "
-            + "TRUSTWORTHY ON, DB_CHAINING ON";
-
-    private static final String USE_DATABASE
-            = "use OrganizerDB";
-
-    private static final String CREATE_TABLE_USERS = "IF not EXISTS (SELECT 1 FROM "
-            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblUsers')\n"
-            + "CREATE TABLE tblUsers (_user_id char(10) NOT NULL PRIMARY KEY, "
-            + "_user_first_name varchar(15),\n"
-            + "_user_last_name varchar(15),\n"
-            + "_login_name varchar(10) NOT NULL,\n"
-            + "_user_email varchar(30) NOT NULL,\n"
-            + "_password char(32) NOT NULL,\n"
-            + "_user_birth_day date,\n"
-            + "_phone varchar(10))";
-
-    private static final String CREATE_TABLE_CONTACT_BOOK = "IF not EXISTS (SELECT 1 FROM "
-            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblContactBook')\n"
-            + "CREATE TABLE tblContactBook "
-            + "(_contact_id char(10) NOT NULL PRIMARY KEY,\n"
-            + "_user_id char(10) NOT NULL FOREIGN KEY REFERENCES tblUsers(_user_id),\n"
-            + "_first_name varchar(15) NOT NULL,\n"
-            + "_last_name varchar(15) NOT NULL,\n"
-            + "_email varchar(30) NOT NULL,\n"
-            + "_phone varchar(10),\n"
-            + "_notes varchar(50))";
-
-    private static final String CREATE_TABLE_EVENTS = "IF not EXISTS (SELECT 1 FROM "
-            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblEvents')"
-            + "CREATE TABLE tblEvents"
-            + "(_user_id char(10) NOT NULL FOREIGN KEY REFERENCES tblUsers(_user_id),\n"
-            + "	_event_id char(10) NOT NULL PRIMARY KEY,\n"
-            + "	_day date NOT NULL,\n"
-            + "	_time_from time NOT NULL,\n"
-            + "	_time_till time NOT NULL,\n"
-            + "	_description varchar(100) NOT NULL,\n"
-            + "	_type int NOT NULL,\n"
-            + "	_contacts varchar(100))";
-
-    private static final String CREATE_MEMOS = "IF not EXISTS (SELECT 1 FROM "
-            + "INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblMemos')"
-            + "CREATE TABLE tblMemos "
-            + "(_user_id char(10) NOT NULL FOREIGN KEY REFERENCES tblUsers(_user_id),\n"
-            + "	_memo_id char(10) NOT NULL PRIMARY KEY,\n"
-            + "	_memo_description varchar(100) NOT NULL,\n"
-            + "	_due date NOT NULL,\n"
-            + "	_color int NOT NULL)";
 
     private static void createDataBase() {
         // create database if not exist
@@ -111,6 +54,11 @@ public class DAO {
     private static void createTables() {
         // create table users
         executeUpdate(CREATE_TABLE_USERS);
+        executeUpdate(CREATE_TABLE_CONTACT_BOOK);
+        executeUpdate(CREATE_TABLE_EVENTS);
+        executeUpdate(CREATE_TABLE_MEMOS);
+        executeUpdate(CREATE_TABLE_PASS_STORAGE);
+
     }
 
     private static void dbConnect() {
@@ -132,6 +80,8 @@ public class DAO {
             statement = conn.createStatement();
             if (!Personal_Organizer.dbExist) {
                 createDataBase();
+            } else {
+                executeUpdate(USE_DATABASE);
             }
             Tools.diff("this.statement = conn.createStatement();", System.currentTimeMillis());
             // create query
@@ -169,6 +119,20 @@ public class DAO {
         }
     }
 
+    public static void sqlConnectionTest() throws SQLException, SQLServerException, ClassNotFoundException {
+        setDBServerAddress(dbServerAddress);
+        // get the Class object
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        //String db_connect_string = "jdbc:sqlserver://" + dbServerAddress + ";databaseName=" + DB_NAME;
+        String db_connect_string = "jdbc:sqlserver://" + dbServerAddress;
+        // establish a connection with the database
+        conn = DriverManager.getConnection(db_connect_string,
+                dbServerUserName, dbServerPassword);
+        statement = conn.createStatement();
+        executeUpdate(USE_MASTER);
+        dbClose();
+    }
+
     private static void dbClose() {
         try {
             // get the Class object
@@ -189,6 +153,7 @@ public class DAO {
             Tools.print(queryString);
             rs = statement.executeQuery(queryString);
         } catch (SQLException ex) {
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null,
                     "SQL Server connection issue.\n"
                     + "Please, check Server address, user name and password.",
@@ -216,6 +181,7 @@ public class DAO {
             //prepStmt.close();
 
         } catch (SQLException ex) {
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null,
                     "SQL Server connection issue.\n"
                     + "Please, check Server address, user name and password.",
@@ -231,6 +197,7 @@ public class DAO {
             Tools.print(queryString);
             rows = statement.executeUpdate(queryString);
         } catch (SQLException ex) {
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null,
                     "SQL Server connection issue.\n"
                     + "Please, check Server address, user name and password.",
@@ -262,6 +229,7 @@ public class DAO {
             rows = prepStmt.executeUpdate();
             prepStmt.close();
         } catch (SQLException ex) {
+            Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null,
                     "SQL Server connection issue.\n"
                     + "Please, check Server address, user name and password.",
@@ -320,7 +288,7 @@ public class DAO {
         String lastName = Personal_Organizer.userProfile.getLastName();
         String loginName = Personal_Organizer.userProfile.getLoginName();
         String userEmail = Personal_Organizer.userProfile.getUserEmail();
-        String password = Personal_Organizer.userProfile.getPassword();
+        String password = Tools.md5Custom(Personal_Organizer.userProfile.getPassword());
         int birthDayYear = Personal_Organizer.userProfile.getBirthDayYear();
         int birthDayMonth = Personal_Organizer.userProfile.getBirthDayMonth();
         int birthDayDay = Personal_Organizer.userProfile.getBirthDayDay();
@@ -390,8 +358,10 @@ public class DAO {
         try {
 
             while (rs.next()) {
-                Personal_Organizer.events.add(new EventProfile(rs.getString(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getTime(5), rs.getTime(6), rs.getString(7), rs.getString(8), rs.getString(9)));
-                //Tools.print(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) + " " + rs.getString(6) + " " + rs.getString(7) + " " + rs.getString(8) + " " + rs.getString(9));
+                Personal_Organizer.events.add(new EventProfile(rs.getString(1),
+                        rs.getString(2), rs.getString(3), rs.getDate(4),
+                        rs.getTime(5), rs.getTime(6), rs.getString(7),
+                        rs.getString(8)));
             }
 
         } catch (SQLException ex) {
@@ -401,6 +371,19 @@ public class DAO {
                     "Output",
                     JOptionPane.PLAIN_MESSAGE);
         }
+
+        dbClose();
+    }
+
+    public static void deleteEvent(Object eventID) {
+
+        dbConnect();
+        String query = "{call OrganizerDB.dbo.usp_DeleteEvent(?)}";
+
+        ArrayList<Object> params = new ArrayList<Object>();
+        params.add(eventID);
+
+        executeUpdateP(query, params);
 
         dbClose();
     }
@@ -416,7 +399,7 @@ public class DAO {
         try {
 
             while (rs.next()) {
-                Personal_Organizer.eventTypes.add(new EventType(rs.getString(1),rs.getString(2)));
+                Personal_Organizer.eventTypes.add(new EventType(rs.getString(1), rs.getString(2)));
             }
 
         } catch (SQLException ex) {
@@ -439,9 +422,6 @@ public class DAO {
         String eventID = event.getEventID();
         params.add(eventID);
 
-        String userID = event.getUserID();
-        params.add(userID);
-
         String eventTitle = event.getEventTitle();
         params.add(eventTitle);
 
@@ -457,21 +437,45 @@ public class DAO {
         String description = event.getDescription();
         params.add(description);
 
-        String typeID = event.getTypeID();
+        String typeID = event.getType();
         params.add(typeID);
 
-        String contacts = event.getContacts();
-        params.add(contacts);
-
+//        String contacts = event.getContacts();
+//        params.add(contacts);
         if (actionCommand.equals("Save")) {
-            query = "{call OrganizerDB.dbo.usp_AddEvent(?,?,?,?,?,?,?,?,?)}";
+            query = "{call OrganizerDB.dbo.usp_AddEvent(?,?,?,?,?,?,?,?)}";
 
         } else {
-            query = "{call OrganizerDB.dbo.usp_UpdateEvent(?,?,?,?,?,?,?,?,?)}";
+            query = "{call OrganizerDB.dbo.usp_UpdateEvent(?,?,?,?,?,?,?)}";
         }
         rows = executeUpdateP(query, params);
         dbClose();
         return rows;
 
     }
+
+    public static String getDBServerAddress() {
+        return dbServerAddress;
+    }
+
+    public static void setDBServerAddress(String serverAddress) {
+        dbServerAddress = serverAddress;
+    }
+
+    public static String getDBServerUserName() {
+        return dbServerUserName;
+    }
+
+    public static void setDBServerUserName(String serverUserName) {
+        dbServerUserName = serverUserName;
+    }
+
+    public static String getDBServerPassword() {
+        return dbServerPassword;
+    }
+
+    public static void setDBServerPassword(String serverPassword) {
+        dbServerPassword = serverPassword;
+    }
+
 }

@@ -212,59 +212,61 @@ public class Tools {
 
     public static void readSettings(LoginForm frmLogin) {
         String str = read();
-        String[] str1 = str.split("\r\n");
-        //System.out.println(str1.length);
+        if (!str.equals("")) {
+            String[] str1 = str.split("\r\n");
+            //System.out.println(str1.length);
 
-        for (int i = 0; i < str1.length; i++) {
-            String param = str1[i].substring(0, str1[i].indexOf('='));
-            str = str1[i].replaceAll(param + "=", "");
-            //System.out.println(str1[i] + " - " + str1[i].indexOf('=') + " - " + param + " = " + str);
+            for (int i = 0; i < str1.length; i++) {
+                String param = str1[i].substring(0, str1[i].indexOf('='));
+                str = str1[i].replaceAll(param + "=", "");
+                //System.out.println(str1[i] + " - " + str1[i].indexOf('=') + " - " + param + " = " + str);
 
-            switch (param) {
-                case "RememberLogin":
-                    frmLogin.setRememberLogin(str.equals("true"));
-                    break;
-                case "LoginName":
-                    if (str.equals("")) {
-                        frmLogin.setRememberLogin(false);
-                    } else if (frmLogin.getRememberLogin()) {
-                        frmLogin.setLoginName(str);
-                    }
-                    break;
-                case "Password":
-                    if (str.equals("")) {
-                        frmLogin.setRememberLogin(false);
-                    } else if (frmLogin.getRememberLogin()) {
-                        frmLogin.setPassword(decryptionA(str));
-                    }
-                    break;
-                case "RememberSQLSettings":
-                    frmLogin.setRememberSQLSettings(str.equals("true"));
-                    break;
-                case "ServerAddress":
-                    if (str.equals("")) {
-                        frmLogin.setRememberSQLSettings(false);
-                    } else if (frmLogin.getRememberSQLSettings()) {
-                        frmLogin.setServerAddress(str);
-                        DAO.dbServerAddress = str;
-                    }
-                    break;
-                case "ServerUserName":
-                    if (str.equals("")) {
-                        frmLogin.setRememberSQLSettings(false);
-                    } else if (frmLogin.getRememberSQLSettings()) {
-                        frmLogin.setServerUserName(str);
-                        DAO.dbServerUserName = frmLogin.getServerUserName();
-                    }
-                    break;
-                case "ServerPassword":
-                    if (str.equals("")) {
-                        frmLogin.setRememberSQLSettings(false);
-                    } else if (frmLogin.getRememberSQLSettings()) {
-                        frmLogin.setServerPassword(decryptionA(str));
-                        DAO.dbServerPassword = frmLogin.getServerPassword();
-                    }
-                    break;
+                switch (param) {
+                    case "RememberLogin":
+                        frmLogin.setRememberLogin(str.equals("true"));
+                        break;
+                    case "LoginName":
+                        if (str.equals("")) {
+                            frmLogin.setRememberLogin(false);
+                        } else if (frmLogin.getRememberLogin()) {
+                            frmLogin.setLoginName(str);
+                        }
+                        break;
+                    case "Password":
+                        if (str.equals("")) {
+                            frmLogin.setRememberLogin(false);
+                        } else if (frmLogin.getRememberLogin()) {
+                            frmLogin.setPassword(decryptionA(str));
+                        }
+                        break;
+                    case "RememberSQLSettings":
+                        frmLogin.setRememberSQLSettings(str.equals("true"));
+                        break;
+                    case "ServerAddress":
+                        if (str.equals("")) {
+                            frmLogin.setRememberSQLSettings(false);
+                        } else if (frmLogin.getRememberSQLSettings()) {
+                            frmLogin.setServerAddress(str);
+                            DAO.setDBServerAddress(str);
+                        }
+                        break;
+                    case "ServerUserName":
+                        if (str.equals("")) {
+                            frmLogin.setRememberSQLSettings(false);
+                        } else if (frmLogin.getRememberSQLSettings()) {
+                            frmLogin.setServerUserName(str);
+                            DAO.setDBServerUserName(frmLogin.getServerUserName());
+                        }
+                        break;
+                    case "ServerPassword":
+                        if (str.equals("")) {
+                            frmLogin.setRememberSQLSettings(false);
+                        } else if (frmLogin.getRememberSQLSettings()) {
+                            frmLogin.setServerPassword(decryptionA(str));
+                            DAO.setDBServerPassword(frmLogin.getServerPassword());
+                        }
+                        break;
+                }
             }
         }
     }
@@ -291,17 +293,17 @@ public class Tools {
         str.append("ServerAddress");
         str.append("=");
         str.append(frmLogin.getServerAddress());
-        DAO.dbServerAddress = frmLogin.getServerAddress();
+        DAO.setDBServerAddress(frmLogin.getServerAddress());
         str.append("\r\n");
         str.append("ServerUserName");
         str.append("=");
         str.append(frmLogin.getServerUserName());
-        DAO.dbServerUserName = frmLogin.getServerUserName();
+        DAO.setDBServerUserName(frmLogin.getServerUserName());
         str.append("\r\n");
         str.append("ServerPassword");
         str.append("=");
         str.append(encryptionA(frmLogin.getServerPassword()));
-        DAO.dbServerPassword = frmLogin.getServerPassword();
+        DAO.setDBServerPassword(frmLogin.getServerPassword());
 
         write(str.toString());
     }
@@ -336,7 +338,7 @@ public class Tools {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // используемые символы
         String code = "";
         Random r = new Random();
-        for(int i = 0; i < length; i++) { // длинна кода  от 10
+        for (int i = 0; i < length; i++) { // длинна кода  от 10
             code = code + chars.charAt(r.nextInt(chars.length()));
         }
         return code;

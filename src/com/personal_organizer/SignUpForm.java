@@ -28,6 +28,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -51,7 +53,7 @@ public class SignUpForm extends JFrame {
     private JTextField txtPhone, txtEmail, txtLoginName;
     private JPasswordField txtPassword, txtPasswordRepeat;
     private OLabel errLogin, errPassword, errPasswordRepeat, errEmail;
-    private JComboBox birthDayYear, birthDayMonth, birthDayDay;
+    private JComboBox cbxBirthDayYear, cbxBirthDayMonth, cbxBirthDayDay;
 
     private JScrollPane scrollPane;
 
@@ -61,7 +63,6 @@ public class SignUpForm extends JFrame {
     private JPanel pnlIconLogin, pnlIconPassword, pnlIconPasswordRepeat, pnlIconEmail;
     private CardLayout cardLayout;
 
-    JLabel lbl1, lbl2, lbl3, lbl4, lbl5, lbl6;
     private static String[] imageList = {"no.png", "yes.png"};
     private int r, g, b;
     boolean isLoginNameOk, isPasswordOk, isPasswordRepeatOk, isEmailOk;
@@ -97,8 +98,7 @@ public class SignUpForm extends JFrame {
                 gbc.gridwidth = 1;
                 gbc.gridx = 0;
                 gbc.gridy = 0;
-                pnlPersonalInformation.add(lbl1 = new JLabel("Login Name: *"), gbc);
-                lbl1.addMouseListener(new mouseListener());
+                pnlPersonalInformation.add(new JLabel("Login Name: *"), gbc);
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLoginName = new JTextField("", 10), gbc);
@@ -135,8 +135,7 @@ public class SignUpForm extends JFrame {
                 System.out.println("txtPassword.getPassword() = " + txtPassword.getPassword());
 
                 gbc.gridx = 0;
-                pnlPersonalInformation.add(lbl2 = new JLabel("Password: *"), gbc);
-                lbl2.addMouseListener(new mouseListener());
+                pnlPersonalInformation.add(new JLabel("Password: *"), gbc);
 
                 gbc.gridy = 3;
                 gbc.gridx = 0;
@@ -146,8 +145,7 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 0;
                 gbc.gridy = 4;
-                pnlPersonalInformation.add(lbl3 = new JLabel("Repeat Password: *"), gbc);
-                lbl3.addMouseListener(new mouseListener());
+                pnlPersonalInformation.add(new JLabel("Repeat Password: *"), gbc);
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtPasswordRepeat = new JPasswordField("", 10), gbc);
@@ -173,8 +171,7 @@ public class SignUpForm extends JFrame {
                 pnlPersonalInformation.add(txtFirstName = new JTextField("", 10), gbc);
 
                 gbc.gridx = 0;
-                pnlPersonalInformation.add(lbl4 = new JLabel("First Name: "), gbc);
-                lbl4.addMouseListener(new mouseListener());
+                pnlPersonalInformation.add(new JLabel("First Name: "), gbc);
 
                 gbc.gridy = 7;
                 gbc.gridx = 0;
@@ -184,8 +181,7 @@ public class SignUpForm extends JFrame {
 
                 gbc.gridx = 0;
                 gbc.gridy = 8;
-                pnlPersonalInformation.add(lbl5 = new JLabel("Last Name: "), gbc);
-                lbl5.addMouseListener(new mouseListener());
+                pnlPersonalInformation.add(new JLabel("Last Name: "), gbc);
 
                 gbc.gridx = 1;
                 pnlPersonalInformation.add(txtLastName = new JTextField("", 10), gbc);
@@ -201,8 +197,7 @@ public class SignUpForm extends JFrame {
                 pnlPersonalInformation.add(txtPhone = new JTextField("", 10), gbc);
 
                 gbc.gridx = 0;
-                pnlPersonalInformation.add(lbl6 = new JLabel("Phone No.: "), gbc);
-                lbl6.addMouseListener(new mouseListener());
+                pnlPersonalInformation.add(new JLabel("Phone No.: "), gbc);
 
                 gbc.gridy = 11;
                 gbc.gridx = 0;
@@ -244,13 +239,16 @@ public class SignUpForm extends JFrame {
                 String[] years1 = {"", "1976", "1977", "1978", "1979", "1980", "1981", "1982",
                     "1983", "1984", "1985", "1986", "1987", "1988", "1989", "1990", "1991",
                     "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000"};
-                pnlBirthDay.add(birthDayDay = new JComboBox(days));
-                pnlBirthDay.add(birthDayMonth = new JComboBox(months));
-                pnlBirthDay.add(birthDayYear = new JComboBox(years1));
+                pnlBirthDay.add(cbxBirthDayDay = new JComboBox(days));
+                cbxBirthDayDay.addFocusListener(new focusListener());
+                pnlBirthDay.add(cbxBirthDayMonth = new JComboBox(months));
+                cbxBirthDayMonth.addFocusListener(new focusListener());
+                pnlBirthDay.add(cbxBirthDayYear = new JComboBox(years1));
+                cbxBirthDayYear.addFocusListener(new focusListener());
                 pnlPersonalInformation.add(pnlBirthDay, gbc);
-                birthDayDay.setSelectedIndex(24);
-                birthDayMonth.setSelectedIndex(4);
-                birthDayYear.setSelectedIndex(1976 - 1975);
+//                cbxBirthDayDay.setSelectedIndex(24);
+//                cbxBirthDayMonth.setSelectedIndex(4);
+//                cbxBirthDayYear.setSelectedIndex(1976 - 1975);
                 gbc.gridx = 0;
                 pnlPersonalInformation.add(new JLabel("Date of Birth: "), gbc);
 
@@ -276,7 +274,7 @@ public class SignUpForm extends JFrame {
         //scrollPane.setBounds(0, 0, 500, 700);
         this.add(pnlButtons, BorderLayout.SOUTH);
 
-        txtPasswordRepeat.setEnabled(false);
+        //txtPasswordRepeat.setEnabled(false);
         //this.setSize(550, 180);
         this.addWindowListener(new closingListener());
         this.pack();
@@ -363,27 +361,27 @@ public class SignUpForm extends JFrame {
     }
 
     public int getBirthDayYear() {
-        return this.birthDayYear.getSelectedIndex() + 1975;
+        return this.cbxBirthDayYear.getSelectedIndex() + 1975;
     }
 
     public void setBirthDayYear(int birthDayYear) {
-        this.birthDayYear.setSelectedIndex(birthDayYear - 1975);
+        this.cbxBirthDayYear.setSelectedIndex(birthDayYear - 1975);
     }
 
     public int getBirthDayMonth() {
-        return this.birthDayMonth.getSelectedIndex();
+        return this.cbxBirthDayMonth.getSelectedIndex();
     }
 
     public void setBirthDayMonth(int birthDayMonth) {
-        this.birthDayMonth.setSelectedIndex(birthDayMonth);
+        this.cbxBirthDayMonth.setSelectedIndex(birthDayMonth);
     }
 
     public int getBirthDayDay() {
-        return this.birthDayDay.getSelectedIndex();
+        return this.cbxBirthDayDay.getSelectedIndex();
     }
 
     public void setBirthDayDay(int birthDayDay) {
-        this.birthDayDay.setSelectedIndex(birthDayDay);
+        this.cbxBirthDayDay.setSelectedIndex(birthDayDay);
     }
 
     public Date getBirthDay() {
@@ -391,9 +389,9 @@ public class SignUpForm extends JFrame {
     }
 
     public void setBirthDay(Date birthDayYear) {
-        this.birthDayYear.setSelectedIndex(birthDayYear.getYear() - 1975);
-        this.birthDayMonth.setSelectedIndex(birthDayYear.getMonth());
-        this.birthDayDay.setSelectedIndex(birthDayYear.getDate());
+        this.cbxBirthDayYear.setSelectedIndex(birthDayYear.getYear() - 1975);
+        this.cbxBirthDayMonth.setSelectedIndex(birthDayYear.getMonth());
+        this.cbxBirthDayDay.setSelectedIndex(birthDayYear.getDate());
     }
 
     public void setCommand(String command) {
@@ -458,33 +456,6 @@ public class SignUpForm extends JFrame {
                 Personal_Organizer.loginForm.setVisible(true);
             }
         }
-
-//
-//        @Override
-//        public void windowClosed(WindowEvent e) {
-//
-//        }
-//
-//        @Override
-//        public void windowIconified(WindowEvent e) {
-//
-//        }
-//
-//        @Override
-//        public void windowDeiconified(WindowEvent e) {
-//
-//        }
-//
-//        @Override
-//        public void windowActivated(WindowEvent e) {
-//
-//        }
-//
-//        @Override
-//        public void windowDeactivated(WindowEvent e) {
-//
-//        }
-//
     }
 
     class focusListener implements FocusListener {
@@ -499,31 +470,32 @@ public class SignUpForm extends JFrame {
             setUserProfile();
             if (e.getSource() == txtLoginName) {
                 String logon = txtLoginName.getText();
+                errLogin.setGreyColor();
                 if (logon.length() < 3) {
                     setImageNo(cardLayout, pnlIconLogin);
                     errLogin.setText("The user name can't be less then 3 characters.");
-                    System.out.println("The user name can't be less then 3 characters.");
+                    errLogin.setRedColor();
                 } else if (DBFunctions.isTheLoginNameNotUsed()) {
                     setImageYes(cardLayout, pnlIconLogin);
                     errLogin.setText("");
-                    System.out.println("Login - Ok");
                 } else {
                     setImageNo(cardLayout, pnlIconLogin);
                     errLogin.setText("The user name is already used.");
-                    System.out.println("The user name is already used.");
+                    errLogin.setRedColor();
                 }
             } else if (e.getSource() == txtPassword) {
                 String password = txtPassword.getText();
+                errPassword.setGreyColor();
                 if (password.length() < 6) {
                     setImageNo(cardLayout, pnlIconPassword);
                     errPassword.setText("The password can't be less then 6 characters.");
-                    System.out.println("The password can't be less then 6 characters.");
+                    errPassword.setRedColor();
                 } else {
                     boolean hasNumber = false;
                     boolean hasCapital = false;
                     boolean hasSmall = false;
                     boolean hasSpecificCharacters = false;
-                    System.out.println(hasNumber + " - " + hasCapital + " - " + hasSmall + " - " + hasSpecificCharacters);
+//                    System.out.println(hasNumber + " - " + hasCapital + " - " + hasSmall + " - " + hasSpecificCharacters);
                     for (int i = 0; i < password.length(); i++) {
                         if (hasNumber && hasCapital && hasSmall && hasSpecificCharacters) {
                             break;
@@ -553,52 +525,48 @@ public class SignUpForm extends JFrame {
                         setImageYes(cardLayout, pnlIconPassword);
                         errPassword.setText("");
                         txtPasswordRepeat.setEnabled(true);
-                        System.out.println("Password - Ok");
                     } else {
                         txtPasswordRepeat.setEnabled(false);
                         warning = "The password doesn't contain" + warning;
                         warning = warning.substring(0, warning.length() - 1) + ".";
                         setImageNo(cardLayout, pnlIconPassword);
                         errPassword.setText(warning);
-                        System.out.println(warning);
+                        errPassword.setRedColor();
                     }
                 }
             } else if (e.getSource() == txtPasswordRepeat) {
+                errPasswordRepeat.setGreyColor();
                 if (!txtPassword.getText().equals(txtPasswordRepeat.getText())) {
                     setImageNo(cardLayout, pnlIconPasswordRepeat);
                     errPasswordRepeat.setText("The password and repeat password are not match.");
-                    System.out.println("The password and repeat password are not match. " + txtPassword.getText() + " != " + txtPasswordRepeat.getText());
+//                    System.out.println("The password and repeat password are not match. " + txtPassword.getText() + " != " + txtPasswordRepeat.getText());
+                    errPasswordRepeat.setRedColor();
                 } else {
                     setImageYes(cardLayout, pnlIconPasswordRepeat);
                     errPasswordRepeat.setText("");
-                    System.out.println("Password Repeat - Ok.");
+//                    System.out.println("Password Repeat - Ok.");
                 }
             } else if (e.getSource() == txtEmail) {
                 int at = 0;
                 String eMail = txtEmail.getText();
                 String warning = "";
+                errEmail.setGreyColor();
                 if (eMail.equals("")) {
                     setImageNo(cardLayout, pnlIconEmail);
                     errEmail.setToolTipText("You have to enter E-Mail address.");
                     warning = "You have to enter E-Mail address.";
-                    System.out.println("You have to enter E-Mail address.");
                 } else if (eMail.indexOf('.') == -1) {
                     warning = "The '.' sibbol is missing!";
-                    System.out.println("The '.' sibbol is missing!");
                 } else if ((eMail.indexOf(',') >= 0) || (eMail.indexOf(';') >= 0) || (eMail.indexOf(' ') >= 0)) {
                     warning = "E-mail address is incorrect!";
-                    System.out.println("E-mail address is incorrect!");
                 } else {
                     at = eMail.indexOf('@');
                     if (at == -1) {
                         warning = "The '@' simbol is missing!";
-                        System.out.println("The '@' simbol is missing!");
                     } else if ((at < 1) || (at > eMail.length() - 5)) {
                         warning = "E-mail address is incorrect!";
-                        System.out.println("E-mail address is incorrect!");
                     } else if ((eMail.charAt(at - 1) == '.') || (eMail.charAt(at + 1) == '.')) {
                         warning = "E-mail address is incorrect!";
-                        System.out.println("E-mail address is incorrect!");
                     }
 
                 }
@@ -608,9 +576,29 @@ public class SignUpForm extends JFrame {
                 } else {
                     errEmail.setText(warning);
                     cardLayout.first(pnlIconEmail);
+                    errEmail.setRedColor();
+                }
+
+            } else if (e.getSource() == cbxBirthDayDay
+                    || e.getSource() == cbxBirthDayMonth
+                    || e.getSource() == cbxBirthDayYear) {
+                Date newDate;
+                if (cbxBirthDayDay.getSelectedIndex() > 0
+                        || cbxBirthDayMonth.getSelectedIndex() > 0
+                        || cbxBirthDayYear.getSelectedIndex() > 0) {
+                    try {
+                        int year = getBirthDayYear();
+                        int month = getBirthDayMonth();
+                        int day = getBirthDayDay();
+
+                        newDate = new Date(year, month, day);
+                        System.out.println("" + newDate);
+                    } catch (Exception ex) {
+                        Logger.getLogger(SignUpForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
                 }
             }
-
         }
 
     }
@@ -619,58 +607,4 @@ public class SignUpForm extends JFrame {
         Tools.setUserProfile(this);
     }
 
-    class mouseListener implements MouseListener {
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-//            Object ee = e.getSource();
-//            if(ee == lbl1){
-//                r++;
-//                if(r == 256) r = 255;
-//                lbl1.setText(""+r);
-//            } else if(ee == lbl2){
-//                g++;
-//                if(g == 256) g = 255;
-//                lbl2.setText(""+g);
-//            } else if(ee == lbl3){
-//                b++;
-//                if(b == 256) b = 255;
-//                lbl3.setText(""+b);
-//            } else if(ee == lbl4){
-//                r--;
-//                if(r == -1) r = 0;
-//                lbl4.setText(""+r);
-//            } else if(ee == lbl5){
-//                g--;
-//                if(g == -1) g = 0;
-//                lbl5.setText(""+g);
-//            } else if(ee == lbl6){
-//                b--;
-//                if(b == -1) b = 0;
-//                lbl6.setText(""+b);
-//            }
-//            errLogin.setForeground(new Color(r, g, b));
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-
-        }
-
-    }
 }

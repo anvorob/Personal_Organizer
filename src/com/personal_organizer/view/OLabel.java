@@ -16,24 +16,38 @@ import javax.swing.JLabel;
 public class OLabel extends JLabel {
 
     public OLabel() {
-//        super;
+        this("");
+    }
+    public OLabel(String str) {
+        super(str);
         Font f = new Font("Seris", Font.ITALIC, 11);
         this.setFont(f);
         //this.setSize(400, 7);
     }
-    
+
     @Override
-    public void setText(String str){
+    public void setText(String str) {
         super.setText(str);
         if(str.equals("")){
-            //f = new Font("Serif",  Font.ITALIC, 11)
-            this.setForeground(new Color(239, 239, 239));
+            this.setGreyColor();
             super.setText("weferggrtg");
             
         }else{
             this.setForeground(Color.RED);
             
         }
-        
+
+    }
+
+    public void setRedColor() {
+        this.setForeground(Color.RED);
+    }
+
+    public void setBlueColor() {
+        this.setForeground(Color.BLUE);
+    }
+
+    public void setGreyColor() {
+        this.setForeground(new Color(239, 239, 239));
     }
 }

@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 //import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
@@ -71,12 +72,14 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
     JButton btnEventPrev;
     JButton btnAddEvent;
     JButton btnDeleteEvent;
-    JButton btnViewEvent;
+    JButton btnUpdateEvent;
     static Date eventsDate;
     JCalendar cal;
 
-    static public Object[] rowData;
-    static public int fw, fx, fy;
+    static Object[] rowData;
+    static int fw, fx, fy;
+    public static boolean isNecessaryToReFill = false;
+    public static boolean isNotNecessaryToReFill = false;
 
     MemoForm memoForm;
     ContactListForm contactList;
@@ -85,6 +88,7 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
     DefaultTableModel mod = new DefaultTableModel(columns, 0);
     DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
     TableRowSorter<TableModel> sorter;
+    ArrayList<Object> result;
 
     public MainForm() {
 
@@ -94,7 +98,6 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         columns.add("Time From");
         columns.add("Time Till");
         columns.add("Type");
-        columns.add("Contacts");
 
         this.setTitle("Personal Organizer - Welcome " + Personal_Organizer.userProfile.getFirstName());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -146,17 +149,7 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
                 String dateFormated = dateFormat.format(new_c.getTime());
                 eventTitle.setText(dateFormated);
                 eventsDate = new Date(year, month - 1, day);
-//                int rowCount = mod.getRowCount();
-//                for (int i = 0; i < rowCount; i++) {
-//                    mod.removeRow(0);
-//                }
-//                resetEventsShow();
-                try {
-                    sorter.setRowFilter(
-                            RowFilter.regexFilter(dateFormat.format(eventsDate)));
-                } catch (PatternSyntaxException pse) {
-                    System.err.println("Bad regex pattern");
-                }
+                filterTable();
             }
         });
 
@@ -186,14 +179,9 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         rowData = new Object[tblEvents.getColumnCount()];
         sorter = new TableRowSorter<TableModel>(mod);
         tblEvents.setRowSorter(sorter);
-        //sorter.setRowFilter(null);
+        sorter.setRowFilter(null);
 
-        try {
-            sorter.setRowFilter(
-                    RowFilter.regexFilter(dateFormat.format(eventsDate)));
-        } catch (PatternSyntaxException pse) {
-            System.err.println("Bad regex pattern");
-        }
+        filterTable();
 
         tblEvents.getSelectionModel().addListSelectionListener(this);
         tblEvents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -203,14 +191,14 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         pnlEventBtns = new JPanel(new FlowLayout((int) CENTER_ALIGNMENT, 10, 5));
         pnlEventBtns.add(btnAddEvent = new JButton("Add Event"));
         pnlEventBtns.add(btnDeleteEvent = new JButton("Delete Event"));
-        pnlEventBtns.add(btnViewEvent = new JButton("View Event"));
+        pnlEventBtns.add(btnUpdateEvent = new JButton("Update Event"));
 
         btnAddEvent.addActionListener(this);
         btnDeleteEvent.addActionListener(this);
-        btnViewEvent.addActionListener(this);
+        btnUpdateEvent.addActionListener(this);
 
         btnDeleteEvent.setEnabled(false);
-        btnViewEvent.setEnabled(false);
+        btnUpdateEvent.setEnabled(false);
 
         pnlEvents.add(pnlEventsControl, BorderLayout.NORTH);
         pnlEvents.add(pnlEventsTable, BorderLayout.CENTER);
@@ -222,7 +210,7 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         pnlStatusBar.setBackground(Color.GRAY);
 
         pnlStatusBar.add(statusTitle = new JLabel("Title", SwingConstants.RIGHT));
-        pnlStatusBar.add(statusDescript = new JLabel("Description"));
+        pnlStatusBar.add(statusDescript = new JLabel(": Description"));
 
         this.add(pnlStatusBar, BorderLayout.SOUTH);
 
@@ -231,9 +219,7 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         System.out.println("" + this.getWidth() + " " + this.getHeight());
         this.setLocationRelativeTo(null);
         getEvents();
-        FillTheTable fill = new FillTheTable();
-        Thread fillTheTable = new Thread(fill);
-        fillTheTable.start();
+        fillTheTable();
     }
 
     private void getEvents() {
@@ -248,7 +234,6 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         Rectangle r = this.getBounds();
         fx = (int) r.getX();
         fy = (int) r.getY();
-        //System.out.println("width: " + fw + " x: " + fx + " y: " + fy);
     }
 
     @Override
@@ -267,49 +252,81 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
             about.setVisible(true);
         }
         if (e.getSource() == btnDeleteEvent) {
-            //System.out.println("Delete");
+            int selection = JOptionPane.showConfirmDialog(null, "You are going to"
+                    + " delete this event!\nAre you shure?", "Output",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (selection == JOptionPane.YES_OPTION) {
+                deleteEvent();
+            }
         }
-        if (e.getSource() == btnViewEvent) {
-            EventForm event = new EventForm();
-            event.setVisible(true);
+        if (e.getSource() == btnUpdateEvent) {
+            updateEvent();
         } else if (e.getSource() == btnEventPrev) {
             DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
             eventsDate.setDate(eventsDate.getDate() - 1);
             eventTitle.setText(dateFormat.format(eventsDate));
             cal.selectDay(eventsDate.getYear(), eventsDate.getMonth(), eventsDate.getDate());
-
-//            int rowCount = mod.getRowCount();
-//            for (int i = 0; i < rowCount; i++) {
-//                mod.removeRow(0);
-//            }
-//            resetEventsShow();
-            try {
-                sorter.setRowFilter(
-                        RowFilter.regexFilter(dateFormat.format(eventsDate)));
-            } catch (PatternSyntaxException pse) {
-                System.err.println("Bad regex pattern");
-            }
+            filterTable();
         } else if (e.getSource() == btnEventNext) {
             DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
             eventsDate.setDate(eventsDate.getDate() + 1);
             eventTitle.setText(dateFormat.format(eventsDate));
             cal.selectDay(eventsDate.getYear(), eventsDate.getMonth(), eventsDate.getDate());
-//            int rowCount = mod.getRowCount();
-//            for (int i = 0; i < rowCount; i++) {
-//                mod.removeRow(0);
-//            }
-//            resetEventsShow();
-            try {
-                sorter.setRowFilter(
-                        RowFilter.regexFilter(dateFormat.format(eventsDate)));
-            } catch (PatternSyntaxException pse) {
-                System.err.println("Bad regex pattern");
-            }
+            filterTable();
         } else if (e.getSource() == myInfo) {
             Personal_Organizer.signUpForm = new SignUpForm();
             Personal_Organizer.signUpForm.setCommand("Update");
             Personal_Organizer.signUpForm.setVisible(true);
         }
+    }
+
+    protected void deleteEvent() {
+
+        int row = tblEvents.getSelectedRow();
+        StringBuilder parametrs = new StringBuilder("");
+        for (int i = 0; i < tblEvents.getColumnCount(); i++) {
+            parametrs.append(tblEvents.getValueAt(row, i));
+        }
+        result = findTheEvent(parametrs.toString());
+        System.out.println(parametrs.toString());
+        EventProfile eventToDelete = (EventProfile) result.get(1);
+        Personal_Organizer.events.remove(eventToDelete);
+        DAO.deleteEvent(result.get(0));
+        sorter.setRowFilter(null);
+        reFillTheTable reFill = new reFillTheTable();
+        Thread reFillTheTable = new Thread(reFill);
+        reFillTheTable.start();
+
+    }
+
+    protected void updateEvent() {
+
+        int row = tblEvents.getSelectedRow();
+        StringBuilder parametrs = new StringBuilder("");
+        for (int i = 0; i < tblEvents.getColumnCount(); i++) {
+            parametrs.append(tblEvents.getValueAt(row, i));
+        }
+        result = findTheEvent(parametrs.toString());
+        System.out.println(parametrs.toString());
+        EventProfile eventToUpdate = (EventProfile) result.get(1);
+        EventForm event = new EventForm(eventToUpdate.getEventTitle(), eventToUpdate);
+        reFillTheTable reFill = new reFillTheTable();
+        Thread reFillTheTable = new Thread(reFill);
+        reFillTheTable.start();
+        event.setVisible(true);
+    }
+
+    protected ArrayList<Object> findTheEvent(String findString) {
+        ArrayList<Object> result = new ArrayList<Object>();
+        for (EventProfile currentEvent : Personal_Organizer.events) {
+            if (currentEvent.getFieldToFind().equals(findString)) {
+                result.add(currentEvent.getEventID());
+                result.add(currentEvent);
+                break;
+            }
+        }
+
+        return result;
     }
 
     protected void resetEventsShow() {
@@ -318,20 +335,83 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         }
     }
 
+    protected void clearTheTable() {
+        int rowCount = mod.getRowCount();
+        if (mod.getRowCount() > 0) {
+            for (int i = mod.getRowCount() - 1; i > -1; i--) {
+                try {
+                    mod.removeRow(i);
+                } catch (Exception e) {
+                    //Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, e);
+                }
+            }
+        }
+        resetEventsShow();
+    }
+
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        //System.out.println("This is: "++" : "+tblEvents.getSelectedColumn());
         int row = tblEvents.getSelectedRow();
-        //String selectedObject = (String) tblEvents.getModel().getValueAt(tblEvents.getSelectedRow(), tblEvents.getSelectedColumn());
-        Object[] rowData = new Object[tblEvents.getColumnCount()];
-        String selectedObj = "This is: ";
-        btnViewEvent.setEnabled(true);
+        showInStatusBar(row);
+        btnUpdateEvent.setEnabled(true);
         btnDeleteEvent.setEnabled(true);
-        for (int i = 0; i < tblEvents.getColumnCount(); i++) {
-            rowData[i] = tblEvents.getValueAt(row, i);
-            selectedObj += tblEvents.getValueAt(row, i);
+    }
+
+    private void fillTheTable() {
+        for (EventProfile currentEvent : Personal_Organizer.events) {
+            if (!currentEvent.getShow()) {
+                Vector<String> newRow = new Vector<String>();
+                newRow.add(currentEvent.getEventTitle());
+                newRow.add(currentEvent.getDescription());
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
+                System.out.println(dateFormat.format(currentEvent.getTimeFrom()));
+                newRow.add(dateFormat.format(currentEvent.getDay()));
+                DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                newRow.add(timeFormat.format(currentEvent.getTimeFrom()));
+                newRow.add(timeFormat.format(currentEvent.getTimeTill()));
+                newRow.add(EventType.getEventType(currentEvent.getType()));
+                mod.addRow(newRow);
+
+                StringBuilder parametrs = new StringBuilder("");
+                for (String parametr : newRow) {
+                    parametrs.append(parametr);
+                }
+                currentEvent.setFieldToFind(parametrs.toString());
+                currentEvent.setShow(true);
+            }
         }
-        //System.out.println(selectedObj);
+    }
+
+    private void showInStatusBar() {
+        showInStatusBar(-1);
+    }
+
+    private void showInStatusBar(int row) {
+        if (statusTitle != null && statusDescript != null) {
+            if (row < 0 || tblEvents.getRowCount() <= 0) {
+                statusTitle.setText("Title ");
+                statusDescript.setText(": Description");
+            } else {
+                statusTitle.setText("" + tblEvents.getValueAt(row, 0));
+                statusDescript.setText(": " + tblEvents.getValueAt(row, 1));
+            }
+        }
+    }
+
+    private void filterTable() {
+        try {
+            sorter.setRowFilter(
+                    RowFilter.regexFilter(dateFormat.format(eventsDate)));
+        } catch (PatternSyntaxException pse) {
+            System.err.println("Bad regex pattern");
+        }
+        showInStatusBar();
+        if (btnAddEvent != null) {
+            btnUpdateEvent.setEnabled(false);
+        }
+        if (btnDeleteEvent != null) {
+            btnDeleteEvent.setEnabled(false);
+        }
     }
 
     class MListeners implements MenuListener {
@@ -365,45 +445,21 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         }
     }
 
-    class FillTheTable implements Runnable {
+    class reFillTheTable implements Runnable {
 
         @Override
         public void run() {
             while (true) {
-                int i = 0;
-                for (EventProfile currentEvent : Personal_Organizer.events) {
-                    i++;
-                    if (!currentEvent.getShow()) //                        && eventsDate.getYear() == currentEvent.getDay().getYear()
-                    //                            && eventsDate.getMonth() == currentEvent.getDay().getMonth()
-                    //                            && eventsDate.getDate() == currentEvent.getDay().getDate()) 
-                    {
-                        Vector<String> newRow = new Vector<String>();
-                        newRow.add(currentEvent.getEventTitle());
-                        newRow.add(currentEvent.getDescription());
-                        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
-                        System.out.println(dateFormat.format(currentEvent.getTimeFrom()));
-                        newRow.add(dateFormat.format(currentEvent.getDay()));
-                        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                        //System.out.println(timeFormat.format(currentEvent.getTimeFrom()));
-                        newRow.add(timeFormat.format(currentEvent.getTimeFrom()));
-                        //System.out.println(dateFormat.format(currentEvent.getTimeTill()));
-                        newRow.add(timeFormat.format(currentEvent.getTimeTill()));
-                        newRow.add(EventType.getEventType(currentEvent.getType()));
-                        newRow.add(currentEvent.getContacts());
-                        newRow.add("" + Personal_Organizer.events.indexOf(currentEvent));
-                        //data[i][5]=currentEvent.geteventTitle();}
-                        mod.addRow(newRow);
-                        currentEvent.setShow(true);
-                    }
-
-                    if (tblEvents.getModel().getRowCount() > 0) {
-                        statusTitle.setText("" + tblEvents.getModel().getValueAt(0, 0));
-                        statusDescript.setText(": " + tblEvents.getModel().getValueAt(0, 1));
-                    } else {
-                        statusTitle.setText("");
-                        statusDescript.setText(": ");
-
-                    }
+                if (isNecessaryToReFill) {
+                    clearTheTable();
+                    fillTheTable();
+                    filterTable();
+                    isNecessaryToReFill = false;
+                    break;
+                }
+                if (isNotNecessaryToReFill) {
+                    isNotNecessaryToReFill = false;
+                    break;
                 }
                 try {
                     Thread.sleep(500);
