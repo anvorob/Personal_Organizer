@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.PatternSyntaxException;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -34,6 +35,8 @@ import javax.swing.event.MenuKeyEvent;
 import javax.swing.event.MenuKeyListener;
 import javax.swing.event.MenuListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class MainForm extends JFrame implements ActionListener, ListSelectionListener {
 
@@ -80,11 +83,14 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
 
     Vector<String> columns = new Vector<String>();
     DefaultTableModel mod = new DefaultTableModel(columns, 0);
+    DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
+    TableRowSorter<TableModel> sorter;
 
     public MainForm() {
 
         columns.add("Title");
         columns.add("Description");
+        columns.add("Date");
         columns.add("Time From");
         columns.add("Time Till");
         columns.add("Type");
@@ -121,10 +127,10 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         eventTitle = new JLabel("", SwingConstants.CENTER);
         pnlCalendar = new JPanel();
 
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
         Date date = new Date();
         eventsDate = date;
-        eventTitle.setText(dateFormat.format(date));
+
+        eventTitle.setText(dateFormat.format(eventsDate));
         //System.out.println(dateFormat.format(date)); //2014/08/06 15:59:48        
         cal = new JCalendar();
         cal.selectDay(date.getYear(), date.getMonth(), date.getDate());
@@ -137,14 +143,20 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
                 int month = new_c.get(Calendar.MONTH) + 1;
                 int year = new_c.get(Calendar.YEAR);
 
-                String dateFormat = new SimpleDateFormat("dd/MM/yy").format(new_c.getTime());
-                eventTitle.setText(dateFormat);
+                String dateFormated = dateFormat.format(new_c.getTime());
+                eventTitle.setText(dateFormated);
                 eventsDate = new Date(year, month - 1, day);
-                int rowCount = mod.getRowCount();
-                for (int i = 0; i < rowCount; i++) {
-                    mod.removeRow(0);
+//                int rowCount = mod.getRowCount();
+//                for (int i = 0; i < rowCount; i++) {
+//                    mod.removeRow(0);
+//                }
+//                resetEventsShow();
+                try {
+                    sorter.setRowFilter(
+                            RowFilter.regexFilter(dateFormat.format(eventsDate)));
+                } catch (PatternSyntaxException pse) {
+                    System.err.println("Bad regex pattern");
                 }
-                resetEventsShow();
             }
         });
 
@@ -172,6 +184,17 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         tblEvents = new JTable();
         tblEvents.setModel(mod);
         rowData = new Object[tblEvents.getColumnCount()];
+        sorter = new TableRowSorter<TableModel>(mod);
+        tblEvents.setRowSorter(sorter);
+        //sorter.setRowFilter(null);
+
+        try {
+            sorter.setRowFilter(
+                    RowFilter.regexFilter(dateFormat.format(eventsDate)));
+        } catch (PatternSyntaxException pse) {
+            System.err.println("Bad regex pattern");
+        }
+
         tblEvents.getSelectionModel().addListSelectionListener(this);
         tblEvents.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         JScrollPane scroll = new JScrollPane(tblEvents);
@@ -204,6 +227,8 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
         this.add(pnlStatusBar, BorderLayout.SOUTH);
 
         this.pack();
+        this.setSize(this.getWidth(), this.getHeight() - 30);
+        System.out.println("" + this.getWidth() + " " + this.getHeight());
         this.setLocationRelativeTo(null);
         getEvents();
         FillTheTable fill = new FillTheTable();
@@ -248,26 +273,38 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
             EventForm event = new EventForm();
             event.setVisible(true);
         } else if (e.getSource() == btnEventPrev) {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
             eventsDate.setDate(eventsDate.getDate() - 1);
             eventTitle.setText(dateFormat.format(eventsDate));
             cal.selectDay(eventsDate.getYear(), eventsDate.getMonth(), eventsDate.getDate());
 
-            int rowCount = mod.getRowCount();
-            for (int i = 0; i < rowCount; i++) {
-                mod.removeRow(0);
+//            int rowCount = mod.getRowCount();
+//            for (int i = 0; i < rowCount; i++) {
+//                mod.removeRow(0);
+//            }
+//            resetEventsShow();
+            try {
+                sorter.setRowFilter(
+                        RowFilter.regexFilter(dateFormat.format(eventsDate)));
+            } catch (PatternSyntaxException pse) {
+                System.err.println("Bad regex pattern");
             }
-            resetEventsShow();
         } else if (e.getSource() == btnEventNext) {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
             eventsDate.setDate(eventsDate.getDate() + 1);
             eventTitle.setText(dateFormat.format(eventsDate));
             cal.selectDay(eventsDate.getYear(), eventsDate.getMonth(), eventsDate.getDate());
-            int rowCount = mod.getRowCount();
-            for (int i = 0; i < rowCount; i++) {
-                mod.removeRow(0);
+//            int rowCount = mod.getRowCount();
+//            for (int i = 0; i < rowCount; i++) {
+//                mod.removeRow(0);
+//            }
+//            resetEventsShow();
+            try {
+                sorter.setRowFilter(
+                        RowFilter.regexFilter(dateFormat.format(eventsDate)));
+            } catch (PatternSyntaxException pse) {
+                System.err.println("Bad regex pattern");
             }
-            resetEventsShow();
         } else if (e.getSource() == myInfo) {
             Personal_Organizer.signUpForm = new SignUpForm();
             Personal_Organizer.signUpForm.setCommand("Update");
@@ -336,17 +373,21 @@ public class MainForm extends JFrame implements ActionListener, ListSelectionLis
                 int i = 0;
                 for (EventProfile currentEvent : Personal_Organizer.events) {
                     i++;
-                    if (!currentEvent.getShow() && eventsDate.getYear() == currentEvent.getDay().getYear()
-                            && eventsDate.getMonth() == currentEvent.getDay().getMonth()
-                            && eventsDate.getDate() == currentEvent.getDay().getDate()) {
+                    if (!currentEvent.getShow()) //                        && eventsDate.getYear() == currentEvent.getDay().getYear()
+                    //                            && eventsDate.getMonth() == currentEvent.getDay().getMonth()
+                    //                            && eventsDate.getDate() == currentEvent.getDay().getDate()) 
+                    {
                         Vector<String> newRow = new Vector<String>();
                         newRow.add(currentEvent.getEventTitle());
                         newRow.add(currentEvent.getDescription());
-                        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-                        //System.out.println(dateFormat.format(currentEvent.getTimeFrom())); //2014/08/06 15:59:48        
-                        newRow.add(dateFormat.format(currentEvent.getTimeFrom()));
-                        //System.out.println(dateFormat.format(currentEvent.getTimeTill())); //2014/08/06 15:59:48        
-                        newRow.add(dateFormat.format(currentEvent.getTimeTill()));
+                        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yy");
+                        System.out.println(dateFormat.format(currentEvent.getTimeFrom()));
+                        newRow.add(dateFormat.format(currentEvent.getDay()));
+                        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                        //System.out.println(timeFormat.format(currentEvent.getTimeFrom()));
+                        newRow.add(timeFormat.format(currentEvent.getTimeFrom()));
+                        //System.out.println(dateFormat.format(currentEvent.getTimeTill()));
+                        newRow.add(timeFormat.format(currentEvent.getTimeTill()));
                         newRow.add(EventType.getEventType(currentEvent.getType()));
                         newRow.add(currentEvent.getContacts());
                         newRow.add("" + Personal_Organizer.events.indexOf(currentEvent));

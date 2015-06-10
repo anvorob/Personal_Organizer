@@ -26,6 +26,7 @@ public class EventProfile {
     private String type;
     private String contacts;
     private boolean show = false;
+    private int numberOfRow;
 
     public EventProfile() {
         this("", "", "New event", new Date(1,1,15), new Time(0, 0, 0), new Time(0, 0, 0), "", "", "");
@@ -154,5 +155,13 @@ public class EventProfile {
     
     public boolean getShow(){
         return this.show;
+    }
+
+    public void setNumberOfRow(int numberOfRow){
+        this.numberOfRow = numberOfRow;
+    }
+    
+    public int getТumberOfRow(){
+        return this.numberOfRow;
     }
 }
